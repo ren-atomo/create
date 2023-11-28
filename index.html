@@ -3,17 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <title>My Portfolio</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        #projects {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 2em;
+        }
+
+        .project {
+            width: 300px;
+            margin: 1em;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+    <title>Ren Portfolio</title>
 </head>
 <body>
     <header>
-        <h1>My Portfolio</h1>
+        <h1>Ren Portfolio</h1>
     </header>
     <section id="projects">
         <div class="project" onclick="showProjectDetails('project1')">
             <h2>Project 1</h2>
             <!-- 作品の説明や画像などを追加 -->
+            <h3>光と影</h3>
         </div>
         <div class="project" onclick="showProjectDetails('project2')">
             <h2>Project 2</h2>
@@ -24,9 +81,31 @@
     <!-- モーダルウィンドウ -->
     <div id="projectModal" class="modal">
         <span class="close" onclick="closeProjectDetails()">&times;</span>
-        <iframe id="projectIframe" width="100%" height="100%" src="https://ren-atomo.github.io/brock.github.io/"></iframe>
+        <iframe id="projectIframe" width="100%" height="100%"></iframe>
     </div>
 
-    <script src="js/main.js"></script>
+    <script>
+        function showProjectDetails(projectId) {
+            const modal = document.getElementById('projectModal');
+            const iframe = document.getElementById('projectIframe');
+
+            // ここで各プロジェクトに対応するURLを指定
+            const projectUrls = {
+                'project1': 'https://ren-atomo.github.io/brock.github.io/',
+                'project2': 'https://example.com/project2',
+            };
+
+            iframe.src = projectUrls[projectId];
+            modal.style.display = 'block';
+        }
+
+        function closeProjectDetails() {
+            const modal = document.getElementById('projectModal');
+            const iframe = document.getElementById('projectIframe');
+
+            iframe.src = ''; // iframeのURLをクリアしておく
+            modal.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
