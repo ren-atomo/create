@@ -24,56 +24,7 @@
     <!-- モーダルウィンドウ -->
     <div id="projectModal" class="modal">
         <span class="close" onclick="closeProjectDetails()">&times;</span>
-        <iframe id="projectIframe" width="100%" height="100%" srcdoc="<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    .rectangle {
-      position: absolute;
-    }
-  </style>
-</head>
-<body>
-  <script>
-    // 画面の幅と高さを取得
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    // 長方形をランダムに生成して表示
-    function createRandomRectangle() {
-      const rectangle = document.createElement("div");
-      rectangle.classList.add("rectangle");
-      
-      // ランダムな色を生成
-      const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-      rectangle.style.backgroundColor = randomColor;
-
-      // ランダムな幅と高さを生成
-      const randomWidth = Math.floor(Math.random() * (screenWidth / 2));
-      const randomHeight = Math.floor(Math.random() * (screenHeight / 2));
-      rectangle.style.width = randomWidth + "px";
-      rectangle.style.height = randomHeight + "px";
-
-      // ランダムな位置に配置
-      const randomX = Math.floor(Math.random() * (screenWidth - randomWidth));
-      const randomY = Math.floor(Math.random() * (screenHeight - randomHeight));
-      rectangle.style.left = randomX + "px";
-      rectangle.style.top = randomY + "px";
-
-      document.body.appendChild(rectangle);
-    }
-
-    // 画面を読み込んだときに長方形を生成
-    window.onload = function() {
-      const numRectangles = 10; // 表示する長方形の数
-      for (let i = 0; i < numRectangles; i++) {
-        createRandomRectangle();
-      }
-    };
-  </script>
-</body>
-</html>
-"></iframe>
+        <iframe id="projectIframe" width="100%" height="100%" src="https://ren-atomo.github.io/brock.github.io/"></iframe>
     </div>
 
     <script src="js/main.js"></script>
