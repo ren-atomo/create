@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -132,14 +133,37 @@
             background-color: #000;
             color: #fff;
         }
+
+        #todo-list {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #fff;
+            padding: 10px;
+            color: #fff;
+        }
+
+        th {
+            background-color: #0077B5;
+        }
+
     </style>
     <title>Portfolio</title>
 </head>
+
 <body>
     <header>
         <h1>Ren Portfolio</h1>
     </header>
-    
+
     <div id="container">
         <div id="projects">
             <div class="project" onclick="showProjectDetails('project1')">
@@ -193,6 +217,29 @@
 
     <a id="ar-marker-button" href="https://ren-atomo.github.io/marker/" target="_self">AR Marker</a>
 
+    <div id="todo-list">
+        <h2>やりたいことリスト</h2>
+        <table>
+            <tr>
+                <th>項目</th>
+                <th>進捗状況</th>
+            </tr>
+            <tr>
+                <td>プロジェクト1の詳細を追加</td>
+                <td>未着手</td>
+            </tr>
+            <tr>
+                <td>プロジェクト2の詳細を追加</td>
+                <td>未着手</td>
+            </tr>
+            <tr>
+                <td>プロジェクト3の詳細を追加</td>
+                <td>未着手</td>
+            </tr>
+            <!-- 他の項目も同様に追加 -->
+        </table>
+    </div>
+
     <script>
         function showProjectDetails(projectId) {
             const modal = document.getElementById('projectModal');
@@ -219,4 +266,5 @@
         }
     </script>
 </body>
+
 </html>
