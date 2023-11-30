@@ -7,7 +7,7 @@ function showProjectDetails(projectId) {
         'project1': 'https://ren-atomo.github.io/brock.github.io/',
         'project2': 'https://ren-atomo.github.io/marker',
         'project3': 'https://ren-atomo.github.io/maru/',
-        'project4': 'https://ren-atomo.github.io/comingsoon',
+        'project4': 'https://ren-atomo.github.io/comingsoon/',
        // 'project5': 'https://ren-atomo.github.io/comingsoon',
        // 'project6': 'https://ren-atomo.github.io/comingsoon',
     };
