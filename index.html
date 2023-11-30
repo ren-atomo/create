@@ -34,7 +34,7 @@
         #container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2em;
+            padding: 2em 1em; /* Changed padding */
             box-sizing: border-box;
         }
 
@@ -45,8 +45,8 @@
         }
 
         .project {
-            width: calc(33.33% - 20px);
-            margin: 1em;
+            width: calc(33.33% - 10px); /* Adjusted width and margin */
+            margin: 0.5em;
             cursor: pointer;
             border: 2px solid #fff;
             border-radius: 5px;
@@ -173,17 +173,17 @@
                 </div>
             </div>
             <div class="project" onclick="showProjectDetails('project2')">
-                <h2>Project 2</h2>
+                <h2>AR marker</h2>
                 <div class="project-content">
                     <!-- 作品の説明や画像などを追加 -->
-                    <p>coming soon</p>
+                    <p>AR認識用マーカー</p>
                 </div>
             </div>
             <div class="project" onclick="showProjectDetails('project3')">
-                <h2>Project 3</h2>
+                <h2>AR</h2>
                 <div class="project-content">
                     <!-- 作品の説明や画像などを追加 -->
-                    <p>coming soon</p>
+                    <p>マーカーを読み取ると3Dオブジェクトが出現</p>
                 </div>
             </div>
             <div class="project" onclick="showProjectDetails('project4')">
@@ -225,16 +225,20 @@
                 <th>進捗状況</th>
             </tr>
             <tr>
-                <td>プロジェクト1の詳細を追加</td>
-                <td>未着手</td>
+                <td>ワクワクしちゃう地図</td>
+                <td>開発中</td>
             </tr>
             <tr>
-                <td>プロジェクト2の詳細を追加</td>
-                <td>未着手</td>
+                <td>押すたびにどこかでこどもが笑顔になるボタン</td>
+                <td>企画中・人募集</td>
             </tr>
             <tr>
-                <td>プロジェクト3の詳細を追加</td>
-                <td>未着手</td>
+                <td>消えない絵を描くMR</td>
+                <td>構想中</td>
+            </tr>
+            <tr>
+                <td>大人も白線の上を歩くゲーム</td>
+                <td>構想中</td>
             </tr>
             <!-- 他の項目も同様に追加 -->
         </table>
@@ -246,8 +250,8 @@
             const iframe = document.getElementById('projectIframe');
             const projectUrls = {
                 'project1': 'https://ren-atomo.github.io/brock.github.io/',
-                'project2': 'https://ren-atomo.github.io/commingsoon',
-                'project3': 'https://ren-atomo.github.io/commingsoon',
+                'project2': 'https://ren-atomo.github.io/marker',
+                'project3': 'https://ren-atomo.github.io/AR_test',
                 'project4': 'https://ren-atomo.github.io/commingsoon',
                 'project5': 'https://ren-atomo.github.io/commingsoon',
                 'project6': 'https://ren-atomo.github.io/commingsoon',
