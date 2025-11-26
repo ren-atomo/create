@@ -239,7 +239,7 @@
 
     .progress-fill {
       height: 100%;
-      background: var(--black);
+      background: #A3BE8C;
       border-radius: 2px;
       transition: width 0.5s ease;
     }
@@ -326,11 +326,11 @@
       transition: width 0.5s ease;
     }
 
-    .goal-fill.kokugo { background: var(--gray-900); }
-    .goal-fill.sugaku { background: var(--gray-600); }
-    .goal-fill.eigo { background: var(--gray-400); }
-    .goal-fill.rika { background: #22c55e; }
-    .goal-fill.shakai { background: #f59e0b; }
+    .goal-fill.kokugo { background: #EBCB8B; }
+    .goal-fill.sugaku { background: #A3BE8C; }
+    .goal-fill.eigo { background: #5E81AC; }
+    .goal-fill.rika { background: #B48EAD; }
+    .goal-fill.shakai { background: #D08770; }
 
     /* Records */
     .records-list {
@@ -452,10 +452,196 @@
     }
 
     .empty-state {
-      padding: 2rem;
+      padding: 2.5rem 1.5rem;
       text-align: center;
       color: var(--gray-400);
       font-size: 0.875rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-desc {
+      font-size: 0.8125rem;
+      color: var(--gray-400);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .empty-state-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.625rem 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      background: var(--white);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .empty-state-btn:hover {
+      border-color: var(--black);
+      background: var(--gray-50);
+    }
+
+    /* 必須マーク */
+    .required::after {
+      content: ' *';
+      color: #BF616A;
+    }
+
+    /* データ管理画面 */
+    .manager-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.875rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      background: var(--white);
+    }
+
+    .manager-item:hover {
+      background: var(--gray-50);
+    }
+
+    .manager-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .manager-item-main {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+    }
+
+    .manager-item-date {
+      color: var(--gray-500);
+      font-size: 0.75rem;
+    }
+
+    .manager-item-subject {
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .manager-item-detail {
+      color: var(--gray-500);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .manager-delete-btn {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--gray-400);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      margin-left: 0.75rem;
+    }
+
+    .manager-delete-btn:hover {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #BF616A;
+    }
+
+    .manager-empty {
+      text-align: center;
+      padding: 2rem;
+      color: var(--gray-400);
+    }
+
+    /* 連続日数バッジ */
+    .streak-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--gray-100);
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      color: var(--gray-600);
+      margin-top: 0.25rem;
+    }
+
+    .streak-badge.hot {
+      background: #fff7ed;
+      color: #D08770;
+    }
+
+    .streak-badge.fire {
+      background: #fef2f2;
+      color: #BF616A;
+    }
+
+    /* 目標達成バッジ */
+    .goal-achieved {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.375rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      color: #16a34a;
+      margin-left: 0.5rem;
+    }
+
+    /* 週間目標達成 */
+    .progress-section.achieved .progress-fill {
+      background: linear-gradient(90deg, #A3BE8C, #8FBCBB);
+    }
+
+    .progress-celebration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+      color: #16a34a;
+    }
+
+    /* カスタム入力フィールド */
+    .custom-input-wrapper {
+      display: none;
+      margin-top: 0.5rem;
+    }
+
+    .custom-input-wrapper.show {
+      display: block;
     }
 
     /* FAB */
@@ -692,6 +878,8 @@
       border-color: var(--black);
       background: var(--black);
       color: var(--white);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transform: scale(1.02);
     }
 
     /* Mood Buttons */
@@ -718,6 +906,10 @@
 
     .mood-btn.active {
       border-color: var(--black);
+      border-width: 2px;
+      background: var(--gray-100);
+      transform: scale(1.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       background: var(--gray-100);
     }
 
@@ -1310,6 +1502,43 @@
       .ai-options {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      /* モーダルのモバイル対応 */
+      .modal {
+        width: 100%;
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        margin: 0;
+      }
+
+      .modal-body {
+        max-height: calc(100vh - 140px);
+        overflow-y: auto;
+        padding-bottom: 100px;
+      }
+
+      .modal-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-top: 1px solid var(--gray-200);
+        padding: 1rem;
+        z-index: 10;
+      }
+
+      /* ボタングループのレスポンシブ */
+      .btn-group {
+        gap: 0.5rem;
+      }
+
+      .btn-option {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.75rem;
+      }
     }
 
     /* Scrollbar */
@@ -1394,6 +1623,7 @@
       <div class="stat-item">
         <div class="stat-value" id="streakDays">0</div>
         <div class="stat-label">連続日数</div>
+        <div id="streakBadge"></div>
       </div>
       <div class="stat-item">
         <div class="stat-value" id="totalSessions">0</div>
@@ -1402,7 +1632,7 @@
     </section>
 
     <!-- Progress -->
-    <section class="progress-section">
+    <section class="progress-section" id="progressSection">
       <div class="section-header">
         <span class="section-title">週間目標</span>
         <span class="section-value" id="progressValue">0 / 1800 分</span>
@@ -1410,6 +1640,7 @@
       <div class="progress-track">
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
+      <div id="progressCelebration"></div>
     </section>
 
     <!-- Charts -->
@@ -1639,11 +1870,11 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">日付</label>
+          <label class="form-label required">日付</label>
           <input type="date" class="form-input" id="studyDate">
         </div>
         <div class="form-group">
-          <label class="form-label">科目</label>
+          <label class="form-label required">科目</label>
           <div class="btn-group" id="subjectButtons">
             <button class="btn-option" data-value="現代文">現代文</button>
             <button class="btn-option" data-value="古文">古文</button>
@@ -1670,7 +1901,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">学習時間</label>
+          <label class="form-label required">学習時間</label>
           <div class="btn-group" id="timeButtons">
             <button class="btn-option" data-value="15">15分</button>
             <button class="btn-option" data-value="30">30分</button>
@@ -1721,12 +1952,12 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">日付</label>
+          <label class="form-label required">日付</label>
           <input type="date" class="form-input" id="redbookDate">
         </div>
         <div class="form-group">
-          <label class="form-label">大学名</label>
-          <select class="form-input form-select" id="redbookUniversity">
+          <label class="form-label required">大学名</label>
+          <select class="form-input form-select" id="redbookUniversity" onchange="toggleCustomUniversity()">
             <option value="">選択してください</option>
             <option value="立教大学">立教大学</option>
             <option value="青山学院大学">青山学院大学</option>
@@ -1739,10 +1970,14 @@
             <option value="日本大学">日本大学</option>
             <option value="専修大学">専修大学</option>
             <option value="共通テスト">共通テスト</option>
+            <option value="__custom__">その他（入力する）</option>
           </select>
+          <div class="custom-input-wrapper" id="customUniversityWrapper">
+            <input type="text" class="form-input" id="customUniversity" placeholder="大学名を入力">
+          </div>
         </div>
         <div class="form-group">
-          <label class="form-label">科目</label>
+          <label class="form-label required">科目</label>
           <select class="form-input form-select" id="redbookSubject">
             <option value="">選択してください</option>
             <optgroup label="英語">
@@ -1765,7 +2000,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">年度</label>
+          <label class="form-label required">年度</label>
           <select class="form-input form-select" id="redbookYear">
             <option value="">選択してください</option>
             <option value="2025">2025年</option>
@@ -1784,7 +2019,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">得点</label>
+          <label class="form-label required">得点</label>
           <div class="score-input-container">
             <div class="score-row score-total">
               <span class="score-label">総合</span>
@@ -1986,8 +2221,25 @@
           <label class="form-label">共通テスト日</label>
           <input type="date" class="form-input" id="settingsExamDate">
         </div>
+        
+        <!-- データ管理セクション -->
+        <div class="form-group" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
+          <label class="form-label">データ管理</label>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn btn-outline" onclick="openDataManager('study')" style="flex: 1; min-width: 120px;">
+              📖 学習記録
+            </button>
+            <button class="btn btn-outline" onclick="openDataManager('redbook')" style="flex: 1; min-width: 120px;">
+              📕 過去問記録
+            </button>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--gray-400); margin-top: 0.5rem;">
+            記録の確認・削除ができます
+          </p>
+        </div>
+        
         <div class="version-info">
-          <span id="appVersionDisplay">v1.3.1</span>
+          <span id="appVersionDisplay">v1.4.0</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -1997,12 +2249,30 @@
     </div>
   </div>
 
+  <!-- データ管理モーダル -->
+  <div class="modal-overlay" id="dataManagerModal">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="dataManagerTitle">データ管理</h2>
+        <button class="modal-close" onclick="closeDataManager()">×</button>
+      </div>
+      <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+        <div id="dataManagerContent">
+          <!-- 動的に生成 -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeDataManager()">閉じる</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.4.0';
-    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyOYg3MvoNtpzrDGH1Rv7oUSDC9TDLM1KYWApe9Luj-6hjua1rKF_xwDG4wS5WisxB1Bg/exec';
+    const APP_VERSION = '1.5.1';
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwMcgFgV_UFoSYJDNiHWrvGvRtWY3cUt8ZfGTqj4RArOf7hYyX38_Zh5gpheG1XPTgzdQ/exec';
     
     (function checkVersion() {
       const storedVersion = localStorage.getItem('appVersion');
@@ -2438,6 +2708,18 @@
       const streakDays = calculateStreak({ dates: allDates });
       document.getElementById('streakDays').textContent = streakDays;
       
+      // 連続日数のバッジを追加
+      const streakBadge = document.getElementById('streakBadge');
+      if (streakDays >= 7) {
+        const badgeClass = streakDays >= 14 ? 'fire' : 'hot';
+        const badgeText = streakDays >= 14 ? '🔥 すごい！' : '✨ いい調子！';
+        streakBadge.innerHTML = `<span class="streak-badge ${badgeClass}">${badgeText}</span>`;
+      } else if (streakDays >= 3) {
+        streakBadge.innerHTML = `<span class="streak-badge">📈 継続中</span>`;
+      } else {
+        streakBadge.innerHTML = '';
+      }
+      
       // 学習回数（学習記録 + 赤本記録）
       const monthStudySessions = logs.filter(log => new Date(log.date) >= monthAgo).length;
       const monthRedbookSessions = redbookLogs.filter(log => new Date(log.date) >= monthAgo).length;
@@ -2503,6 +2785,29 @@
       
       document.getElementById('progressValue').textContent = `${weekMinutes} / ${goal} 分`;
       document.getElementById('progressFill').style.width = `${percent}%`;
+      
+      // 目標達成時のお祝い表示
+      const progressSection = document.getElementById('progressSection');
+      const celebration = document.getElementById('progressCelebration');
+      
+      if (percent >= 100) {
+        progressSection.classList.add('achieved');
+        celebration.innerHTML = `
+          <div class="progress-celebration">
+            🎉 週間目標達成！おめでとう！
+          </div>
+        `;
+      } else if (percent >= 80) {
+        progressSection.classList.remove('achieved');
+        celebration.innerHTML = `
+          <div class="progress-celebration" style="background: #fffbeb; border-color: #fde68a; color: #d97706;">
+            💪 あと少し！残り ${goal - weekMinutes} 分
+          </div>
+        `;
+      } else {
+        progressSection.classList.remove('achieved');
+        celebration.innerHTML = '';
+      }
     }
     
     function renderCharts() {
@@ -2545,12 +2850,15 @@
         });
       }
       
+      // ミニマルで落ち着いた見やすいカラーパレット
       const colors = {
-        '英語': '#0a0a0a',
-        '数学': '#525252',
-        '国語': '#a3a3a3',
-        '過去問': '#ef4444',
-        'その他': '#d4d4d4'
+        '英語': '#5E81AC',    // 落ち着いたブルー
+        '数学': '#A3BE8C',    // 落ち着いたグリーン
+        '国語': '#EBCB8B',    // 落ち着いたイエロー
+        '理科': '#B48EAD',    // 落ち着いたパープル
+        '社会': '#D08770',    // 落ち着いたオレンジ
+        '過去問': '#BF616A',  // 落ち着いたレッド
+        'その他': '#4C566A'   // ダークグレー
       };
       
       const datasets = Object.entries(subjectData).map(([subject, data]) => ({
@@ -2629,7 +2937,20 @@
       
       const sortedSubjects = Object.entries(subjectMinutes).sort((a, b) => b[1] - a[1]);
       
-      const grays = ['#0a0a0a', '#262626', '#404040', '#525252', '#737373', '#a3a3a3', '#d4d4d4', '#e5e5e5', '#f5f5f5'];
+      // 科目ごとに固定色を割り当て
+      const subjectColors = {
+        '英語': '#5E81AC',
+        '数学': '#A3BE8C',
+        '国語': '#EBCB8B',
+        '理科': '#B48EAD',
+        '社会': '#D08770',
+        '過去問演習': '#BF616A',
+        'その他': '#4C566A'
+      };
+      
+      // 色の配列を生成（科目に対応した色、なければデフォルトカラー配列から）
+      const defaultColors = ['#5E81AC', '#A3BE8C', '#EBCB8B', '#B48EAD', '#D08770', '#BF616A', '#88C0D0', '#81A1C1'];
+      const chartColors = sortedSubjects.map((s, i) => subjectColors[s[0]] || defaultColors[i % defaultColors.length]);
       
       if (subjectChart) subjectChart.destroy();
       
@@ -2639,7 +2960,7 @@
           labels: sortedSubjects.map(s => s[0]),
           datasets: [{
             data: sortedSubjects.map(s => s[1]),
-            backgroundColor: grays.slice(0, sortedSubjects.length),
+            backgroundColor: chartColors,
             borderWidth: 0
           }]
         },
@@ -2688,7 +3009,13 @@
       const goals = appData.goals || [];
       
       if (goals.length === 0) {
-        section.innerHTML = '<div class="empty-state">目標が設定されていません</div>';
+        section.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎯</div>
+            <div class="empty-state-title">目標が設定されていません</div>
+            <div class="empty-state-desc">スプレッドシートの「目標」シートで<br>科目ごとの目標を設定できます</div>
+          </div>
+        `;
         return;
       }
       
@@ -2697,11 +3024,12 @@
       section.innerHTML = goals.map(goal => {
         const progress = Math.min(100, Math.round(((goal.current) / (goal.target)) * 100));
         const cls = classes[goal.subject] || 'kokugo';
+        const isAchieved = goal.current >= goal.target;
         
         return `
           <div class="goal-item">
             <div class="goal-header">
-              <span class="goal-name">${goal.subject}</span>
+              <span class="goal-name">${goal.subject}${isAchieved ? '<span class="goal-achieved">🏆 達成！</span>' : ''}</span>
               <span class="goal-values">${goal.current}% → ${goal.target}%</span>
             </div>
             <div class="goal-bar">
@@ -2717,11 +3045,20 @@
       const logs = (appData.studyLogs || []).slice(0, 8);
       
       if (logs.length === 0) {
-        container.innerHTML = '<div class="empty-state">まだ記録がありません</div>';
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📖</div>
+            <div class="empty-state-title">まだ記録がありません</div>
+            <div class="empty-state-desc">学習を記録して、<br>毎日の頑張りを見える化しよう！</div>
+            <button class="empty-state-btn" onclick="openStudyModal()">
+              ＋ 最初の記録をつける
+            </button>
+          </div>
+        `;
         return;
       }
       
-      container.innerHTML = logs.map(log => {
+      container.innerHTML = logs.map((log, index) => {
         const hasDetails = log.memo || log.textbook || log.unit || log.studyType;
         return `
         <div class="record-item ${hasDetails ? 'has-details' : ''}">
@@ -2748,11 +3085,20 @@
       const logs = (appData.redbookLogs || []).slice(0, 8);
       
       if (logs.length === 0) {
-        container.innerHTML = '<div class="empty-state">まだ記録がありません</div>';
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📕</div>
+            <div class="empty-state-title">まだ記録がありません</div>
+            <div class="empty-state-desc">過去問を解いたら記録して、<br>成績の推移を確認しよう！</div>
+            <button class="empty-state-btn" onclick="openRedbookModal()">
+              ＋ 最初の記録をつける
+            </button>
+          </div>
+        `;
         return;
       }
       
-      container.innerHTML = logs.map(log => {
+      container.innerHTML = logs.map((log, index) => {
         const scoreClass = log.score >= 70 ? 'high' : log.score >= 50 ? 'mid' : 'low';
         const hasDetails = log.memo || log.time || log.sectionScores || log.weakAreas;
         return `
@@ -2812,10 +3158,155 @@
       toggleFab();
       resetRedbookForm();
       document.getElementById('redbookModal').classList.add('active');
+      // カスタム入力を隠す
+      document.getElementById('customUniversityWrapper').classList.remove('show');
     }
     
     function closeRedbookModal() {
       document.getElementById('redbookModal').classList.remove('active');
+    }
+    
+    // カスタム大学入力の表示切替
+    function toggleCustomUniversity() {
+      const select = document.getElementById('redbookUniversity');
+      const wrapper = document.getElementById('customUniversityWrapper');
+      
+      if (select.value === '__custom__') {
+        wrapper.classList.add('show');
+        document.getElementById('customUniversity').focus();
+      } else {
+        wrapper.classList.remove('show');
+      }
+    }
+    
+    // 記録削除
+    // ==========================================
+    // データ管理
+    // ==========================================
+    let currentManagerType = '';
+    
+    function openDataManager(type) {
+      currentManagerType = type;
+      const modal = document.getElementById('dataManagerModal');
+      const title = document.getElementById('dataManagerTitle');
+      
+      if (type === 'study') {
+        title.textContent = '📖 学習記録の管理';
+        renderStudyManager();
+      } else {
+        title.textContent = '📕 過去問記録の管理';
+        renderRedbookManager();
+      }
+      
+      modal.classList.add('active');
+    }
+    
+    function closeDataManager() {
+      document.getElementById('dataManagerModal').classList.remove('active');
+      currentManagerType = '';
+    }
+    
+    function renderStudyManager() {
+      const container = document.getElementById('dataManagerContent');
+      const logs = appData.studyLogs || [];
+      
+      if (logs.length === 0) {
+        container.innerHTML = '<div class="manager-empty">記録がありません</div>';
+        return;
+      }
+      
+      container.innerHTML = logs.map((log, index) => `
+        <div class="manager-item">
+          <div class="manager-item-info">
+            <div class="manager-item-main">
+              <span class="manager-item-date">${formatDateShort(log.date)}</span>
+              <span class="manager-item-subject">${log.subject}</span>
+              <span>${log.minutes}分</span>
+              <span>${log.mood || ''}</span>
+            </div>
+            ${log.studyType || log.unit || log.memo ? `
+              <div class="manager-item-detail">
+                ${log.studyType ? log.studyType : ''}
+                ${log.unit ? ' / ' + log.unit : ''}
+                ${log.memo ? ' / ' + log.memo : ''}
+              </div>
+            ` : ''}
+          </div>
+          <button class="manager-delete-btn" onclick="deleteStudyLog(${index})" title="削除">🗑</button>
+        </div>
+      `).join('');
+    }
+    
+    function renderRedbookManager() {
+      const container = document.getElementById('dataManagerContent');
+      const logs = appData.redbookLogs || [];
+      
+      if (logs.length === 0) {
+        container.innerHTML = '<div class="manager-empty">記録がありません</div>';
+        return;
+      }
+      
+      container.innerHTML = logs.map((log, index) => `
+        <div class="manager-item">
+          <div class="manager-item-info">
+            <div class="manager-item-main">
+              <span class="manager-item-date">${formatDateShort(log.date)}</span>
+              <span class="manager-item-subject">${log.university}</span>
+              <span>${log.subject}</span>
+              <span>${log.score}%</span>
+            </div>
+            ${log.year || log.memo ? `
+              <div class="manager-item-detail">
+                ${log.year ? log.year + '年度' : ''}
+                ${log.memo ? ' / ' + log.memo : ''}
+              </div>
+            ` : ''}
+          </div>
+          <button class="manager-delete-btn" onclick="deleteRedbookLog(${index})" title="削除">🗑</button>
+        </div>
+      `).join('');
+    }
+    
+    async function deleteStudyLog(index) {
+      if (!confirm('この学習記録を削除しますか？')) return;
+      
+      showLoading();
+      try {
+        await postData({
+          action: 'deleteStudyLog',
+          index: index
+        });
+        showToast('記録を削除しました');
+        await refreshData();
+        // 管理画面が開いていたら再描画
+        if (currentManagerType === 'study') {
+          renderStudyManager();
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+        hideLoading();
+      }
+    }
+    
+    async function deleteRedbookLog(index) {
+      if (!confirm('この過去問記録を削除しますか？')) return;
+      
+      showLoading();
+      try {
+        await postData({
+          action: 'deleteRedbookLog',
+          index: index
+        });
+        showToast('記録を削除しました');
+        await refreshData();
+        // 管理画面が開いていたら再描画
+        if (currentManagerType === 'redbook') {
+          renderRedbookManager();
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+        hideLoading();
+      }
     }
     
     // 得点計算
@@ -2989,9 +3480,18 @@
     }
     
     async function submitRedbookLog() {
-      const university = document.getElementById('redbookUniversity').value;
+      let university = document.getElementById('redbookUniversity').value;
       const subject = document.getElementById('redbookSubject').value;
       const year = document.getElementById('redbookYear').value;
+      
+      // カスタム大学の処理
+      if (university === '__custom__') {
+        university = document.getElementById('customUniversity').value.trim();
+        if (!university) {
+          showToast('大学名を入力してください', 'error');
+          return;
+        }
+      }
       
       // 総合得点を取得
       const totalGot = parseInt(document.getElementById('totalScoreGot').value) || 0;
@@ -3837,7 +4337,7 @@
           datasets: [{
             label: '平均学習時間（分）',
             data: dayAvgs,
-            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+            backgroundColor: '#5E81AC'
           }]
         },
         options: {
@@ -4061,8 +4561,8 @@
           datasets: [{
             label: '得点率（%）',
             data: filtered.map(l => l.score),
-            borderColor: 'rgba(0, 0, 0, 0.8)',
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            borderColor: '#BF616A',
+            backgroundColor: 'rgba(191, 97, 106, 0.1)',
             fill: true,
             tension: 0.3
           }]
@@ -4161,6 +4661,12 @@
           break;
         case 'motivation':
           prompt = generateMotivationPrompt(analysis);
+          break;
+        case 'section':
+          prompt = generateSectionPrompt(analysis);
+          break;
+        case 'efficiency':
+          prompt = generateEfficiencyPrompt(analysis);
           break;
       }
       
@@ -5973,148 +6479,6 @@ ${uniData.avgTime ? `**平均解答時間**: ${uniData.avgTime}分` : ''}
     }
     
     // ==========================================
-    // 過去問戦略プロンプト
-    // ==========================================
-    
-    function generateRedbookPrompt(a) {
-      const { profile, daysUntil, redbookAnalysis, goalAnalysis, redbookLogs, subjectAnalysis } = a;
-      
-      // 過去問の詳細分析
-      const universityStats = {};
-      const subjectStats = {};
-      
-      redbookLogs.forEach(log => {
-        // 大学別
-        if (!universityStats[log.university]) {
-          universityStats[log.university] = { scores: [], times: [], count: 0 };
-        }
-        universityStats[log.university].scores.push(log.score);
-        if (log.time) universityStats[log.university].times.push(log.time);
-        universityStats[log.university].count++;
-        
-        // 科目別
-        const subject = log.subject || '不明';
-        if (!subjectStats[subject]) {
-          subjectStats[subject] = { scores: [], times: [], count: 0 };
-        }
-        subjectStats[subject].scores.push(log.score);
-        if (log.time) subjectStats[subject].times.push(log.time);
-        subjectStats[subject].count++;
-      });
-      
-      let p = `あなたは大学受験の過去問対策のエキスパートです。以下のデータを分析し、過去問演習の戦略を立ててください。
-
----
-
-# 📋 基本情報
-
-**志望校**: ${profile['第1志望'] || '未設定'}`;
-      if (profile['第2志望']) p += `
-**併願校**: ${profile['第2志望']}${profile['第3志望'] ? '、' + profile['第3志望'] : ''}`;
-      p += `
-**試験まで**: ${daysUntil}日
-
----
-
-# 📕 過去問演習の全体像
-
-**演習回数**: ${redbookAnalysis.totalAttempts}回
-**平均得点率**: ${redbookAnalysis.avgScore}%
-**得点傾向**: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降気味' : '➡️ 安定'}
-
-`;
-      
-      // 大学別の成績
-      if (Object.keys(universityStats).length > 0) {
-        p += `## 🏫 大学別の成績\n\n`;
-        p += `| 大学 | 演習回数 | 平均得点率 | 平均時間 | 傾向 |\n`;
-        p += `|------|----------|------------|----------|------|\n`;
-        Object.entries(universityStats).forEach(([uni, data]) => {
-          const avgScore = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
-          const avgTime = data.times.length > 0 
-            ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) + '分'
-            : '-';
-          const trend = data.scores.length >= 2 
-            ? (data.scores[data.scores.length - 1] > data.scores[0] ? '↑' : data.scores[data.scores.length - 1] < data.scores[0] ? '↓' : '→')
-            : '-';
-          const icon = avgScore >= 70 ? '🟢' : avgScore >= 50 ? '🟡' : '🔴';
-          p += `| ${uni} | ${data.count}回 | ${icon} ${avgScore}% | ${avgTime} | ${trend} |\n`;
-        });
-        p += `\n`;
-      }
-      
-      // 科目別の成績
-      if (Object.keys(subjectStats).length > 0) {
-        p += `## 📚 科目別の成績\n\n`;
-        Object.entries(subjectStats).forEach(([subject, data]) => {
-          const avgScore = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
-          const avgTime = data.times.length > 0 
-            ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length)
-            : null;
-          const icon = avgScore >= 70 ? '🟢' : avgScore >= 50 ? '🟡' : '🔴';
-          p += `- **${subject}**: ${icon} 平均${avgScore}%（${data.count}回）`;
-          if (avgTime) p += ` ⏱️${avgTime}分`;
-          p += `\n`;
-        });
-        p += `\n`;
-      }
-      
-      // 繰り返し間違える分野
-      if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
-        p += `## ⚠️ 繰り返し間違える分野\n\n`;
-        const sorted = Object.entries(redbookAnalysis.weakAreasSummary).sort((a, b) => b[1] - a[1]);
-        sorted.forEach(([area, count]) => {
-          const severity = count >= 3 ? '🔴' : count >= 2 ? '🟡' : '⚪';
-          p += `- ${severity} **${area}**: ${count}回\n`;
-        });
-        p += `\n`;
-      }
-      
-      // 全演習記録
-      p += `## 📝 演習記録（新しい順）\n\n`;
-      [...redbookLogs].reverse().slice(0, 10).forEach(log => {
-        const icon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
-        p += `### ${log.date} ${log.university} ${log.subject || ''} ${log.year}年\n`;
-        p += `- 得点率: ${icon} **${log.score}%**\n`;
-        if (log.time) p += `- 解答時間: ${log.time}分\n`;
-        if (log.sectionScores) p += `- 大問別: ${log.sectionScores}\n`;
-        if (log.weakAreas) p += `- 間違えた分野: ${log.weakAreas}\n`;
-        if (log.memo) p += `- 振り返り: ${log.memo}\n`;
-        p += `\n`;
-      });
-      
-      p += `---
-
-# 🎯 相談内容
-
-過去問演習の戦略について、具体的なアドバイスをください。
-
-## 回答に含めてほしいこと
-
-1. **現状の評価**
-   - 過去問演習の進み具合は順調か
-   - 得点率から見える課題
-
-2. **今後の演習計画**
-   - どの大学の過去問を優先すべきか
-   - 何年分くらい解くべきか
-   - 演習頻度の目安
-
-3. **弱点分野への対処**
-   - 繰り返し間違える分野の具体的な対策
-   - インプットに戻るべきか、演習を続けるべきか
-
-4. **時間配分の改善**
-   - 解答時間は適切か
-   - スピードを上げるべき大問
-
-5. **試験直前の過去問活用法**
-   - 新しい年度を解くべきか、復習すべきか`;
-      
-      return p;
-    }
-    
-    // ==========================================
     // 大問別攻略プロンプト
     // ==========================================
     
@@ -6232,102 +6596,6 @@ ${uniData.avgTime ? `**平均解答時間**: ${uniData.avgTime}分` : ''}
 3. **苦手な大問への対策** - 具体的な学習方法、捨て問の判断基準
 4. **時間管理戦略** - 各大問の目標解答時間
 5. **試験当日の解答順序** - 最適な順序の提案`;
-      
-      return p;
-    }
-    
-    // ==========================================
-    // 大学別対策プロンプト
-    // ==========================================
-    
-    function generateUniversityPrompt(a) {
-      const { profile, daysUntil, redbookLogs, redbookAnalysis, goalAnalysis } = a;
-      
-      const selectedUniversity = document.getElementById('aiUniversitySelect')?.value;
-      if (!selectedUniversity) {
-        return '↑上の「対策したい大学」を選択してください。';
-      }
-      
-      const uniLogs = redbookLogs.filter(log => log.university === selectedUniversity);
-      
-      if (uniLogs.length === 0) {
-        return `「${selectedUniversity}」の過去問演習データがまだありません。\n\n先に過去問を解いて記録してから、この機能をご利用ください。`;
-      }
-      
-      const subjectScores = {};
-      const weakAreas = {};
-      
-      uniLogs.forEach(log => {
-        const subject = log.subject || '不明';
-        if (!subjectScores[subject]) {
-          subjectScores[subject] = { scores: [], times: [] };
-        }
-        subjectScores[subject].scores.push(log.score);
-        if (log.time) subjectScores[subject].times.push(log.time);
-        
-        if (log.weakAreas) {
-          log.weakAreas.split(/[,、]/).forEach(area => {
-            const trimmed = area.trim();
-            if (trimmed) weakAreas[trimmed] = (weakAreas[trimmed] || 0) + 1;
-          });
-        }
-      });
-      
-      let p = `あなたは「${selectedUniversity}」の入試対策のエキスパートです。以下のデータを分析し、合格に向けた具体的な戦略を立ててください。
-
----
-
-# 🏫 ${selectedUniversity} 対策
-
-**試験まで**: ${daysUntil}日
-**演習回数**: ${uniLogs.length}回
-**平均得点率**: ${Math.round(uniLogs.reduce((s, l) => s + l.score, 0) / uniLogs.length)}%
-
-## 📚 科目別の成績
-
-| 科目 | 演習回数 | 平均得点率 | 最高点 | 最低点 | 平均時間 |
-|------|----------|------------|--------|--------|----------|
-`;
-      Object.entries(subjectScores).forEach(([subject, data]) => {
-        const avg = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
-        const max = Math.max(...data.scores);
-        const min = Math.min(...data.scores);
-        const avgTime = data.times.length > 0 
-          ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) + '分' : '-';
-        const icon = avg >= 70 ? '🟢' : avg >= 50 ? '🟡' : '🔴';
-        p += `| ${subject} | ${data.scores.length}回 | ${icon} ${avg}% | ${max}% | ${min}% | ${avgTime} |\n`;
-      });
-      
-      if (Object.keys(weakAreas).length > 0) {
-        p += `\n## ⚠️ この大学でよく間違える分野\n\n`;
-        Object.entries(weakAreas).sort((a, b) => b[1] - a[1]).forEach(([area, count]) => {
-          p += `- **${area}**: ${count}回\n`;
-        });
-      }
-      
-      p += `\n## 📝 演習記録\n\n`;
-      [...uniLogs].reverse().forEach(log => {
-        const icon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
-        p += `- ${log.date} ${log.subject || ''} ${log.year}年: ${icon} ${log.score}%`;
-        if (log.time) p += ` (${log.time}分)`;
-        if (log.weakAreas) p += ` → ${log.weakAreas}`;
-        p += `\n`;
-      });
-      
-      p += `
----
-
-# 🎯 相談内容
-
-${selectedUniversity}に合格するための具体的な対策を教えてください。
-
-## 回答に含めてほしいこと
-
-1. **現状の評価** - 合格可能性の客観的判断
-2. **この大学の出題傾向** - 過去問から読み取れる特徴
-3. **科目別の対策** - 各科目の目標点と重点対策分野
-4. **残り${daysUntil}日の学習計画** - 週ごとの目標
-5. **試験当日の戦略** - 時間配分、解答順序`;
       
       return p;
     }
