@@ -773,6 +773,92 @@
       color: var(--gray-700);
     }
 
+    /* Score Input */
+    .score-input-container {
+      background: var(--gray-50);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .score-row.score-total {
+      background: var(--white);
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--gray-200);
+    }
+
+    .score-label {
+      min-width: 50px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .section-name {
+      width: 70px !important;
+      min-width: 70px;
+      padding: 0.5rem !important;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .score-inputs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .score-box {
+      width: 70px !important;
+      text-align: center;
+      padding: 0.5rem !important;
+    }
+
+    .score-box:read-only {
+      background: var(--gray-100);
+      font-weight: 600;
+    }
+
+    .score-divider {
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .score-percent {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      min-width: 60px;
+    }
+
+    .score-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .btn-sm {
+      padding: 0.375rem 1rem;
+      font-size: 1.25rem;
+      min-width: 44px;
+    }
+
+    #sectionScoresContainer {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
     /* Loading */
     .loading-overlay {
       position: fixed;
@@ -1181,16 +1267,44 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">得点率（%）</label>
-          <input type="number" class="form-input" id="redbookScore" min="0" max="100" placeholder="例: 75">
+          <label class="form-label">得点</label>
+          <div class="score-input-container">
+            <div class="score-row score-total">
+              <span class="score-label">総合</span>
+              <div class="score-inputs">
+                <input type="number" class="form-input score-box" id="totalScoreGot" readonly placeholder="0">
+                <span class="score-divider">/</span>
+                <input type="number" class="form-input score-box" id="totalScoreMax" readonly placeholder="0">
+                <span class="score-percent" id="totalScorePercent">（0%）</span>
+              </div>
+            </div>
+            <div id="sectionScoresContainer">
+              <div class="score-row" data-section="1">
+                <input type="text" class="form-input section-name" value="大問1" placeholder="大問1">
+                <div class="score-inputs">
+                  <input type="number" class="form-input score-box section-got" min="0" placeholder="0" oninput="calculateTotalScore()">
+                  <span class="score-divider">/</span>
+                  <input type="number" class="form-input score-box section-max" min="0" placeholder="0" oninput="calculateTotalScore()">
+                </div>
+              </div>
+              <div class="score-row" data-section="2">
+                <input type="text" class="form-input section-name" value="大問2" placeholder="大問2">
+                <div class="score-inputs">
+                  <input type="number" class="form-input score-box section-got" min="0" placeholder="0" oninput="calculateTotalScore()">
+                  <span class="score-divider">/</span>
+                  <input type="number" class="form-input score-box section-max" min="0" placeholder="0" oninput="calculateTotalScore()">
+                </div>
+              </div>
+            </div>
+            <div class="score-buttons">
+              <button type="button" class="btn btn-sm btn-outline" onclick="removeSection()">−</button>
+              <button type="button" class="btn btn-sm btn-outline" onclick="addSection()">＋</button>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">⏱️ 解答時間（分）</label>
           <input type="number" class="form-input" id="redbookTime" min="0" placeholder="例: 80">
-        </div>
-        <div class="form-group">
-          <label class="form-label">📝 大問ごとの得点（任意）</label>
-          <input type="text" class="form-input" id="redbookSectionScores" placeholder="例: 大問1:8/10, 大問2:12/20, 大問3:15/20">
         </div>
         <div class="form-group">
           <label class="form-label">📋 間違えた分野（任意）</label>
@@ -1298,7 +1412,7 @@
   </div>
 
   <script>
-    let API_URL = localStorage.getItem('apiUrl') || 'https://script.google.com/macros/s/AKfycbw-DjDh59MJbi4zQIgDNA5EI5eozWjN_tSU-v0YH0Bzvs744moswzobFyB9VNqRNef7KA/exec';
+    let API_URL = localStorage.getItem('apiUrl') || 'https://script.google.com/macros/s/AKfycbzS6GFMIHj71yWTrbBo9Vg1-G5iqrE_1eNt77Ltkz1d6bWqHc6-Eo_SbeibeTvxIkAGyw/exec';
     let appData = {
       studyLogs: [],
       redbookLogs: [],
@@ -1890,16 +2004,95 @@
       document.getElementById('redbookModal').classList.remove('active');
     }
     
+    // 得点計算
+    function calculateTotalScore() {
+      const container = document.getElementById('sectionScoresContainer');
+      const rows = container.querySelectorAll('.score-row');
+      
+      let totalGot = 0;
+      let totalMax = 0;
+      
+      rows.forEach(row => {
+        const got = parseInt(row.querySelector('.section-got').value) || 0;
+        const max = parseInt(row.querySelector('.section-max').value) || 0;
+        totalGot += got;
+        totalMax += max;
+      });
+      
+      document.getElementById('totalScoreGot').value = totalGot;
+      document.getElementById('totalScoreMax').value = totalMax;
+      
+      const percent = totalMax > 0 ? Math.round((totalGot / totalMax) * 100) : 0;
+      document.getElementById('totalScorePercent').textContent = `（${percent}%）`;
+    }
+    
+    // 大問追加
+    function addSection() {
+      const container = document.getElementById('sectionScoresContainer');
+      const currentCount = container.querySelectorAll('.score-row').length;
+      const newSection = currentCount + 1;
+      
+      const row = document.createElement('div');
+      row.className = 'score-row';
+      row.dataset.section = newSection;
+      row.innerHTML = `
+        <input type="text" class="form-input section-name" value="大問${newSection}" placeholder="大問${newSection}">
+        <div class="score-inputs">
+          <input type="number" class="form-input score-box section-got" min="0" placeholder="0" oninput="calculateTotalScore()">
+          <span class="score-divider">/</span>
+          <input type="number" class="form-input score-box section-max" min="0" placeholder="0" oninput="calculateTotalScore()">
+        </div>
+      `;
+      
+      container.appendChild(row);
+    }
+    
+    // 大問削除
+    function removeSection() {
+      const container = document.getElementById('sectionScoresContainer');
+      const rows = container.querySelectorAll('.score-row');
+      
+      if (rows.length > 1) {
+        rows[rows.length - 1].remove();
+        calculateTotalScore();
+      }
+    }
+    
+    // 大問入力をリセット（デフォルト2問に戻す）
+    function resetSectionScores() {
+      const container = document.getElementById('sectionScoresContainer');
+      container.innerHTML = `
+        <div class="score-row" data-section="1">
+          <input type="text" class="form-input section-name" value="大問1" placeholder="大問1">
+          <div class="score-inputs">
+            <input type="number" class="form-input score-box section-got" min="0" placeholder="0" oninput="calculateTotalScore()">
+            <span class="score-divider">/</span>
+            <input type="number" class="form-input score-box section-max" min="0" placeholder="0" oninput="calculateTotalScore()">
+          </div>
+        </div>
+        <div class="score-row" data-section="2">
+          <input type="text" class="form-input section-name" value="大問2" placeholder="大問2">
+          <div class="score-inputs">
+            <input type="number" class="form-input score-box section-got" min="0" placeholder="0" oninput="calculateTotalScore()">
+            <span class="score-divider">/</span>
+            <input type="number" class="form-input score-box section-max" min="0" placeholder="0" oninput="calculateTotalScore()">
+          </div>
+        </div>
+      `;
+      document.getElementById('totalScoreGot').value = '';
+      document.getElementById('totalScoreMax').value = '';
+      document.getElementById('totalScorePercent').textContent = '（0%）';
+    }
+    
     function resetRedbookForm() {
       document.getElementById('redbookDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('redbookUniversity').value = '';
       document.getElementById('redbookSubject').value = '';
       document.getElementById('redbookYear').value = '';
-      document.getElementById('redbookScore').value = '';
       document.getElementById('redbookTime').value = '';
-      document.getElementById('redbookSectionScores').value = '';
       document.getElementById('redbookWeakAreas').value = '';
       document.getElementById('redbookMemo').value = '';
+      resetSectionScores();
     }
     
     function openAIModal() {
@@ -1955,12 +2148,32 @@
       const university = document.getElementById('redbookUniversity').value;
       const subject = document.getElementById('redbookSubject').value;
       const year = document.getElementById('redbookYear').value;
-      const score = document.getElementById('redbookScore').value;
+      
+      // 総合得点を取得
+      const totalGot = parseInt(document.getElementById('totalScoreGot').value) || 0;
+      const totalMax = parseInt(document.getElementById('totalScoreMax').value) || 0;
       
       if (!university) { showToast('大学を選択してください', 'error'); return; }
       if (!subject) { showToast('科目を選択してください', 'error'); return; }
       if (!year) { showToast('年度を選択してください', 'error'); return; }
-      if (!score) { showToast('得点率を入力してください', 'error'); return; }
+      if (totalMax === 0) { showToast('得点を入力してください', 'error'); return; }
+      
+      // 得点率を計算
+      const score = Math.round((totalGot / totalMax) * 100);
+      
+      // 大問ごとの得点を文字列形式で作成
+      const container = document.getElementById('sectionScoresContainer');
+      const rows = container.querySelectorAll('.score-row');
+      const sectionScoresArray = [];
+      rows.forEach(row => {
+        const name = row.querySelector('.section-name').value || '大問';
+        const got = row.querySelector('.section-got').value || '0';
+        const max = row.querySelector('.section-max').value || '0';
+        if (parseInt(max) > 0) {
+          sectionScoresArray.push(`${name}:${got}/${max}`);
+        }
+      });
+      const sectionScores = sectionScoresArray.join(', ');
       
       showLoading();
       
@@ -1971,9 +2184,9 @@
           university,
           subject,
           year,
-          score: parseInt(score),
+          score,
           time: document.getElementById('redbookTime').value ? parseInt(document.getElementById('redbookTime').value) : '',
-          sectionScores: document.getElementById('redbookSectionScores').value,
+          sectionScores,
           weakAreas: document.getElementById('redbookWeakAreas').value,
           memo: document.getElementById('redbookMemo').value
         });
