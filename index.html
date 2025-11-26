@@ -1523,7 +1523,7 @@
     }
     
     function renderCountdown() {
-      const examDate = localStorage.getItem('examDate') || '2025-01-18';
+      const examDate = localStorage.getItem('examDate') || '2026-01-17';
       const mainExam = new Date(examDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -1915,7 +1915,7 @@
     function openSettingsModal() {
       document.getElementById('settingsApiUrl').value = API_URL;
       document.getElementById('settingsWeeklyGoal').value = appData.settings?.weeklyGoalMinutes || 1800;
-      document.getElementById('settingsExamDate').value = localStorage.getItem('examDate') || '2025-01-18';
+      document.getElementById('settingsExamDate').value = localStorage.getItem('examDate') || '2026-01-17';
       document.getElementById('settingsModal').classList.add('active');
     }
     
@@ -2011,7 +2011,7 @@
     
     function analyzeStudyData(logs, redbookLogs, goals, profile) {
       const today = new Date();
-      const examDate = new Date(localStorage.getItem('examDate') || '2025-01-18');
+      const examDate = new Date(localStorage.getItem('examDate') || '2026-01-17');
       const daysUntil = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
       
       // 期間別ログ
