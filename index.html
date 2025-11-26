@@ -1206,6 +1206,10 @@
             <div class="ai-option-icon">🎯</div>
             <div class="ai-option-label">弱点分析</div>
           </div>
+          <div class="ai-option" data-type="prediction">
+            <div class="ai-option-icon">📊</div>
+            <div class="ai-option-label">得点予測</div>
+          </div>
           <div class="ai-option" data-type="subject">
             <div class="ai-option-icon">📚</div>
             <div class="ai-option-label">科目別相談</div>
@@ -1978,6 +1982,315 @@
       if (apiUrl) refreshData();
     }
     
+    // ==========================================
+    // 高度な分析エンジン
+    // ==========================================
+    
+    function analyzeStudyData(logs, redbookLogs, goals, profile) {
+      const today = new Date();
+      const examDate = new Date(localStorage.getItem('examDate') || '2025-01-18');
+      const daysUntil = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+      
+      // 期間別ログ
+      const getLogsInRange = (days) => {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        return logs.filter(log => new Date(log.date) >= cutoff);
+      };
+      
+      const weekLogs = getLogsInRange(7);
+      const twoWeekLogs = getLogsInRange(14);
+      const monthLogs = getLogsInRange(30);
+      
+      // ========== 基本統計 ==========
+      const totalMinutes = logs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const weekMinutes = weekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const prevWeekMinutes = twoWeekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0) - weekMinutes;
+      const studyDays = new Set(logs.map(l => l.date)).size;
+      const streak = calculateStreak(logs);
+      
+      // ========== 曜日別パターン ==========
+      const dayOfWeekStats = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+      const dayOfWeekCount = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+      logs.forEach(log => {
+        const dow = new Date(log.date).getDay();
+        dayOfWeekStats[dow] += log.minutes || 0;
+        dayOfWeekCount[dow]++;
+      });
+      const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+      const dayOfWeekAvg = {};
+      for (let i = 0; i < 7; i++) {
+        dayOfWeekAvg[dayNames[i]] = dayOfWeekCount[i] > 0 
+          ? Math.round(dayOfWeekStats[i] / dayOfWeekCount[i]) 
+          : 0;
+      }
+      
+      // 最も勉強する曜日・しない曜日
+      const sortedDays = Object.entries(dayOfWeekAvg).sort((a, b) => b[1] - a[1]);
+      const strongDays = sortedDays.filter(d => d[1] > 0).slice(0, 2).map(d => d[0]);
+      const weakDays = sortedDays.filter(d => d[1] >= 0).slice(-2).map(d => d[0]);
+      
+      // ========== 科目別詳細分析 ==========
+      const subjectAnalysis = {};
+      const categories = ['英語', '数学', '国語', 'その他'];
+      
+      categories.forEach(cat => {
+        const catLogs = logs.filter(log => categorizeSubject(log.subject) === cat);
+        const catWeekLogs = weekLogs.filter(log => categorizeSubject(log.subject) === cat);
+        const catPrevWeekLogs = twoWeekLogs.filter(log => categorizeSubject(log.subject) === cat && !catWeekLogs.includes(log));
+        
+        const weekMin = catWeekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+        const prevWeekMin = catPrevWeekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+        const totalMin = catLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+        
+        // 学習タイプ別
+        const typeBreakdown = {};
+        catWeekLogs.forEach(log => {
+          if (log.studyType) {
+            typeBreakdown[log.studyType] = (typeBreakdown[log.studyType] || 0) + (log.minutes || 0);
+          }
+        });
+        
+        // 手応え分析
+        const moodBreakdown = { excellent: 0, good: 0, neutral: 0, bad: 0, terrible: 0 };
+        catLogs.forEach(log => {
+          if (log.mood === '😊') moodBreakdown.excellent++;
+          else if (log.mood === '🙂') moodBreakdown.good++;
+          else if (log.mood === '😐') moodBreakdown.neutral++;
+          else if (log.mood === '😕') moodBreakdown.bad++;
+          else if (log.mood === '😫') moodBreakdown.terrible++;
+        });
+        
+        // 使用教材
+        const textbooks = {};
+        catLogs.forEach(log => {
+          if (log.textbook) {
+            textbooks[log.textbook] = (textbooks[log.textbook] || 0) + (log.minutes || 0);
+          }
+        });
+        
+        // 学習した単元
+        const units = catWeekLogs.filter(l => l.unit).map(l => l.unit);
+        
+        // 傾向判定
+        let trend = 'stable';
+        if (weekMin > prevWeekMin * 1.2) trend = 'increasing';
+        else if (weekMin < prevWeekMin * 0.8) trend = 'decreasing';
+        
+        subjectAnalysis[cat] = {
+          totalMinutes: totalMin,
+          weekMinutes: weekMin,
+          prevWeekMinutes: prevWeekMin,
+          trend,
+          typeBreakdown,
+          moodBreakdown,
+          textbooks,
+          recentUnits: units,
+          sessionCount: catLogs.length
+        };
+      });
+      
+      // ========== 学習タイプバランス ==========
+      const typeBalance = { 新規: 0, 復習: 0, 演習: 0, 暗記: 0, 過去問: 0, 模試: 0 };
+      weekLogs.forEach(log => {
+        if (log.studyType && typeBalance.hasOwnProperty(log.studyType)) {
+          typeBalance[log.studyType] += log.minutes || 0;
+        }
+      });
+      const typeTotal = Object.values(typeBalance).reduce((a, b) => a + b, 0);
+      const typePercentage = {};
+      Object.entries(typeBalance).forEach(([type, min]) => {
+        typePercentage[type] = typeTotal > 0 ? Math.round(min / typeTotal * 100) : 0;
+      });
+      
+      // タイプバランスの評価
+      let typeBalanceAssessment = [];
+      if (typePercentage['復習'] < 20) typeBalanceAssessment.push('復習が少なめ（定着に不安）');
+      if (typePercentage['演習'] < 15) typeBalanceAssessment.push('演習量が不足（実戦力に課題）');
+      if (typePercentage['新規'] > 50) typeBalanceAssessment.push('新規学習に偏重（消化不良の恐れ）');
+      
+      // ========== 過去問分析 ==========
+      const redbookAnalysis = {
+        totalAttempts: redbookLogs.length,
+        avgScore: 0,
+        scoresBySubject: {},
+        scoreTrend: 'stable',
+        weakAreasSummary: {},
+        timeManagement: { adequate: 0, rushed: 0, unknown: 0 }
+      };
+      
+      if (redbookLogs.length > 0) {
+        redbookAnalysis.avgScore = Math.round(
+          redbookLogs.reduce((sum, l) => sum + l.score, 0) / redbookLogs.length
+        );
+        
+        // 科目別平均
+        const subjectScores = {};
+        const subjectCounts = {};
+        redbookLogs.forEach(log => {
+          const cat = categorizeSubject(log.subject);
+          if (!subjectScores[cat]) {
+            subjectScores[cat] = 0;
+            subjectCounts[cat] = 0;
+          }
+          subjectScores[cat] += log.score;
+          subjectCounts[cat]++;
+        });
+        Object.keys(subjectScores).forEach(cat => {
+          redbookAnalysis.scoresBySubject[cat] = Math.round(subjectScores[cat] / subjectCounts[cat]);
+        });
+        
+        // 得点トレンド（直近5回 vs それ以前）
+        if (redbookLogs.length >= 4) {
+          const recent = redbookLogs.slice(0, Math.floor(redbookLogs.length / 2));
+          const older = redbookLogs.slice(Math.floor(redbookLogs.length / 2));
+          const recentAvg = recent.reduce((s, l) => s + l.score, 0) / recent.length;
+          const olderAvg = older.reduce((s, l) => s + l.score, 0) / older.length;
+          if (recentAvg > olderAvg + 5) redbookAnalysis.scoreTrend = 'improving';
+          else if (recentAvg < olderAvg - 5) redbookAnalysis.scoreTrend = 'declining';
+        }
+        
+        // 苦手分野集計
+        redbookLogs.forEach(log => {
+          if (log.weakAreas) {
+            log.weakAreas.split(/[,、]/).forEach(area => {
+              const trimmed = area.trim();
+              if (trimmed) {
+                redbookAnalysis.weakAreasSummary[trimmed] = 
+                  (redbookAnalysis.weakAreasSummary[trimmed] || 0) + 1;
+              }
+            });
+          }
+        });
+      }
+      
+      // ========== 目標達成分析 ==========
+      const goalAnalysis = goals.map(goal => {
+        const gap = goal.target - goal.current;
+        const mustGap = (goal.must || goal.target) - goal.current;
+        const subjectRedbook = redbookLogs.filter(l => categorizeSubject(l.subject) === goal.subject);
+        const recentScore = subjectRedbook.length > 0 ? subjectRedbook[0].score : goal.current;
+        
+        // 達成可能性判定
+        let feasibility = 'possible';
+        if (gap > 30 && daysUntil < 30) feasibility = 'challenging';
+        else if (gap > 20 && daysUntil < 14) feasibility = 'difficult';
+        else if (gap <= 10) feasibility = 'likely';
+        
+        // 必要な週間学習時間の推定（簡易）
+        const neededWeeklyHours = Math.max(1, Math.ceil(gap / 5));
+        
+        return {
+          subject: goal.subject,
+          current: goal.current,
+          target: goal.target,
+          must: goal.must || goal.target,
+          gap,
+          mustGap,
+          recentScore,
+          feasibility,
+          neededWeeklyHours
+        };
+      });
+      
+      // ========== リスク分析 ==========
+      const risks = [];
+      
+      // 学習量リスク
+      if (weekMinutes < 600) {
+        risks.push({ type: 'study_volume', severity: 'high', message: '週間学習時間が10時間未満で少なめ' });
+      } else if (weekMinutes < 900) {
+        risks.push({ type: 'study_volume', severity: 'medium', message: '週間学習時間が15時間未満' });
+      }
+      
+      // 科目バランスリスク
+      const subjectMinutes = Object.values(subjectAnalysis).map(s => s.weekMinutes);
+      const maxSubject = Math.max(...subjectMinutes);
+      const minSubject = Math.min(...subjectMinutes.filter(m => m > 0));
+      if (maxSubject > minSubject * 3) {
+        risks.push({ type: 'balance', severity: 'medium', message: '科目間の学習時間に大きな偏り' });
+      }
+      
+      // 過去問スコアリスク
+      if (redbookAnalysis.avgScore > 0 && redbookAnalysis.avgScore < 50) {
+        risks.push({ type: 'score', severity: 'high', message: '過去問の平均得点率が50%未満' });
+      }
+      
+      // 復習不足リスク
+      if (typePercentage['復習'] < 15) {
+        risks.push({ type: 'review', severity: 'medium', message: '復習の割合が少なく定着に不安' });
+      }
+      
+      // 継続性リスク
+      if (streak < 3 && studyDays > 7) {
+        risks.push({ type: 'consistency', severity: 'low', message: '連続学習が途切れがち' });
+      }
+      
+      // ========== 強みの特定 ==========
+      const strengths = [];
+      
+      if (streak >= 7) {
+        strengths.push({ type: 'consistency', message: `${streak}日連続学習を継続中` });
+      }
+      if (weekMinutes >= 1500) {
+        strengths.push({ type: 'volume', message: '十分な学習量を確保' });
+      }
+      if (redbookAnalysis.scoreTrend === 'improving') {
+        strengths.push({ type: 'progress', message: '過去問の得点が上昇傾向' });
+      }
+      
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        const goodMood = data.moodBreakdown.excellent + data.moodBreakdown.good;
+        const badMood = data.moodBreakdown.bad + data.moodBreakdown.terrible;
+        if (goodMood > badMood * 2 && goodMood >= 3) {
+          strengths.push({ type: 'confidence', message: `${cat}の学習で好調` });
+        }
+      });
+      
+      return {
+        // 基本情報
+        daysUntil,
+        totalMinutes,
+        weekMinutes,
+        prevWeekMinutes,
+        studyDays,
+        streak,
+        weekTrend: weekMinutes > prevWeekMinutes ? 'up' : weekMinutes < prevWeekMinutes ? 'down' : 'stable',
+        
+        // パターン
+        dayOfWeekAvg,
+        strongDays,
+        weakDays,
+        
+        // 科目別
+        subjectAnalysis,
+        
+        // タイプバランス
+        typeBalance,
+        typePercentage,
+        typeBalanceAssessment,
+        
+        // 過去問
+        redbookAnalysis,
+        
+        // 目標
+        goalAnalysis,
+        
+        // 評価
+        risks,
+        strengths,
+        
+        // 生データ
+        weekLogs,
+        redbookLogs,
+        profile
+      };
+    }
+    
+    // ==========================================
+    // プロンプト生成メイン
+    // ==========================================
+    
     function generatePrompt() {
       const preview = document.getElementById('promptPreview');
       const logs = appData.studyLogs || [];
@@ -1985,399 +2298,449 @@
       const profile = appData.profile || {};
       const goals = appData.goals || [];
       
-      const examDate = localStorage.getItem('examDate') || '2025-01-18';
-      const today = new Date();
-      const daysUntil = Math.ceil((new Date(examDate) - today) / (1000 * 60 * 60 * 24));
-      
-      // 今週のログ
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      const weekLogs = logs.filter(log => new Date(log.date) >= weekAgo);
-      const weekMinutes = weekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
-      
-      // 科目別統計（詳細版）
-      const subjectStats = {};
-      weekLogs.forEach(log => {
-        const cat = categorizeSubject(log.subject);
-        if (!subjectStats[cat]) subjectStats[cat] = { minutes: 0, details: {}, types: {}, units: [] };
-        subjectStats[cat].minutes += log.minutes || 0;
-        subjectStats[cat].details[log.subject] = (subjectStats[cat].details[log.subject] || 0) + (log.minutes || 0);
-        if (log.studyType) {
-          subjectStats[cat].types[log.studyType] = (subjectStats[cat].types[log.studyType] || 0) + (log.minutes || 0);
-        }
-        if (log.unit) {
-          subjectStats[cat].units.push(log.unit);
-        }
-      });
-      
-      // 学習タイプ別統計
-      const typeStats = {};
-      weekLogs.forEach(log => {
-        if (log.studyType) {
-          typeStats[log.studyType] = (typeStats[log.studyType] || 0) + (log.minutes || 0);
-        }
-      });
-      
-      // 手応え統計
-      const moodStats = { good: [], bad: [] };
-      weekLogs.forEach(log => {
-        if (log.mood === '😊' || log.mood === '🙂') moodStats.good.push({ subject: log.subject, unit: log.unit, memo: log.memo });
-        else if (log.mood === '😫' || log.mood === '😕') moodStats.bad.push({ subject: log.subject, unit: log.unit, memo: log.memo });
-      });
-      
-      // 苦手分野の集計（赤本から）
-      const weakAreasCount = {};
-      redbookLogs.forEach(log => {
-        if (log.weakAreas) {
-          log.weakAreas.split(/[,、]/).forEach(area => {
-            const trimmed = area.trim();
-            if (trimmed) {
-              weakAreasCount[trimmed] = (weakAreasCount[trimmed] || 0) + 1;
-            }
-          });
-        }
-      });
-      
-      // 使用教材の集計
-      const textbookCount = {};
-      logs.forEach(log => {
-        if (log.textbook) {
-          textbookCount[log.textbook] = (textbookCount[log.textbook] || 0) + (log.minutes || 0);
-        }
-      });
-      
-      // データをまとめる
-      const analysisData = {
-        profile,
-        goals,
-        daysUntil,
-        weekMinutes,
-        weekLogs,
-        subjectStats,
-        typeStats,
-        moodStats,
-        weakAreasCount,
-        textbookCount,
-        redbookLogs,
-        allLogs: logs,
-        streak: calculateStreak(logs)
-      };
+      // 高度な分析を実行
+      const analysis = analyzeStudyData(logs, redbookLogs, goals, profile);
       
       let prompt = '';
       
       switch (selectedAIType) {
         case 'weekly':
-          prompt = generateWeeklyPrompt(analysisData);
+          prompt = generateWeeklyPrompt(analysis);
           break;
         case 'daily':
-          prompt = generateDailyPrompt(analysisData);
+          prompt = generateDailyPrompt(analysis, logs);
           break;
         case 'weakness':
-          prompt = generateWeaknessPrompt(analysisData);
+          prompt = generateWeaknessPrompt(analysis);
+          break;
+        case 'prediction':
+          prompt = generatePredictionPrompt(analysis);
           break;
         case 'subject':
-          prompt = generateSubjectPrompt(analysisData);
+          prompt = generateSubjectPrompt(analysis);
           break;
         case 'lastspurt':
-          prompt = generateLastSpurtPrompt(analysisData);
+          prompt = generateLastSpurtPrompt(analysis);
           break;
         case 'motivation':
-          prompt = generateMotivationPrompt(analysisData);
+          prompt = generateMotivationPrompt(analysis);
           break;
       }
       
       preview.textContent = prompt;
     }
     
-    // ========== ヘルパー関数 ==========
+    // ==========================================
+    // 週間計画プロンプト
+    // ==========================================
     
-    function formatTypeStats(typeStats) {
-      const total = Object.values(typeStats).reduce((a, b) => a + b, 0);
-      if (total === 0) return '記録なし';
-      return Object.entries(typeStats)
-        .map(([type, min]) => `${type}: ${Math.round(min / total * 100)}%`)
-        .join('、');
-    }
-    
-    function getTopWeakAreas(weakAreasCount, limit = 5) {
-      return Object.entries(weakAreasCount)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, limit)
-        .map(([area, count]) => `${area}（${count}回）`)
-        .join('、');
-    }
-    
-    function getSubjectWeakAreas(redbookLogs, targetSubject) {
-      const areas = {};
-      redbookLogs.forEach(log => {
-        const cat = categorizeSubject(log.subject);
-        if (cat === targetSubject && log.weakAreas) {
-          log.weakAreas.split(/[,、]/).forEach(area => {
-            const trimmed = area.trim();
-            if (trimmed) areas[trimmed] = (areas[trimmed] || 0) + 1;
-          });
+    function generateWeeklyPrompt(a) {
+      const { profile, daysUntil, weekMinutes, prevWeekMinutes, weekTrend, streak,
+              subjectAnalysis, typePercentage, typeBalanceAssessment,
+              redbookAnalysis, goalAnalysis, risks, strengths, strongDays, weakDays } = a;
+      
+      let p = `あなたは大学受験専門の学習コーチです。以下の受験生のデータを分析し、来週の最適な学習計画を提案してください。
+
+---
+
+# 📋 受験生プロフィール
+
+**志望校**: ${profile['第1志望'] || '未設定'}`;
+      if (profile['第2志望']) p += `
+**併願校**: ${profile['第2志望']}${profile['第3志望'] ? '、' + profile['第3志望'] : ''}`;
+      p += `
+**試験まで**: ${daysUntil}日（約${Math.ceil(daysUntil / 7)}週間）
+**連続学習日数**: ${streak}日
+
+---
+
+# 📊 学習データ分析
+
+## 今週の学習実績
+
+**総学習時間**: ${formatMinutes(weekMinutes)}`;
+      if (prevWeekMinutes > 0) {
+        const change = weekMinutes - prevWeekMinutes;
+        const changeStr = change >= 0 ? `+${formatMinutes(change)}` : `-${formatMinutes(Math.abs(change))}`;
+        p += `（先週比: ${changeStr} ${weekTrend === 'up' ? '📈' : weekTrend === 'down' ? '📉' : '➡️'}）`;
+      }
+      
+      p += `\n\n### 科目別内訳\n`;
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        if (data.weekMinutes > 0) {
+          const pct = Math.round(data.weekMinutes / weekMinutes * 100);
+          const trendIcon = data.trend === 'increasing' ? '↑' : data.trend === 'decreasing' ? '↓' : '→';
+          p += `- **${cat}**: ${formatMinutes(data.weekMinutes)}（${pct}%）${trendIcon}\n`;
+          
+          // タイプ内訳があれば
+          if (Object.keys(data.typeBreakdown).length > 0) {
+            const types = Object.entries(data.typeBreakdown)
+              .map(([t, m]) => `${t}${Math.round(m / data.weekMinutes * 100)}%`)
+              .join(' / ');
+            p += `  └ ${types}\n`;
+          }
         }
       });
-      return areas;
-    }
-    
-    // ========== 週間計画プロンプト ==========
-    
-    function generateWeeklyPrompt(data) {
-      const { profile, goals, daysUntil, weekMinutes, subjectStats, typeStats, moodStats, weakAreasCount, redbookLogs } = data;
       
-      let p = `# 週間学習計画の相談\n\n`;
-      p += `## 私の基本情報\n\n`;
-      p += `- **志望校**: ${profile['第1志望'] || '未設定'}`;
-      if (profile['第2志望']) p += `（併願: ${profile['第2志望']}）`;
-      p += `\n- **試験まで**: あと${daysUntil}日\n`;
+      p += `\n### 学習タイプバランス\n`;
+      Object.entries(typePercentage).forEach(([type, pct]) => {
+        if (pct > 0) {
+          const bar = '█'.repeat(Math.round(pct / 10)) + '░'.repeat(10 - Math.round(pct / 10));
+          p += `- ${type}: ${bar} ${pct}%\n`;
+        }
+      });
       
-      if (goals.length > 0) {
-        p += `\n## 目標得点率\n\n`;
-        goals.forEach(g => {
-          const gap = g.target - g.current;
-          p += `- **${g.subject}**: 現状${g.current}% → 目標${g.target}%（あと+${gap}pt必要）\n`;
-        });
+      if (typeBalanceAssessment.length > 0) {
+        p += `\n⚠️ **バランス課題**: ${typeBalanceAssessment.join('、')}\n`;
       }
       
-      p += `\n## 先週の学習実績\n\n`;
-      p += `**総学習時間**: ${formatMinutes(weekMinutes)}\n\n`;
+      p += `\n### 学習パターン\n`;
+      p += `- よく勉強する曜日: **${strongDays.join('・')}曜日**\n`;
+      p += `- 学習が少ない曜日: **${weakDays.join('・')}曜日**\n`;
       
-      if (Object.keys(subjectStats).length > 0) {
-        p += `### 科目別内訳\n`;
-        Object.entries(subjectStats).forEach(([cat, stats]) => {
-          const pct = weekMinutes > 0 ? Math.round(stats.minutes / weekMinutes * 100) : 0;
-          p += `- **${cat}**: ${formatMinutes(stats.minutes)}（${pct}%）\n`;
-          // 詳細科目
-          const details = Object.entries(stats.details).map(([s, m]) => `${s}:${m}分`).join('、');
-          if (details) p += `  - 内訳: ${details}\n`;
-        });
-      }
-      
-      if (Object.keys(typeStats).length > 0) {
-        p += `\n### 学習タイプ別バランス\n`;
-        p += formatTypeStats(typeStats) + '\n';
-      }
-      
-      if (redbookLogs.length > 0) {
-        p += `\n## 直近の過去問演習\n\n`;
-        redbookLogs.slice(0, 5).forEach(log => {
-          p += `- ${log.university} ${log.subject || ''} ${log.year}年: **${log.score}%**`;
-          if (log.weakAreas) p += ` ⚠️間違い: ${log.weakAreas}`;
+      if (goalAnalysis.length > 0) {
+        p += `\n## 目標と現状\n\n`;
+        goalAnalysis.forEach(g => {
+          const icon = g.feasibility === 'likely' ? '🟢' : g.feasibility === 'possible' ? '🟡' : '🔴';
+          p += `### ${g.subject} ${icon}\n`;
+          p += `- 現状: ${g.current}% → 目標: ${g.target}%（**+${g.gap}pt必要**）\n`;
+          p += `- 最低ライン: ${g.must}%\n`;
+          if (g.recentScore !== g.current) {
+            p += `- 直近の過去問: ${g.recentScore}%\n`;
+          }
           p += `\n`;
         });
       }
       
-      if (Object.keys(weakAreasCount).length > 0) {
-        p += `\n## 頻出の苦手分野\n\n`;
-        p += getTopWeakAreas(weakAreasCount) + '\n';
+      if (redbookAnalysis.totalAttempts > 0) {
+        p += `## 過去問演習状況\n\n`;
+        p += `- 演習回数: ${redbookAnalysis.totalAttempts}回\n`;
+        p += `- 平均得点率: ${redbookAnalysis.avgScore}%\n`;
+        p += `- 得点傾向: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降気味' : '➡️ 安定'}\n`;
+        
+        if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+          const topWeak = Object.entries(redbookAnalysis.weakAreasSummary)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+          p += `\n**繰り返し間違える分野**:\n`;
+          topWeak.forEach(([area, count]) => {
+            p += `- ⚠️ ${area}（${count}回）\n`;
+          });
+        }
       }
       
-      if (moodStats.bad.length > 0) {
-        p += `\n## 苦戦した学習（手応え低）\n\n`;
-        const uniqueBad = [...new Set(moodStats.bad.map(m => m.unit ? `${m.subject}(${m.unit})` : m.subject))];
-        p += uniqueBad.slice(0, 5).join('、') + '\n';
+      if (strengths.length > 0) {
+        p += `\n## 💪 強み\n`;
+        strengths.forEach(s => p += `- ${s.message}\n`);
       }
       
-      p += `\n---\n\n`;
-      p += `## 相談内容\n\n`;
-      p += `来週の学習計画を立ててください。\n\n`;
-      p += `### 回答形式\n`;
-      p += `1. **現状分析**（2-3行）: 今週のデータから見える課題\n`;
-      p += `2. **優先順位**（高/中/低）: 科目・分野ごとの優先度\n`;
-      p += `3. **週間スケジュール**: 曜日ごとの具体的な学習内容と時間配分\n`;
-      p += `4. **注意点**: 特に気をつけるべきこと\n`;
+      if (risks.length > 0) {
+        p += `\n## ⚠️ 課題・リスク\n`;
+        risks.forEach(r => {
+          const icon = r.severity === 'high' ? '🔴' : r.severity === 'medium' ? '🟡' : '🟢';
+          p += `- ${icon} ${r.message}\n`;
+        });
+      }
+      
+      p += `
+---
+
+# 🎯 相談内容
+
+上記のデータを踏まえ、**来週の具体的な学習計画**を作成してください。
+
+## 回答に含めてほしいこと
+
+1. **現状の総合評価**（3行程度）
+   - データから読み取れる私の学習状況の特徴
+
+2. **来週の重点ポイント**（優先度順に3つ）
+   - 何に注力すべきか、なぜか
+
+3. **1週間のスケジュール案**
+   - 曜日ごとの学習内容と時間配分
+   - 私の学習パターン（${strongDays.join('・')}曜日が強い）を考慮
+
+4. **科目別の具体的アドバイス**
+   - 苦手分野への対策方法
+   - 使用すべき教材や勉強法
+
+5. **来週末の目標**
+   - 達成すべき具体的なマイルストーン`;
       
       return p;
     }
     
-    // ========== 今日の振り返りプロンプト ==========
+    // ==========================================
+    // 今日の振り返りプロンプト
+    // ==========================================
     
-    function generateDailyPrompt(data) {
-      const { allLogs, weekMinutes, subjectStats, typeStats } = data;
+    function generateDailyPrompt(a, allLogs) {
+      const { profile, daysUntil, weekMinutes, streak, subjectAnalysis } = a;
       const today = new Date();
       const todayStr = today.toISOString().split('T')[0];
       const todayLogs = allLogs.filter(log => log.date === todayStr);
       const todayMinutes = todayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
       
-      let p = `# 今日の学習振り返り\n\n`;
-      p += `**日付**: ${todayStr}\n`;
-      p += `**本日の学習時間**: ${formatMinutes(todayMinutes)}\n`;
-      p += `**今週の累計**: ${formatMinutes(weekMinutes)}\n\n`;
+      // 昨日のログ
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayLogs = allLogs.filter(log => log.date === yesterdayStr);
+      const yesterdayMinutes = yesterdayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      
+      let p = `あなたは大学受験専門の学習コーチです。今日の学習を振り返り、明日以降のアドバイスをください。
+
+---
+
+# 📅 今日の学習記録
+
+**日付**: ${todayStr}（試験まであと${daysUntil}日）
+**本日の学習時間**: ${formatMinutes(todayMinutes)}`;
+      
+      if (yesterdayMinutes > 0) {
+        const diff = todayMinutes - yesterdayMinutes;
+        p += `（昨日比: ${diff >= 0 ? '+' : ''}${formatMinutes(diff)}）`;
+      }
+      
+      p += `
+**今週の累計**: ${formatMinutes(weekMinutes)}
+**連続学習日数**: ${streak}日
+
+`;
       
       if (todayLogs.length > 0) {
-        p += `## 今日の学習内容\n\n`;
+        p += `## 学習内容の詳細\n\n`;
         todayLogs.forEach(log => {
-          p += `- **${log.subject}**: ${log.minutes}分`;
-          if (log.studyType) p += `（${log.studyType}）`;
-          if (log.mood) p += ` ${log.mood}`;
+          const moodText = {
+            '😊': '絶好調',
+            '🙂': '好調',
+            '😐': '普通',
+            '😕': '苦戦',
+            '😫': 'かなり苦戦'
+          };
+          
+          p += `### ${log.subject}（${log.minutes}分）\n`;
+          if (log.studyType) p += `- タイプ: ${log.studyType}\n`;
+          if (log.unit) p += `- 範囲: ${log.unit}\n`;
+          if (log.textbook) p += `- 教材: ${log.textbook}\n`;
+          if (log.mood) p += `- 手応え: ${log.mood} ${moodText[log.mood] || ''}\n`;
+          if (log.memo) p += `- メモ: 「${log.memo}」\n`;
           p += `\n`;
-          if (log.unit) p += `  - 範囲: ${log.unit}\n`;
-          if (log.textbook) p += `  - 教材: ${log.textbook}\n`;
-          if (log.memo) p += `  - メモ: ${log.memo}\n`;
         });
+        
+        // 手応え分析
+        const excellent = todayLogs.filter(l => l.mood === '😊').map(l => l.subject);
+        const struggling = todayLogs.filter(l => l.mood === '😫' || l.mood === '😕').map(l => l.subject);
+        
+        if (excellent.length > 0 || struggling.length > 0) {
+          p += `## 今日の手応え\n`;
+          if (excellent.length > 0) p += `- ✨ 好調: ${excellent.join('、')}\n`;
+          if (struggling.length > 0) p += `- 💦 苦戦: ${struggling.join('、')}\n`;
+          p += `\n`;
+        }
       } else {
-        p += `※今日はまだ学習記録がありません。\n`;
+        p += `## 今日の学習\n\n`;
+        p += `※まだ今日の学習記録がありません。\n\n`;
       }
       
-      // 良かった点・悪かった点を抽出
-      const goodLogs = todayLogs.filter(l => l.mood === '😊' || l.mood === '🙂');
-      const badLogs = todayLogs.filter(l => l.mood === '😫' || l.mood === '😕');
-      
-      if (goodLogs.length > 0) {
-        p += `\n## 手応えが良かった学習\n`;
-        goodLogs.forEach(l => p += `- ${l.subject}${l.unit ? `: ${l.unit}` : ''}\n`);
-      }
-      
-      if (badLogs.length > 0) {
-        p += `\n## 苦戦した学習\n`;
-        badLogs.forEach(l => {
-          p += `- ${l.subject}${l.unit ? `: ${l.unit}` : ''}`;
-          if (l.memo) p += ` → ${l.memo}`;
-          p += `\n`;
-        });
-      }
-      
-      p += `\n---\n\n`;
-      p += `## 相談内容\n\n`;
-      p += `今日の学習を振り返って、明日以降のアドバイスをください。\n\n`;
-      p += `### 回答形式\n`;
-      p += `1. **今日の評価**（◎/○/△）と理由\n`;
-      p += `2. **良かった点**: 継続すべきこと\n`;
-      p += `3. **改善点**: 明日から意識すること\n`;
-      p += `4. **明日のおすすめ学習**: 具体的な科目・内容・時間\n`;
+      p += `---
+
+# 🎯 相談内容
+
+今日の学習を振り返って、フィードバックと明日へのアドバイスをください。
+
+## 回答に含めてほしいこと
+
+1. **今日の評価**（◎/○/△/×）
+   - 良かった点と改善点
+
+2. **苦戦した部分へのアドバイス**
+   - 具体的な克服方法
+
+3. **明日の学習プラン**
+   - おすすめの科目・内容・時間配分
+   - 今日の続きでやるべきこと
+
+4. **モチベーションを保つ一言**`;
       
       return p;
     }
     
-    // ========== 弱点分析プロンプト ==========
+    // ==========================================
+    // 弱点分析プロンプト
+    // ==========================================
     
-    function generateWeaknessPrompt(data) {
-      const { profile, goals, redbookLogs, moodStats, weakAreasCount, allLogs } = data;
+    function generateWeaknessPrompt(a) {
+      const { profile, daysUntil, redbookAnalysis, goalAnalysis, subjectAnalysis, redbookLogs } = a;
       
-      let p = `# 弱点分析リクエスト\n\n`;
+      let p = `あなたは大学受験のデータアナリストです。以下の学習データから弱点を分析し、効率的な対策を提案してください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+
+`;
       
-      p += `## 志望校\n\n`;
-      p += `- 第1志望: ${profile['第1志望'] || '未設定'}\n`;
-      if (profile['第2志望']) p += `- 第2志望: ${profile['第2志望']}\n`;
-      if (profile['第3志望']) p += `- 第3志望: ${profile['第3志望']}\n`;
-      
-      if (goals.length > 0) {
-        p += `\n## 目標と現状のギャップ\n\n`;
-        goals.forEach(g => {
-          const gap = g.target - g.current;
-          const must = g.must || g.target;
-          p += `### ${g.subject}\n`;
-          p += `- 現状: ${g.current}% → 目標: ${g.target}%（ギャップ: ${gap}pt）\n`;
-          p += `- 最低ライン: ${must}%\n\n`;
+      if (goalAnalysis.length > 0) {
+        p += `# 📊 目標と現状のギャップ\n\n`;
+        p += `| 科目 | 現状 | 目標 | ギャップ | 達成見込み |\n`;
+        p += `|------|------|------|----------|------------|\n`;
+        goalAnalysis.forEach(g => {
+          const status = g.feasibility === 'likely' ? '🟢 達成圏内' : 
+                         g.feasibility === 'possible' ? '🟡 努力次第' : '🔴 要集中対策';
+          p += `| ${g.subject} | ${g.current}% | ${g.target}% | +${g.gap}pt | ${status} |\n`;
         });
+        p += `\n`;
       }
       
       if (redbookLogs.length > 0) {
-        p += `## 過去問・模試の結果一覧\n\n`;
-        redbookLogs.slice(0, 15).forEach(log => {
-          p += `- **${log.university}** ${log.subject || ''} ${log.year}年: ${log.score}%`;
-          if (log.time) p += `（${log.time}分で解答）`;
+        p += `# 📝 過去問・模試の全結果\n\n`;
+        redbookLogs.forEach(log => {
+          const scoreIcon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
+          p += `## ${log.date} ${log.university} ${log.subject || ''} ${log.year}年\n`;
+          p += `- 得点率: ${scoreIcon} **${log.score}%**\n`;
+          if (log.time) p += `- 解答時間: ${log.time}分\n`;
+          if (log.sectionScores) p += `- 大問別: ${log.sectionScores}\n`;
+          if (log.weakAreas) p += `- ⚠️ 間違えた分野: **${log.weakAreas}**\n`;
+          if (log.memo) p += `- メモ: ${log.memo}\n`;
           p += `\n`;
-          if (log.sectionScores) p += `  - 大問別: ${log.sectionScores}\n`;
-          if (log.weakAreas) p += `  - ⚠️間違えた分野: ${log.weakAreas}\n`;
-          if (log.memo) p += `  - メモ: ${log.memo}\n`;
         });
       }
       
-      if (Object.keys(weakAreasCount).length > 0) {
-        p += `\n## 頻出の間違い分野（集計）\n\n`;
-        const sorted = Object.entries(weakAreasCount).sort((a, b) => b[1] - a[1]);
+      if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+        p += `# 🔴 繰り返し間違える分野（要重点対策）\n\n`;
+        const sorted = Object.entries(redbookAnalysis.weakAreasSummary)
+          .sort((a, b) => b[1] - a[1]);
+        
+        p += `| 分野 | 出現回数 | 深刻度 |\n`;
+        p += `|------|----------|--------|\n`;
         sorted.forEach(([area, count]) => {
-          p += `- **${area}**: ${count}回\n`;
+          const severity = count >= 3 ? '🔴 高' : count >= 2 ? '🟡 中' : '🟢 低';
+          p += `| ${area} | ${count}回 | ${severity} |\n`;
         });
+        p += `\n`;
       }
       
-      if (moodStats.bad.length > 0) {
-        p += `\n## 学習時に苦戦した内容\n\n`;
-        const uniqueBad = [...new Map(moodStats.bad.map(m => [m.subject + m.unit, m])).values()];
-        uniqueBad.slice(0, 8).forEach(m => {
-          p += `- ${m.subject}`;
-          if (m.unit) p += `: ${m.unit}`;
-          if (m.memo) p += ` → ${m.memo}`;
+      p += `# 📈 科目別の学習状況\n\n`;
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        if (data.totalMinutes > 0) {
+          const goodRate = data.sessionCount > 0 
+            ? Math.round((data.moodBreakdown.excellent + data.moodBreakdown.good) / data.sessionCount * 100)
+            : 0;
+          const badRate = data.sessionCount > 0
+            ? Math.round((data.moodBreakdown.bad + data.moodBreakdown.terrible) / data.sessionCount * 100)
+            : 0;
+          
+          p += `## ${cat}\n`;
+          p += `- 累計学習時間: ${formatMinutes(data.totalMinutes)}\n`;
+          p += `- 学習回数: ${data.sessionCount}回\n`;
+          p += `- 手応え: 好調${goodRate}% / 苦戦${badRate}%\n`;
+          if (redbookAnalysis.scoresBySubject[cat]) {
+            p += `- 過去問平均: ${redbookAnalysis.scoresBySubject[cat]}%\n`;
+          }
           p += `\n`;
-        });
-      }
+        }
+      });
       
-      p += `\n---\n\n`;
-      p += `## 分析リクエスト\n\n`;
-      p += `上記のデータを分析して、私の弱点と対策を教えてください。\n\n`;
-      p += `### 回答形式\n`;
-      p += `1. **最優先で対策すべき弱点**（3つ）: 理由とともに\n`;
-      p += `2. **科目別の課題**: 各科目で特に注意すべき分野\n`;
-      p += `3. **具体的な対策方法**: 各弱点に対する勉強法\n`;
-      p += `4. **目標達成への見通し**: 現実的な到達可能性と必要な努力量\n`;
+      p += `---
+
+# 🎯 分析リクエスト
+
+上記のデータを詳細に分析し、弱点克服のための戦略を立ててください。
+
+## 回答に含めてほしいこと
+
+1. **弱点の優先順位付け**
+   - 最も対策が必要な分野TOP3とその理由
+   - 試験への影響度と改善の難易度
+
+2. **弱点の根本原因の分析**
+   - なぜその分野で間違いが多いのか
+   - 知識不足なのか、解法パターンなのか、時間管理なのか
+
+3. **具体的な対策プラン**
+   - 各弱点に対する具体的な勉強法
+   - 使うべき教材や参考書
+   - 1日あたりの目安時間
+
+4. **残り${daysUntil}日での現実的な目標**
+   - どこまで改善できそうか
+   - 優先して捨てるべき分野があれば
+
+5. **学習効率を上げるコツ**
+   - 同じミスを繰り返さないための方法`;
       
       return p;
     }
     
-    // ========== 科目別相談プロンプト ==========
+    // ==========================================
+    // 科目別相談プロンプト
+    // ==========================================
     
-    function generateSubjectPrompt(data) {
+    function generateSubjectPrompt(a) {
       const selectedSubject = document.getElementById('aiSubjectSelect').value;
       if (!selectedSubject) {
         return '↑上の「相談したい科目」を選択してください。';
       }
       
-      const { profile, goals, allLogs, redbookLogs, daysUntil } = data;
+      const { profile, daysUntil, subjectAnalysis, redbookAnalysis, goalAnalysis, redbookLogs, weekLogs } = a;
+      const subjectData = subjectAnalysis[selectedSubject] || {};
+      const subjectGoal = goalAnalysis.find(g => g.subject === selectedSubject);
+      const subjectRedbook = redbookLogs.filter(l => categorizeSubject(l.subject) === selectedSubject);
+      const subjectWeekLogs = weekLogs.filter(l => categorizeSubject(l.subject) === selectedSubject);
       
-      // 選択科目に関連するログを抽出
-      const subjectLogs = allLogs.filter(log => categorizeSubject(log.subject) === selectedSubject);
-      const subjectRedbook = redbookLogs.filter(log => categorizeSubject(log.subject) === selectedSubject);
-      const subjectGoal = goals.find(g => g.subject === selectedSubject);
-      
-      // 学習タイプ別集計
-      const typeStats = {};
-      subjectLogs.forEach(log => {
-        if (log.studyType) typeStats[log.studyType] = (typeStats[log.studyType] || 0) + (log.minutes || 0);
+      // 科目別の苦手分野
+      const weakAreas = {};
+      subjectRedbook.forEach(log => {
+        if (log.weakAreas) {
+          log.weakAreas.split(/[,、]/).forEach(area => {
+            const trimmed = area.trim();
+            if (trimmed) weakAreas[trimmed] = (weakAreas[trimmed] || 0) + 1;
+          });
+        }
       });
       
-      // 使用教材集計
-      const textbooks = {};
-      subjectLogs.forEach(log => {
-        if (log.textbook) textbooks[log.textbook] = (textbooks[log.textbook] || 0) + (log.minutes || 0);
-      });
-      
-      // 苦手分野集計
-      const weakAreas = getSubjectWeakAreas(redbookLogs, selectedSubject);
-      
-      // 手応え集計
-      const moodCount = { good: 0, bad: 0 };
-      subjectLogs.forEach(log => {
-        if (log.mood === '😊' || log.mood === '🙂') moodCount.good++;
-        else if (log.mood === '😫' || log.mood === '😕') moodCount.bad++;
-      });
-      
-      let p = `# ${selectedSubject}の学習相談\n\n`;
-      
-      p += `## 基本情報\n\n`;
-      p += `- 志望校: ${profile['第1志望'] || '未設定'}\n`;
-      p += `- 試験まで: あと${daysUntil}日\n`;
+      let p = `あなたは${selectedSubject}専門の受験コーチです。以下のデータを分析し、${selectedSubject}の成績向上のための具体的なアドバイスをください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+**相談科目**: ${selectedSubject}
+
+`;
       
       if (subjectGoal) {
-        p += `- 目標: 現状${subjectGoal.current}% → 目標${subjectGoal.target}%（あと+${subjectGoal.target - subjectGoal.current}pt）\n`;
+        p += `# 🎯 目標設定\n\n`;
+        p += `- **現状**: ${subjectGoal.current}%\n`;
+        p += `- **目標**: ${subjectGoal.target}%（+${subjectGoal.gap}pt必要）\n`;
+        p += `- **最低ライン**: ${subjectGoal.must}%\n`;
+        p += `- **達成見込み**: ${subjectGoal.feasibility === 'likely' ? '🟢 達成圏内' : subjectGoal.feasibility === 'possible' ? '🟡 努力次第' : '🔴 要集中対策'}\n\n`;
       }
       
-      const totalMinutes = subjectLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
-      p += `\n## ${selectedSubject}の学習データ\n\n`;
-      p += `**累計学習時間**: ${formatMinutes(totalMinutes)}（${subjectLogs.length}回の学習）\n\n`;
+      p += `# 📊 学習データ\n\n`;
+      p += `**累計学習時間**: ${formatMinutes(subjectData.totalMinutes || 0)}\n`;
+      p += `**今週の学習時間**: ${formatMinutes(subjectData.weekMinutes || 0)}\n`;
+      p += `**学習回数**: ${subjectData.sessionCount || 0}回\n`;
+      p += `**傾向**: ${subjectData.trend === 'increasing' ? '📈 増加中' : subjectData.trend === 'decreasing' ? '📉 減少中' : '➡️ 安定'}\n\n`;
       
-      if (Object.keys(typeStats).length > 0) {
-        p += `### 学習タイプ内訳\n`;
-        Object.entries(typeStats).forEach(([type, min]) => {
+      if (Object.keys(subjectData.typeBreakdown || {}).length > 0) {
+        p += `## 学習タイプの内訳\n`;
+        Object.entries(subjectData.typeBreakdown).forEach(([type, min]) => {
           p += `- ${type}: ${formatMinutes(min)}\n`;
         });
         p += `\n`;
       }
       
-      if (Object.keys(textbooks).length > 0) {
-        p += `### 使用教材\n`;
-        Object.entries(textbooks)
+      if (Object.keys(subjectData.textbooks || {}).length > 0) {
+        p += `## 使用教材\n`;
+        Object.entries(subjectData.textbooks)
           .sort((a, b) => b[1] - a[1])
           .forEach(([book, min]) => {
             p += `- ${book}: ${formatMinutes(min)}\n`;
@@ -2385,181 +2748,548 @@
         p += `\n`;
       }
       
-      // 最近の学習内容
-      const recentLogs = subjectLogs.slice(0, 10);
-      if (recentLogs.length > 0) {
-        p += `### 最近の学習内容\n`;
-        recentLogs.forEach(log => {
+      if (subjectWeekLogs.length > 0) {
+        p += `## 今週の学習内容\n`;
+        subjectWeekLogs.forEach(log => {
           p += `- ${log.date}: ${log.subject} ${log.minutes}分`;
           if (log.mood) p += ` ${log.mood}`;
           if (log.unit) p += ` [${log.unit}]`;
+          if (log.memo) p += ` → ${log.memo}`;
           p += `\n`;
         });
         p += `\n`;
       }
       
       if (subjectRedbook.length > 0) {
-        p += `### 過去問演習結果\n`;
+        p += `## 過去問演習結果\n\n`;
         subjectRedbook.forEach(log => {
-          p += `- ${log.university} ${log.year}年: **${log.score}%**`;
-          if (log.sectionScores) p += `\n  - 大問別: ${log.sectionScores}`;
-          if (log.weakAreas) p += `\n  - 間違い: ${log.weakAreas}`;
+          p += `### ${log.university} ${log.year}年（${log.date}）\n`;
+          p += `- 得点率: **${log.score}%**\n`;
+          if (log.time) p += `- 解答時間: ${log.time}分\n`;
+          if (log.sectionScores) p += `- 大問別: ${log.sectionScores}\n`;
+          if (log.weakAreas) p += `- 間違えた分野: ${log.weakAreas}\n`;
+          if (log.memo) p += `- 振り返り: ${log.memo}\n`;
           p += `\n`;
         });
-        p += `\n`;
       }
       
       if (Object.keys(weakAreas).length > 0) {
-        p += `### よく間違える分野\n`;
+        p += `## ⚠️ よく間違える分野\n`;
         Object.entries(weakAreas)
           .sort((a, b) => b[1] - a[1])
           .forEach(([area, count]) => {
-            p += `- ${area}: ${count}回\n`;
+            p += `- **${area}**: ${count}回\n`;
           });
         p += `\n`;
       }
       
-      p += `### 手応えの傾向\n`;
-      p += `- 良い手応え: ${moodCount.good}回\n`;
-      p += `- 苦戦: ${moodCount.bad}回\n`;
+      // 手応え分析
+      if (subjectData.moodBreakdown) {
+        const mb = subjectData.moodBreakdown;
+        const total = mb.excellent + mb.good + mb.neutral + mb.bad + mb.terrible;
+        if (total > 0) {
+          p += `## 手応えの傾向\n`;
+          p += `- 😊 絶好調: ${mb.excellent}回\n`;
+          p += `- 🙂 好調: ${mb.good}回\n`;
+          p += `- 😐 普通: ${mb.neutral}回\n`;
+          p += `- 😕 苦戦: ${mb.bad}回\n`;
+          p += `- 😫 かなり苦戦: ${mb.terrible}回\n\n`;
+        }
+      }
       
-      p += `\n---\n\n`;
-      p += `## 相談内容\n\n`;
-      p += `${selectedSubject}の成績を上げるためのアドバイスをください。\n\n`;
-      p += `### 回答形式\n`;
-      p += `1. **現状診断**: データから見える私の${selectedSubject}の特徴\n`;
-      p += `2. **重点対策分野**: 特に伸ばすべき分野（3つ）と理由\n`;
-      p += `3. **具体的な学習プラン**: 1日/1週間の学習メニュー例\n`;
-      p += `4. **おすすめ教材・勉強法**: 現在の使用教材への評価も含めて\n`;
-      p += `5. **目標達成への道筋**: 残り${daysUntil}日でどこまで伸ばせるか\n`;
+      p += `---
+
+# 🎯 相談内容
+
+${selectedSubject}の成績を効率的に上げるためのアドバイスをください。
+
+## 回答に含めてほしいこと
+
+1. **現状診断**
+   - データから見える私の${selectedSubject}の特徴
+   - 強みと弱みの分析
+
+2. **重点対策分野**（3つ）
+   - 優先度の高い順に
+   - なぜその分野を重視すべきか
+
+3. **具体的な学習プラン**
+   - 1日の${selectedSubject}学習メニュー例
+   - 1週間のスケジュール案
+
+4. **教材・勉強法のアドバイス**
+   - 現在使用中の教材への評価
+   - 追加で使うべき教材があれば
+
+5. **目標達成への道筋**
+   - 残り${daysUntil}日で${subjectGoal ? `+${subjectGoal.gap}pt` : '目標'}達成するために`;
       
       return p;
     }
     
-    // ========== 直前期対策プロンプト ==========
+    // ==========================================
+    // 直前期対策プロンプト
+    // ==========================================
     
-    function generateLastSpurtPrompt(data) {
-      const { profile, goals, daysUntil, redbookLogs, weakAreasCount, allLogs, weekMinutes } = data;
+    function generateLastSpurtPrompt(a) {
+      const { profile, daysUntil, weekMinutes, totalMinutes, streak, studyDays,
+              redbookAnalysis, goalAnalysis, risks, subjectAnalysis } = a;
       
-      let p = `# 直前期対策プランの相談\n\n`;
+      const avgDailyMinutes = studyDays > 0 ? Math.round(totalMinutes / studyDays) : 0;
+      const remainingStudyTime = avgDailyMinutes * daysUntil;
       
-      p += `## 現在の状況\n\n`;
-      p += `- **志望校**: ${profile['第1志望'] || '未設定'}\n`;
-      if (profile['第2志望']) p += `- **併願校**: ${profile['第2志望']}`;
-      if (profile['第3志望']) p += `、${profile['第3志望']}`;
-      p += `\n- **試験まで**: ⚠️ **あと${daysUntil}日**\n`;
-      p += `- **直近1週間の学習時間**: ${formatMinutes(weekMinutes)}\n`;
+      let p = `あなたは大学受験の直前期対策のスペシャリストです。残り日数を考慮した現実的な対策プランを提案してください。
+
+---
+
+# ⏰ 残り時間
+
+**試験まで**: ⚠️ **${daysUntil}日**（約${Math.ceil(daysUntil / 7)}週間）
+**推定可能学習時間**: 約${formatMinutes(remainingStudyTime)}
+（1日平均${formatMinutes(avgDailyMinutes)}で計算）
+
+---
+
+# 📋 受験生の状況
+
+**志望校**: ${profile['第1志望'] || '未設定'}`;
+      if (profile['第2志望']) p += `
+**併願校**: ${profile['第2志望']}${profile['第3志望'] ? '、' + profile['第3志望'] : ''}`;
+      p += `
+
+**これまでの実績**:
+- 累計学習時間: ${formatMinutes(totalMinutes)}
+- 学習日数: ${studyDays}日
+- 連続学習: ${streak}日
+- 直近1週間: ${formatMinutes(weekMinutes)}
+
+`;
       
-      if (goals.length > 0) {
-        p += `\n## 目標と現状\n\n`;
-        p += `| 科目 | 現状 | 目標 | 最低ライン | 必要な伸び |\n`;
+      if (goalAnalysis.length > 0) {
+        p += `# 🎯 目標と現状\n\n`;
+        p += `| 科目 | 現状 | 目標 | 必要な伸び | 達成難易度 |\n`;
         p += `|------|------|------|------------|------------|\n`;
-        goals.forEach(g => {
-          const must = g.must || Math.floor((g.current + g.target) / 2);
-          p += `| ${g.subject} | ${g.current}% | ${g.target}% | ${must}% | +${g.target - g.current}pt |\n`;
+        goalAnalysis.forEach(g => {
+          const difficulty = g.feasibility === 'likely' ? '★☆☆' : 
+                            g.feasibility === 'possible' ? '★★☆' : '★★★';
+          p += `| ${g.subject} | ${g.current}% | ${g.target}% | +${g.gap}pt | ${difficulty} |\n`;
         });
+        p += `\n`;
       }
       
-      if (redbookLogs.length > 0) {
-        p += `\n## 直近の過去問結果\n\n`;
-        const recentRedbook = redbookLogs.slice(0, 8);
-        recentRedbook.forEach(log => {
-          const icon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
-          p += `- ${icon} **${log.university}** ${log.subject || ''} ${log.year}年: ${log.score}%`;
-          if (log.weakAreas) p += ` → 課題: ${log.weakAreas}`;
+      if (redbookAnalysis.totalAttempts > 0) {
+        p += `# 📝 過去問演習の現状\n\n`;
+        p += `- 演習回数: ${redbookAnalysis.totalAttempts}回\n`;
+        p += `- 平均得点率: **${redbookAnalysis.avgScore}%**\n`;
+        p += `- 得点傾向: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中（良い傾向）' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降気味（要対策）' : '➡️ 安定'}\n\n`;
+        
+        if (Object.keys(redbookAnalysis.scoresBySubject).length > 0) {
+          p += `**科目別平均**:\n`;
+          Object.entries(redbookAnalysis.scoresBySubject).forEach(([cat, score]) => {
+            const icon = score >= 70 ? '🟢' : score >= 50 ? '🟡' : '🔴';
+            p += `- ${cat}: ${icon} ${score}%\n`;
+          });
           p += `\n`;
+        }
+        
+        if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+          p += `**繰り返し間違える分野（直前期で必ず対策）**:\n`;
+          Object.entries(redbookAnalysis.weakAreasSummary)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .forEach(([area, count]) => {
+              p += `- 🔴 ${area}（${count}回）\n`;
+            });
+          p += `\n`;
+        }
+      }
+      
+      if (risks.length > 0) {
+        p += `# ⚠️ 現在のリスク要因\n\n`;
+        risks.forEach(r => {
+          const icon = r.severity === 'high' ? '🔴' : r.severity === 'medium' ? '🟡' : '🟢';
+          p += `- ${icon} ${r.message}\n`;
+        });
+        p += `\n`;
+      }
+      
+      p += `# 📊 科目別の仕上がり度\n\n`;
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        if (data.totalMinutes > 0) {
+          const score = redbookAnalysis.scoresBySubject[cat] || '未測定';
+          const goalData = goalAnalysis.find(g => g.subject === cat);
+          const status = typeof score === 'number' 
+            ? (goalData && score >= goalData.target ? '🟢 目標圏内' : score >= 50 ? '🟡 もう一息' : '🔴 要強化')
+            : '⚪ 要演習';
+          p += `- **${cat}**: ${status}（過去問平均: ${score}${typeof score === 'number' ? '%' : ''}）\n`;
+        }
+      });
+      
+      p += `
+---
+
+# 🎯 相談内容
+
+残り${daysUntil}日で合格を勝ち取るための**直前期対策プラン**を作成してください。
+
+## 回答に含めてほしいこと
+
+1. **やること・やらないことの判断**
+   - 残り時間で優先すべきこと
+   - 思い切って捨てるべきこと
+
+2. **直前期のスケジュール**
+   - 〜1週間前: やるべきこと
+   - 直前3日間: やるべきこと
+   - 前日: やるべきこと
+
+3. **科目別の時間配分**
+   - 1日あたりの理想的な配分
+
+4. **弱点への対処法**
+   - 今から間に合う対策
+   - 本番で避けるべき問題
+
+5. **試験本番の戦略**
+   - 時間配分
+   - 解く順番
+   - パニック時の対処法
+
+6. **メンタル管理**
+   - 不安との付き合い方
+   - 直前期のモチベーション維持`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // モチベーションプロンプト
+    // ==========================================
+    
+    function generateMotivationPrompt(a) {
+      const { profile, daysUntil, totalMinutes, studyDays, streak, weekMinutes,
+              subjectAnalysis, strengths, redbookAnalysis } = a;
+      
+      const totalHours = Math.floor(totalMinutes / 60);
+      
+      // ポジティブな実績を抽出
+      const achievements = [];
+      if (streak >= 3) achievements.push(`${streak}日連続で学習を継続`);
+      if (totalHours >= 50) achievements.push(`累計${totalHours}時間以上の学習`);
+      if (studyDays >= 14) achievements.push(`${studyDays}日間コツコツ努力`);
+      if (redbookAnalysis.scoreTrend === 'improving') achievements.push('過去問の得点が上昇傾向');
+      
+      // 苦戦している部分
+      const struggles = [];
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        const badRate = data.sessionCount > 0
+          ? (data.moodBreakdown.bad + data.moodBreakdown.terrible) / data.sessionCount
+          : 0;
+        if (badRate > 0.4) struggles.push(`${cat}で苦戦することが多い`);
+      });
+      
+      let p = `あなたは受験生のメンタルサポートの専門家です。温かく、でも現実的なアドバイスで私を励ましてください。
+
+---
+
+# 👤 私について
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: あと${daysUntil}日
+
+---
+
+# 📊 これまでの努力
+
+**数字で見る私の頑張り**:
+- 🕐 累計学習時間: **${totalHours}時間${totalMinutes % 60}分**
+- 📅 学習した日数: **${studyDays}日**
+- 🔥 連続学習日数: **${streak}日**
+- 📈 直近1週間: ${formatMinutes(weekMinutes)}
+
+`;
+      
+      if (achievements.length > 0) {
+        p += `**私の実績**:\n`;
+        achievements.forEach(a => p += `- ✨ ${a}\n`);
+        p += `\n`;
+      }
+      
+      if (strengths.length > 0) {
+        p += `**強み**:\n`;
+        strengths.forEach(s => p += `- 💪 ${s.message}\n`);
+        p += `\n`;
+      }
+      
+      p += `---
+
+# 😔 今の気持ち
+
+正直に言うと、最近こんな気持ちがあります：
+
+- 試験が近づいてきて、漠然とした不安がある
+- 本当に自分が合格できるのか自信が持てない
+- 周りの受験生と比べて焦ってしまうことがある
+- 勉強しても成果が見えにくくて、モチベーションが下がる時がある
+`;
+      
+      if (struggles.length > 0) {
+        p += `- ${struggles.join('\n- ')}\n`;
+      }
+      
+      p += `
+でも、${profile['第1志望'] || '志望校'}に絶対に合格したいという気持ちは変わりません。
+
+---
+
+# 🎯 お願い
+
+今までの努力を認めてほしいです。そして、残り${daysUntil}日を乗り切るための力をください。
+
+## 回答に含めてほしいこと
+
+1. **私の努力への評価**
+   - ${totalHours}時間という数字の意味
+   - ${streak}日連続という継続の価値
+   - 具体的に褒めてほしい
+
+2. **温かい励ましの言葉**
+   - 不安を和らげる言葉
+   - 自信を持てるような言葉
+
+3. **不安との向き合い方**
+   - 受験生なら誰もが感じる不安であること
+   - 具体的なメンタル管理のコツ
+
+4. **残り${daysUntil}日の過ごし方**
+   - 無理なく続けられるアドバイス
+   - 焦らないための考え方
+
+5. **合格した未来のイメージ**
+   - 志望校に通う自分を想像させてほしい
+   - 最後に、力強い応援メッセージを`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 得点予測プロンプト
+    // ==========================================
+    
+    function generatePredictionPrompt(a) {
+      const { profile, daysUntil, totalMinutes, studyDays, weekMinutes,
+              subjectAnalysis, redbookAnalysis, goalAnalysis, redbookLogs } = a;
+      
+      // 科目別の過去問データを整理
+      const subjectScoreHistory = {};
+      redbookLogs.forEach(log => {
+        const cat = categorizeSubject(log.subject);
+        if (!subjectScoreHistory[cat]) {
+          subjectScoreHistory[cat] = [];
+        }
+        subjectScoreHistory[cat].push({
+          date: log.date,
+          university: log.university,
+          year: log.year,
+          score: log.score,
+          weakAreas: log.weakAreas
+        });
+      });
+      
+      // 各科目の成長率を計算
+      const growthAnalysis = {};
+      Object.entries(subjectScoreHistory).forEach(([cat, scores]) => {
+        if (scores.length >= 2) {
+          // 時系列順にソート（古い順）
+          const sorted = [...scores].sort((a, b) => new Date(a.date) - new Date(b.date));
+          const firstHalf = sorted.slice(0, Math.ceil(sorted.length / 2));
+          const secondHalf = sorted.slice(Math.ceil(sorted.length / 2));
+          
+          const firstAvg = firstHalf.reduce((s, l) => s + l.score, 0) / firstHalf.length;
+          const secondAvg = secondHalf.reduce((s, l) => s + l.score, 0) / secondHalf.length;
+          const growth = secondAvg - firstAvg;
+          
+          growthAnalysis[cat] = {
+            firstAvg: Math.round(firstAvg),
+            secondAvg: Math.round(secondAvg),
+            growth: Math.round(growth),
+            trend: growth > 3 ? 'improving' : growth < -3 ? 'declining' : 'stable',
+            sampleSize: scores.length
+          };
+        }
+      });
+      
+      // 学習時間と科目の関係
+      const studyTimeBySubject = {};
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        studyTimeBySubject[cat] = {
+          total: data.totalMinutes,
+          weekly: data.weekMinutes,
+          sessionCount: data.sessionCount
+        };
+      });
+      
+      // 共通テストの配点を想定（一般的な文系の場合）
+      const commonTestStructure = {
+        '英語': { reading: 100, listening: 100, total: 200 },
+        '数学': { math1A: 100, math2B: 100, total: 200 },
+        '国語': { modern: 110, classic: 90, total: 200 },
+        '理科': { total: 100 },
+        '社会': { total: 100 }
+      };
+      
+      let p = `あなたは大学受験のデータサイエンティストです。以下の学習データを統計的に分析し、共通テストでの得点を客観的に予測してください。
+
+⚠️ **重要**: 予測は楽観的になりすぎず、データに基づいた現実的な数値を提示してください。受験生の今後の学習計画に影響するため、根拠のない希望的観測は避けてください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+**累計学習時間**: ${formatMinutes(totalMinutes)}
+**学習日数**: ${studyDays}日
+**直近1週間**: ${formatMinutes(weekMinutes)}
+
+`;
+      
+      if (goalAnalysis.length > 0) {
+        p += `# 🎯 目標設定\n\n`;
+        p += `| 科目 | 現状（自己評価） | 目標 | 最低ライン |\n`;
+        p += `|------|------------------|------|------------|\n`;
+        goalAnalysis.forEach(g => {
+          p += `| ${g.subject} | ${g.current}% | ${g.target}% | ${g.must}% |\n`;
+        });
+        p += `\n`;
+      }
+      
+      p += `# 📊 過去問・模試の全記録\n\n`;
+      
+      if (redbookLogs.length === 0) {
+        p += `※過去問・模試の記録がありません。予測の精度が低くなります。\n\n`;
+      } else {
+        // 科目別に整理して表示
+        Object.entries(subjectScoreHistory).forEach(([cat, scores]) => {
+          if (scores.length > 0) {
+            p += `## ${cat}\n\n`;
+            p += `| 日付 | 大学/模試 | 年度 | 得点率 | 間違えた分野 |\n`;
+            p += `|------|-----------|------|--------|-------------|\n`;
+            scores.forEach(s => {
+              p += `| ${s.date} | ${s.university} | ${s.year} | **${s.score}%** | ${s.weakAreas || '-'} |\n`;
+            });
+            
+            // 統計サマリー
+            const avg = Math.round(scores.reduce((sum, s) => sum + s.score, 0) / scores.length);
+            const max = Math.max(...scores.map(s => s.score));
+            const min = Math.min(...scores.map(s => s.score));
+            const latest = scores[0].score;
+            
+            p += `\n**統計**: 平均${avg}% / 最高${max}% / 最低${min}% / 直近${latest}%\n`;
+            
+            if (growthAnalysis[cat]) {
+              const ga = growthAnalysis[cat];
+              const trendIcon = ga.trend === 'improving' ? '📈' : ga.trend === 'declining' ? '📉' : '➡️';
+              p += `**成長**: 前半平均${ga.firstAvg}% → 後半平均${ga.secondAvg}%（${ga.growth >= 0 ? '+' : ''}${ga.growth}pt）${trendIcon}\n`;
+            }
+            p += `\n`;
+          }
         });
         
-        // 平均点を計算
-        const avgScore = Math.round(recentRedbook.reduce((sum, l) => sum + l.score, 0) / recentRedbook.length);
-        p += `\n**直近${recentRedbook.length}回の平均**: ${avgScore}%\n`;
+        // 全体統計
+        p += `## 全科目総合\n\n`;
+        p += `- 演習回数: ${redbookAnalysis.totalAttempts}回\n`;
+        p += `- 全体平均: **${redbookAnalysis.avgScore}%**\n`;
+        p += `- 得点傾向: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇傾向' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降傾向' : '➡️ 横ばい'}\n\n`;
       }
       
-      if (Object.keys(weakAreasCount).length > 0) {
-        p += `\n## 繰り返し間違える分野（要集中対策）\n\n`;
-        const topWeak = Object.entries(weakAreasCount)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 6);
-        topWeak.forEach(([area, count]) => {
-          p += `- 🔴 **${area}**: ${count}回ミス\n`;
+      p += `# 📚 学習時間データ\n\n`;
+      p += `| 科目 | 累計時間 | 今週 | 学習回数 |\n`;
+      p += `|------|----------|------|----------|\n`;
+      Object.entries(studyTimeBySubject).forEach(([cat, data]) => {
+        if (data.total > 0) {
+          p += `| ${cat} | ${formatMinutes(data.total)} | ${formatMinutes(data.weekly)} | ${data.sessionCount}回 |\n`;
+        }
+      });
+      
+      if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+        p += `\n# ⚠️ 繰り返し間違える分野\n\n`;
+        const sorted = Object.entries(redbookAnalysis.weakAreasSummary)
+          .sort((a, b) => b[1] - a[1]);
+        p += `| 分野 | 出現回数 | 深刻度 |\n`;
+        p += `|------|----------|--------|\n`;
+        sorted.forEach(([area, count]) => {
+          const severity = count >= 3 ? '🔴 高' : count >= 2 ? '🟡 中' : '🟢 低';
+          p += `| ${area} | ${count}回 | ${severity} |\n`;
         });
+        p += `\n`;
       }
       
-      // 学習ペースの計算
-      const totalMinutes = allLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
-      const avgDailyMinutes = allLogs.length > 0 ? Math.round(totalMinutes / Math.max(1, new Set(allLogs.map(l => l.date)).size)) : 0;
+      p += `# 📈 残り期間での伸びしろ要因\n\n`;
+      p += `**プラス要因**:\n`;
+      if (daysUntil >= 30) p += `- 残り${daysUntil}日あり、対策の時間がある\n`;
+      if (redbookAnalysis.scoreTrend === 'improving') p += `- 得点が上昇傾向にある\n`;
+      if (weekMinutes >= 1200) p += `- 週20時間以上の学習量を確保\n`;
       
-      p += `\n## 学習ペース\n\n`;
-      p += `- これまでの累計: ${formatMinutes(totalMinutes)}\n`;
-      p += `- 1日平均: ${formatMinutes(avgDailyMinutes)}\n`;
-      p += `- 残り日数で確保できる時間: 約${formatMinutes(avgDailyMinutes * daysUntil)}\n`;
+      p += `\n**マイナス要因**:\n`;
+      if (daysUntil < 30) p += `- 残り${daysUntil}日と時間が限られている\n`;
+      if (redbookAnalysis.scoreTrend === 'declining') p += `- 得点が下降傾向にある\n`;
+      if (Object.keys(redbookAnalysis.weakAreasSummary).length >= 5) p += `- 苦手分野が複数ある\n`;
+      if (weekMinutes < 600) p += `- 週の学習時間が10時間未満\n`;
       
-      p += `\n---\n\n`;
-      p += `## 相談内容\n\n`;
-      p += `残り${daysUntil}日の直前期対策プランを作成してください。\n\n`;
-      p += `### 回答形式\n`;
-      p += `1. **優先順位の明確化**: 残り時間で「やること」「やらないこと」の判断\n`;
-      p += `2. **科目別の時間配分**: 1日あたりの理想的な配分\n`;
-      p += `3. **直前期スケジュール**:\n`;
-      p += `   - 残り2週間～1週間前: やるべきこと\n`;
-      p += `   - 残り1週間～3日前: やるべきこと\n`;
-      p += `   - 直前3日～前日: やるべきこと\n`;
-      p += `4. **本番で+5点取るためのコツ**: 試験当日の戦略\n`;
-      p += `5. **メンタル管理**: 直前期の不安との向き合い方\n`;
-      
-      return p;
-    }
-    
-    // ========== モチベーションプロンプト ==========
-    
-    function generateMotivationPrompt(data) {
-      const { profile, daysUntil, allLogs, streak, weekMinutes, moodStats } = data;
-      
-      const totalMinutes = allLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
-      const totalHours = Math.floor(totalMinutes / 60);
-      const totalDays = new Set(allLogs.map(l => l.date)).size;
-      
-      let p = `# 励ましとアドバイスのお願い\n\n`;
-      
-      p += `## これまでの頑張り\n\n`;
-      p += `- **累計学習時間**: ${totalHours}時間${totalMinutes % 60}分\n`;
-      p += `- **学習した日数**: ${totalDays}日\n`;
-      p += `- **連続学習日数**: ${streak}日\n`;
-      p += `- **直近1週間**: ${formatMinutes(weekMinutes)}\n`;
-      
-      p += `\n## 志望への想い\n\n`;
-      p += `- 志望校: ${profile['第1志望'] || '未設定'}\n`;
-      p += `- 試験まで: あと${daysUntil}日\n`;
-      
-      // 最近の手応え傾向
-      const recentGood = moodStats.good.length;
-      const recentBad = moodStats.bad.length;
-      
-      p += `\n## 最近の調子\n\n`;
-      if (recentBad > recentGood) {
-        p += `正直、最近は苦戦することが多いです（今週: 好調${recentGood}回、苦戦${recentBad}回）。\n`;
-        p += `思うように進まなくて、少し焦っています。\n`;
-      } else if (recentGood > 0) {
-        p += `調子は悪くないですが、本番が近づいて不安もあります（今週: 好調${recentGood}回、苦戦${recentBad}回）。\n`;
-      } else {
-        p += `毎日頑張っていますが、成果が見えにくくて不安です。\n`;
-      }
-      
-      p += `\n## 今の気持ち\n\n`;
-      p += `- 試験が近づいてきて緊張している\n`;
-      p += `- 自分の実力で本当に合格できるか不安\n`;
-      p += `- 周りと比べて焦ることがある\n`;
-      p += `- でも、志望校に絶対に受かりたい\n`;
-      
-      p += `\n---\n\n`;
-      p += `## お願い\n\n`;
-      p += `私を励ましてください。そして、残り${daysUntil}日を乗り切るための現実的なアドバイスもください。\n\n`;
-      p += `### 回答形式\n`;
-      p += `1. **これまでの努力への評価**: 具体的な数字（${totalHours}時間、${streak}日連続など）を踏まえて\n`;
-      p += `2. **励ましの言葉**: 温かく、でも現実的に\n`;
-      p += `3. **不安との向き合い方**: 具体的なメンタル管理法\n`;
-      p += `4. **残り${daysUntil}日の過ごし方**: 無理なく続けられるアドバイス\n`;
-      p += `5. **合格後の自分をイメージする言葉**: モチベーションが上がるような一言\n`;
+      p += `
+---
+
+# 🎯 予測リクエスト
+
+上記のデータを分析し、**共通テスト本番での得点率**を予測してください。
+
+## 回答形式
+
+### 1. 科目別の得点予測
+
+各科目について、以下の3パターンで予測してください：
+
+| 科目 | 悲観的 | 現実的 | 楽観的 | 予測根拠 |
+|------|--------|--------|--------|----------|
+| 英語 | ○○% | ○○% | ○○% | ... |
+| 数学 | ○○% | ○○% | ○○% | ... |
+| 国語 | ○○% | ○○% | ○○% | ... |
+| ... | ... | ... | ... | ... |
+
+- **悲観的**: 苦手分野が出題された場合、体調不良の場合など
+- **現実的**: 現在の実力がそのまま発揮された場合
+- **楽観的**: 得意分野が出題され、実力以上を発揮した場合
+
+### 2. 総合得点の予測
+
+- 悲観的シナリオ: ○○○点 / ○○○点（○○%）
+- 現実的シナリオ: ○○○点 / ○○○点（○○%）
+- 楽観的シナリオ: ○○○点 / ○○○点（○○%）
+
+### 3. 予測の根拠
+
+- データから読み取れる傾向
+- 残り${daysUntil}日での伸びしろの推定
+- 予測の信頼度（データ量に基づく）
+
+### 4. 目標達成の可能性
+
+- 目標得点率への到達可能性（%）
+- 最低ライン突破の可能性（%）
+- 達成に必要な条件
+
+### 5. 上振れ・下振れ要因
+
+**上振れする可能性がある場合**:
+- ...
+
+**下振れする可能性がある場合**:
+- ...
+
+### 6. 残り${daysUntil}日で点数を上げるための提案
+
+優先度の高い順に、具体的な対策を提案してください。`;
       
       return p;
     }
