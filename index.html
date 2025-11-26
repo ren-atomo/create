@@ -1413,7 +1413,7 @@
           <input type="date" class="form-input" id="settingsExamDate">
         </div>
         <div class="version-info">
-          <span id="appVersionDisplay">v1.1.0</span>
+          <span id="appVersionDisplay">v1.1.1</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -1427,7 +1427,7 @@
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.1.0';
+    const APP_VERSION = '1.1.1';
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbzS6GFMIHj71yWTrbBo9Vg1-G5iqrE_1eNt77Ltkz1d6bWqHc6-Eo_SbeibeTvxIkAGyw/exec';
     
     (function checkVersion() {
@@ -1579,7 +1579,7 @@
           resolve(data);
         };
         
-        const fullUrl = `${API_URL}?action=getAllData&callback=${callbackName}`;
+        const fullUrl = `${API_URL}?action=getData&callback=${callbackName}`;
         console.log('Full URL:', fullUrl);
         script.src = fullUrl;
         
