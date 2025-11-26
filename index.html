@@ -329,6 +329,8 @@
     .goal-fill.kokugo { background: var(--gray-900); }
     .goal-fill.sugaku { background: var(--gray-600); }
     .goal-fill.eigo { background: var(--gray-400); }
+    .goal-fill.rika { background: #22c55e; }
+    .goal-fill.shakai { background: #f59e0b; }
 
     /* Records */
     .records-list {
@@ -1138,11 +1140,26 @@
         </div>
         <div class="form-group">
           <label class="form-label">科目</label>
-          <div class="btn-group" id="redbookSubjectButtons">
-            <button class="btn-option" data-value="英語">英語</button>
-            <button class="btn-option" data-value="国語">国語</button>
-            <button class="btn-option" data-value="数学">数学</button>
-          </div>
+          <select class="form-input form-select" id="redbookSubject">
+            <option value="">選択してください</option>
+            <optgroup label="英語">
+              <option value="英語R">英語R（リーディング）</option>
+              <option value="英語L">英語L（リスニング）</option>
+              <option value="英語">英語（総合）</option>
+            </optgroup>
+            <optgroup label="国語">
+              <option value="現代文">現代文</option>
+              <option value="古文">古文</option>
+              <option value="漢文">漢文</option>
+              <option value="国語">国語（総合）</option>
+            </optgroup>
+            <optgroup label="数学">
+              <option value="数学IA">数学IA</option>
+              <option value="数学IIB">数学IIB</option>
+              <option value="数学IIIC">数学IIIC</option>
+              <option value="数学">数学（総合）</option>
+            </optgroup>
+          </select>
         </div>
         <div class="form-group">
           <label class="form-label">年度</label>
@@ -1155,6 +1172,12 @@
             <option value="2021">2021年</option>
             <option value="2020">2020年</option>
             <option value="2019">2019年</option>
+            <option value="2018">2018年</option>
+            <option value="2017">2017年</option>
+            <option value="2016">2016年</option>
+            <option value="2015">2015年</option>
+            <option value="2014以前">2014年以前</option>
+            <option value="オリジナル">オリジナル問題</option>
           </select>
         </div>
         <div class="form-group">
@@ -1288,7 +1311,6 @@
     let selectedTime = 0;
     let selectedMood = '';
     let selectedStudyType = '';
-    let selectedRedbookSubject = '';
     let selectedAIType = 'weekly';
     
     let dailyChart = null;
@@ -1343,14 +1365,6 @@
           document.querySelectorAll('#studyTypeButtons .btn-option').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           selectedStudyType = btn.dataset.value;
-        });
-      });
-      
-      document.querySelectorAll('#redbookSubjectButtons .btn-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('#redbookSubjectButtons .btn-option').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          selectedRedbookSubject = btn.dataset.value;
         });
       });
     }
@@ -1722,13 +1736,22 @@
     }
     
     function categorizeSubject(subject) {
-      const english = ['単語', '文法', '長文', '音読', 'リスニング'];
-      const math = ['数学1A', '数学2B'];
-      const japanese = ['現代文', '古文', '漢文'];
+      // 英語系
+      const english = ['単語', '文法', '長文', '音読', 'リスニング', '英語', '英語R', '英語L'];
+      // 数学系
+      const math = ['数学1A', '数学2B', '数学', '数学IA', '数学IIB', '数学IIIC'];
+      // 国語系
+      const japanese = ['現代文', '古文', '漢文', '国語'];
+      // 理科系
+      const science = ['物理', '物理基礎', '化学', '化学基礎', '生物', '生物基礎', '地学', '地学基礎'];
+      // 社会系
+      const social = ['日本史', '世界史', '地理', '政治経済', '倫理', '倫理政経', '現代社会', '公共'];
       
       if (english.includes(subject)) return '英語';
       if (math.includes(subject)) return '数学';
       if (japanese.includes(subject)) return '国語';
+      if (science.includes(subject)) return '理科';
+      if (social.includes(subject)) return '社会';
       return 'その他';
     }
     
@@ -1741,7 +1764,7 @@
         return;
       }
       
-      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo' };
+      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '理科': 'rika', '社会': 'shakai' };
       
       section.innerHTML = goals.map(goal => {
         const progress = Math.min(100, Math.round(((goal.current) / (goal.target)) * 100));
@@ -1870,14 +1893,13 @@
     function resetRedbookForm() {
       document.getElementById('redbookDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('redbookUniversity').value = '';
-      document.querySelectorAll('#redbookSubjectButtons .btn-option').forEach(b => b.classList.remove('active'));
+      document.getElementById('redbookSubject').value = '';
       document.getElementById('redbookYear').value = '';
       document.getElementById('redbookScore').value = '';
       document.getElementById('redbookTime').value = '';
       document.getElementById('redbookSectionScores').value = '';
       document.getElementById('redbookWeakAreas').value = '';
       document.getElementById('redbookMemo').value = '';
-      selectedRedbookSubject = '';
     }
     
     function openAIModal() {
@@ -1931,11 +1953,12 @@
     
     async function submitRedbookLog() {
       const university = document.getElementById('redbookUniversity').value;
+      const subject = document.getElementById('redbookSubject').value;
       const year = document.getElementById('redbookYear').value;
       const score = document.getElementById('redbookScore').value;
       
       if (!university) { showToast('大学を選択してください', 'error'); return; }
-      if (!selectedRedbookSubject) { showToast('科目を選択してください', 'error'); return; }
+      if (!subject) { showToast('科目を選択してください', 'error'); return; }
       if (!year) { showToast('年度を選択してください', 'error'); return; }
       if (!score) { showToast('得点率を入力してください', 'error'); return; }
       
@@ -1946,7 +1969,7 @@
           action: 'addRedbookLog',
           date: document.getElementById('redbookDate').value,
           university,
-          subject: selectedRedbookSubject,
+          subject,
           year,
           score: parseInt(score),
           time: document.getElementById('redbookTime').value ? parseInt(document.getElementById('redbookTime').value) : '',
