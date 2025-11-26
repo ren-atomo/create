@@ -839,6 +839,15 @@
       min-width: 60px;
     }
 
+    .version-info {
+      text-align: center;
+      padding-top: 1rem;
+      margin-top: 1rem;
+      border-top: 1px solid var(--gray-200);
+      font-size: 0.75rem;
+      color: var(--gray-400);
+    }
+
     .score-buttons {
       display: flex;
       justify-content: center;
@@ -1403,6 +1412,9 @@
           <label class="form-label">共通テスト日</label>
           <input type="date" class="form-input" id="settingsExamDate">
         </div>
+        <div class="version-info">
+          <span id="appVersionDisplay">v1.1.0</span>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="closeSettingsModal()">キャンセル</button>
@@ -1412,7 +1424,37 @@
   </div>
 
   <script>
-    let API_URL = localStorage.getItem('apiUrl') || 'https://script.google.com/macros/s/AKfycbzS6GFMIHj71yWTrbBo9Vg1-G5iqrE_1eNt77Ltkz1d6bWqHc6-Eo_SbeibeTvxIkAGyw/exec';
+    // ==========================================
+    // バージョン管理 & キャッシュクリア
+    // ==========================================
+    const APP_VERSION = '1.1.0';
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbzS6GFMIHj71yWTrbBo9Vg1-G5iqrE_1eNt77Ltkz1d6bWqHc6-Eo_SbeibeTvxIkAGyw/exec';
+    
+    (function checkVersion() {
+      const storedVersion = localStorage.getItem('appVersion');
+      
+      if (storedVersion !== APP_VERSION) {
+        console.log(`App updated: ${storedVersion || 'none'} → ${APP_VERSION}`);
+        
+        // API URLを最新のデフォルトに更新
+        localStorage.setItem('apiUrl', DEFAULT_API_URL);
+        
+        // バージョンを保存
+        localStorage.setItem('appVersion', APP_VERSION);
+        
+        // 更新通知（初回以外）
+        if (storedVersion) {
+          setTimeout(() => {
+            showToast(`アプリが更新されました (v${APP_VERSION})`, 'success');
+          }, 1000);
+        }
+      }
+    })();
+    
+    // ==========================================
+    // メイン
+    // ==========================================
+    let API_URL = localStorage.getItem('apiUrl') || DEFAULT_API_URL;
     let appData = {
       studyLogs: [],
       redbookLogs: [],
@@ -2109,6 +2151,7 @@
       document.getElementById('settingsApiUrl').value = API_URL;
       document.getElementById('settingsWeeklyGoal').value = appData.settings?.weeklyGoalMinutes || 1800;
       document.getElementById('settingsExamDate').value = localStorage.getItem('examDate') || '2026-01-17';
+      document.getElementById('appVersionDisplay').textContent = `v${APP_VERSION}`;
       document.getElementById('settingsModal').classList.add('active');
     }
     
