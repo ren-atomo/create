@@ -722,41 +722,114 @@
     }
 
     /* AI Modal */
-    .ai-options {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
+    .ai-question {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+      text-align: center;
     }
-
-    .ai-option {
-      padding: 0.75rem 0.5rem;
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
+    
+    .ai-main-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .ai-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
       background: var(--white);
       cursor: pointer;
       transition: all 0.15s ease;
-      text-align: center;
     }
-
-    .ai-option:hover {
-      border-color: var(--gray-300);
-    }
-
-    .ai-option.active {
-      border-color: var(--black);
+    
+    .ai-card:hover {
+      border-color: var(--gray-400);
       background: var(--gray-50);
     }
-
-    .ai-option-icon {
-      font-size: 1.25rem;
-      margin-bottom: 0.375rem;
+    
+    .ai-card.active {
+      border-color: var(--black);
+      background: var(--gray-100);
     }
-
-    .ai-option-label {
-      font-size: 0.8125rem;
-      font-weight: 500;
+    
+    .ai-card-icon {
+      font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+    
+    .ai-card-content {
+      flex: 1;
+    }
+    
+    .ai-card-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 0.25rem;
+    }
+    
+    .ai-card-desc {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+    }
+    
+    .ai-more-toggle {
+      text-align: center;
+      padding: 0.75rem;
+      color: var(--gray-500);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    
+    .ai-more-toggle:hover {
       color: var(--gray-700);
+    }
+    
+    .ai-more-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: var(--gray-50);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    
+    .ai-option-small {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 20px;
+      background: var(--white);
+      font-size: 0.8125rem;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .ai-option-small:hover {
+      border-color: var(--gray-400);
+      background: var(--gray-100);
+    }
+    
+    .ai-option-small.active {
+      border-color: var(--black);
+      background: var(--gray-900);
+      color: var(--white);
+    }
+    
+    .ai-option-small-icon {
+      font-size: 1rem;
     }
 
     .prompt-preview {
@@ -846,6 +919,262 @@
       border-top: 1px solid var(--gray-200);
       font-size: 0.75rem;
       color: var(--gray-400);
+    }
+
+    /* Tab Menu */
+    .tab-menu {
+      display: flex;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 60px;
+      z-index: 100;
+      padding: 0 1rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.75rem 0.5rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--gray-700);
+      background: var(--gray-50);
+    }
+
+    .tab-btn.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+    }
+
+    .tab-icon {
+      font-size: 1.25rem;
+    }
+
+    .tab-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Analysis Header */
+    .analysis-header {
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    .analysis-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .analysis-subtitle {
+      color: var(--gray-500);
+      font-size: 0.875rem;
+    }
+
+    /* Four column stats */
+    .stats-row.four-cols {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 600px) {
+      .stats-row.four-cols {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Breakdown List */
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .breakdown-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .breakdown-label {
+      min-width: 80px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .breakdown-bar-container {
+      flex: 1;
+      height: 24px;
+      background: var(--gray-100);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .breakdown-bar {
+      height: 100%;
+      background: var(--gray-800);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .breakdown-value {
+      min-width: 70px;
+      text-align: right;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    /* Filter Row */
+    .filter-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-select {
+      flex: 1;
+      max-width: 200px;
+    }
+
+    /* Full Height Records */
+    .records-list.full-height {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    /* Mood Grid */
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+
+    .mood-item {
+      text-align: center;
+      padding: 1rem;
+      background: var(--gray-50);
+      border-radius: 8px;
+    }
+
+    .mood-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .mood-count {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .mood-percent {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+    }
+
+    @media (max-width: 600px) {
+      .mood-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Weak Areas */
+    .weak-areas-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .weak-area-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--gray-50);
+      border-radius: 6px;
+      border-left: 3px solid var(--gray-400);
+    }
+
+    .weak-area-item.high {
+      border-left-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .weak-area-item.medium {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .weak-area-name {
+      font-weight: 500;
+    }
+
+    .weak-area-count {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+    }
+
+    /* Time Input Toggle */
+    .time-input-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .time-toggle-btn {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid var(--gray-300);
+      background: var(--white);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .time-toggle-btn.active {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+
+    .section-time-input {
+      width: 60px !important;
+      text-align: center;
+      padding: 0.375rem !important;
+      font-size: 0.8rem;
+    }
+
+    .record-score {
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .record-detail {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      margin-top: 0.25rem;
+      padding-top: 0.25rem;
+      border-top: 1px dashed var(--gray-200);
     }
 
     .score-buttons {
@@ -1023,8 +1352,26 @@
     </div>
   </header>
 
+  <!-- Tab Menu -->
+  <nav class="tab-menu">
+    <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">ダッシュボード</span>
+    </button>
+    <button class="tab-btn" data-tab="study" onclick="switchTab('study')">
+      <span class="tab-icon">📚</span>
+      <span class="tab-label">学習分析</span>
+    </button>
+    <button class="tab-btn" data-tab="redbook" onclick="switchTab('redbook')">
+      <span class="tab-icon">📕</span>
+      <span class="tab-label">過去問分析</span>
+    </button>
+  </nav>
+
   <!-- Main -->
   <main class="main">
+    <!-- ==================== Dashboard Tab ==================== -->
+    <div class="tab-content active" id="tab-dashboard">
     <!-- Hero -->
     <section class="hero">
       <div class="hero-countdown">
@@ -1104,6 +1451,167 @@
         </div>
       </div>
     </section>
+    </div><!-- End Dashboard Tab -->
+
+    <!-- ==================== Study Analysis Tab ==================== -->
+    <div class="tab-content" id="tab-study">
+      <section class="analysis-header">
+        <h2 class="analysis-title">📚 学習分析</h2>
+        <p class="analysis-subtitle">学習記録データの詳細分析</p>
+      </section>
+
+      <!-- Study Stats -->
+      <section class="stats-row four-cols">
+        <div class="stat-item">
+          <div class="stat-value" id="studyTotalHours">0</div>
+          <div class="stat-label">累計（時間）</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="studyAvgDaily">0</div>
+          <div class="stat-label">1日平均（分）</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="studyTotalDays">0</div>
+          <div class="stat-label">学習日数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="studyMaxStreak">0</div>
+          <div class="stat-label">最長連続</div>
+        </div>
+      </section>
+
+      <!-- Subject Breakdown -->
+      <section class="card">
+        <h3 class="card-title">科目別学習時間</h3>
+        <div id="subjectBreakdown" class="breakdown-list">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Day of Week Analysis -->
+      <section class="card">
+        <h3 class="card-title">曜日別学習パターン</h3>
+        <div class="chart-container">
+          <canvas id="dayOfWeekChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Study Type Analysis -->
+      <section class="card">
+        <h3 class="card-title">学習タイプ別割合</h3>
+        <div id="studyTypeBreakdown" class="breakdown-list">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Mood Analysis -->
+      <section class="card">
+        <h3 class="card-title">手応え分析</h3>
+        <div id="moodAnalysis" class="mood-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- All Study Records -->
+      <section class="card">
+        <h3 class="card-title">全学習記録</h3>
+        <div class="filter-row">
+          <select class="form-input form-select filter-select" id="studyFilterSubject" onchange="filterStudyRecords()">
+            <option value="">全科目</option>
+          </select>
+          <select class="form-input form-select filter-select" id="studyFilterPeriod" onchange="filterStudyRecords()">
+            <option value="all">全期間</option>
+            <option value="7">過去7日</option>
+            <option value="30">過去30日</option>
+            <option value="90">過去90日</option>
+          </select>
+        </div>
+        <div class="records-list full-height" id="allStudyRecords">
+          <div class="empty-state">まだ記録がありません</div>
+        </div>
+      </section>
+    </div><!-- End Study Tab -->
+
+    <!-- ==================== Redbook Analysis Tab ==================== -->
+    <div class="tab-content" id="tab-redbook">
+      <section class="analysis-header">
+        <h2 class="analysis-title">📕 過去問分析</h2>
+        <p class="analysis-subtitle">赤本・模試の演習データ分析</p>
+      </section>
+
+      <!-- Redbook Stats -->
+      <section class="stats-row four-cols">
+        <div class="stat-item">
+          <div class="stat-value" id="redbookTotalCount">0</div>
+          <div class="stat-label">演習回数</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="redbookAvgScore">0%</div>
+          <div class="stat-label">平均得点率</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="redbookHighScore">0%</div>
+          <div class="stat-label">最高得点</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="redbookTrend">―</div>
+          <div class="stat-label">傾向</div>
+        </div>
+      </section>
+
+      <!-- Score Trend Chart -->
+      <section class="card">
+        <h3 class="card-title">得点率推移</h3>
+        <div class="filter-row">
+          <select class="form-input form-select filter-select" id="scoreTrendSubject" onchange="updateScoreTrendChart()">
+            <option value="">全科目</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="scoreTrendChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Subject Scores -->
+      <section class="card">
+        <h3 class="card-title">科目別平均得点率</h3>
+        <div id="subjectScores" class="breakdown-list">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- University Scores -->
+      <section class="card">
+        <h3 class="card-title">大学別平均得点率</h3>
+        <div id="universityScores" class="breakdown-list">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Weak Areas -->
+      <section class="card">
+        <h3 class="card-title">⚠️ 頻出の苦手分野</h3>
+        <div id="weakAreasList" class="weak-areas-list">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- All Redbook Records -->
+      <section class="card">
+        <h3 class="card-title">全演習記録</h3>
+        <div class="filter-row">
+          <select class="form-input form-select filter-select" id="redbookFilterSubject" onchange="filterRedbookRecords()">
+            <option value="">全科目</option>
+          </select>
+          <select class="form-input form-select filter-select" id="redbookFilterUniv" onchange="filterRedbookRecords()">
+            <option value="">全大学</option>
+          </select>
+        </div>
+        <div class="records-list full-height" id="allRedbookRecords">
+          <div class="empty-state">まだ記録がありません</div>
+        </div>
+      </section>
+    </div><!-- End Redbook Tab -->
   </main>
 
   <!-- FAB -->
@@ -1313,7 +1821,27 @@
         </div>
         <div class="form-group">
           <label class="form-label">⏱️ 解答時間（分）</label>
-          <input type="number" class="form-input" id="redbookTime" min="0" placeholder="例: 80">
+          <div class="time-input-toggle">
+            <button type="button" class="time-toggle-btn active" onclick="toggleTimeInputMode('total')">総合のみ</button>
+            <button type="button" class="time-toggle-btn" onclick="toggleTimeInputMode('section')">大問ごと</button>
+          </div>
+          <div id="totalTimeInput">
+            <input type="number" class="form-input" id="redbookTime" min="0" placeholder="例: 80">
+          </div>
+          <div id="sectionTimeInput" style="display: none;">
+            <div class="score-input-container" style="padding: 0.75rem;">
+              <div class="score-row" style="margin-bottom: 0.5rem;">
+                <span class="score-label" style="font-weight: 600;">総合</span>
+                <div class="score-inputs">
+                  <input type="number" class="form-input score-box" id="totalTimeCalc" readonly placeholder="0">
+                  <span style="color: var(--gray-500); font-size: 0.875rem;">分（自動計算）</span>
+                </div>
+              </div>
+              <div id="sectionTimesContainer">
+                <!-- Generated by JS based on score sections -->
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">📋 間違えた分野（任意）</label>
@@ -1339,34 +1867,72 @@
         <button class="modal-close" onclick="closeAIModal()">✕</button>
       </div>
       <div class="modal-body">
-        <div class="ai-options" id="aiOptions">
-          <div class="ai-option active" data-type="weekly">
-            <div class="ai-option-icon">📅</div>
-            <div class="ai-option-label">週間計画</div>
+        <p class="ai-question">何について相談しますか？</p>
+        
+        <!-- メインの4つ -->
+        <div class="ai-main-options" id="aiMainOptions">
+          <div class="ai-card active" data-type="weekly">
+            <div class="ai-card-icon">📅</div>
+            <div class="ai-card-content">
+              <div class="ai-card-title">来週の計画を立てたい</div>
+              <div class="ai-card-desc">学習データを元に最適なスケジュールを提案</div>
+            </div>
           </div>
-          <div class="ai-option" data-type="daily">
-            <div class="ai-option-icon">📝</div>
-            <div class="ai-option-label">今日の振り返り</div>
+          <div class="ai-card" data-type="weakness">
+            <div class="ai-card-icon">🎯</div>
+            <div class="ai-card-content">
+              <div class="ai-card-title">苦手を克服したい</div>
+              <div class="ai-card-desc">弱点分析と具体的な対策方法</div>
+            </div>
           </div>
-          <div class="ai-option" data-type="weakness">
-            <div class="ai-option-icon">🎯</div>
-            <div class="ai-option-label">弱点分析</div>
+          <div class="ai-card" data-type="redbook">
+            <div class="ai-card-icon">📕</div>
+            <div class="ai-card-content">
+              <div class="ai-card-title">過去問の戦略を立てたい</div>
+              <div class="ai-card-desc">演習データから最適な過去問活用法を提案</div>
+            </div>
           </div>
-          <div class="ai-option" data-type="prediction">
-            <div class="ai-option-icon">📊</div>
-            <div class="ai-option-label">得点予測</div>
+          <div class="ai-card" data-type="motivation">
+            <div class="ai-card-icon">💪</div>
+            <div class="ai-card-content">
+              <div class="ai-card-title">やる気を出したい</div>
+              <div class="ai-card-desc">努力を認めて励ましてもらう</div>
+            </div>
           </div>
-          <div class="ai-option" data-type="subject">
-            <div class="ai-option-icon">📚</div>
-            <div class="ai-option-label">科目別相談</div>
+        </div>
+        
+        <!-- その他のオプション（折りたたみ） -->
+        <div class="ai-more-toggle" onclick="toggleMoreOptions()">
+          <span id="moreToggleText">その他の相談 ▼</span>
+        </div>
+        <div class="ai-more-options" id="aiMoreOptions" style="display: none;">
+          <div class="ai-option-small" data-type="daily">
+            <span class="ai-option-small-icon">📝</span>
+            <span>今日の振り返り</span>
           </div>
-          <div class="ai-option" data-type="lastspurt">
-            <div class="ai-option-icon">🔥</div>
-            <div class="ai-option-label">直前期対策</div>
+          <div class="ai-option-small" data-type="section">
+            <span class="ai-option-small-icon">🧩</span>
+            <span>大問別攻略</span>
           </div>
-          <div class="ai-option" data-type="motivation">
-            <div class="ai-option-icon">💪</div>
-            <div class="ai-option-label">モチベーション</div>
+          <div class="ai-option-small" data-type="university">
+            <span class="ai-option-small-icon">🏫</span>
+            <span>大学別対策</span>
+          </div>
+          <div class="ai-option-small" data-type="efficiency">
+            <span class="ai-option-small-icon">⏱️</span>
+            <span>時間効率分析</span>
+          </div>
+          <div class="ai-option-small" data-type="prediction">
+            <span class="ai-option-small-icon">📊</span>
+            <span>得点予測</span>
+          </div>
+          <div class="ai-option-small" data-type="subject">
+            <span class="ai-option-small-icon">📚</span>
+            <span>科目別相談</span>
+          </div>
+          <div class="ai-option-small" data-type="lastspurt">
+            <span class="ai-option-small-icon">🔥</span>
+            <span>直前期対策</span>
           </div>
         </div>
         
@@ -1378,10 +1944,18 @@
             <option value="英語">英語</option>
             <option value="数学">数学</option>
             <option value="国語">国語</option>
-            <option value="理科">理科</option>
-            <option value="社会">社会</option>
           </select>
         </div>
+        
+        <!-- 大学選択（大学別対策時のみ表示） -->
+        <div class="form-group" id="universitySelectGroup" style="display: none;">
+          <label class="form-label">対策したい大学</label>
+          <select class="form-select" id="aiUniversitySelect" onchange="generatePrompt()">
+            <option value="">選択してください</option>
+            <!-- 過去問データから動的に生成 -->
+          </select>
+        </div>
+        
         <label class="form-label">生成されたプロンプト</label>
         <div class="prompt-preview" id="promptPreview">生成中...</div>
       </div>
@@ -1413,7 +1987,7 @@
           <input type="date" class="form-input" id="settingsExamDate">
         </div>
         <div class="version-info">
-          <span id="appVersionDisplay">v1.1.1</span>
+          <span id="appVersionDisplay">v1.3.1</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -1427,8 +2001,8 @@
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.1.1';
-    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbzS6GFMIHj71yWTrbBo9Vg1-G5iqrE_1eNt77Ltkz1d6bWqHc6-Eo_SbeibeTvxIkAGyw/exec';
+    const APP_VERSION = '1.4.0';
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyOYg3MvoNtpzrDGH1Rv7oUSDC9TDLM1KYWApe9Luj-6hjua1rKF_xwDG4wS5WisxB1Bg/exec';
     
     (function checkVersion() {
       const storedVersion = localStorage.getItem('appVersion');
@@ -1471,6 +2045,9 @@
     
     let dailyChart = null;
     let subjectChart = null;
+    let dayOfWeekChart = null;
+    let scoreTrendChart = null;
+    let timeInputMode = 'total';
     
     document.addEventListener('DOMContentLoaded', () => {
       initializeDateInputs();
@@ -1484,6 +2061,81 @@
         hideLoading();
       }
     });
+    
+    // ==========================================
+    // タブ切り替え
+    // ==========================================
+    function switchTab(tabName) {
+      // タブボタンの切り替え
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+      
+      // コンテンツの切り替え
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.toggle('active', content.id === `tab-${tabName}`);
+      });
+      
+      // 分析タブに切り替えた時にデータを更新
+      if (tabName === 'study') {
+        renderStudyAnalysis();
+      } else if (tabName === 'redbook') {
+        renderRedbookAnalysis();
+      }
+    }
+    
+    // ==========================================
+    // 時間入力モード切り替え
+    // ==========================================
+    function toggleTimeInputMode(mode) {
+      timeInputMode = mode;
+      
+      document.querySelectorAll('.time-toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      if (mode === 'total') {
+        document.getElementById('totalTimeInput').style.display = 'block';
+        document.getElementById('sectionTimeInput').style.display = 'none';
+      } else {
+        document.getElementById('totalTimeInput').style.display = 'none';
+        document.getElementById('sectionTimeInput').style.display = 'block';
+        syncSectionTimesWithScores();
+      }
+    }
+    
+    function syncSectionTimesWithScores() {
+      const scoreContainer = document.getElementById('sectionScoresContainer');
+      const timeContainer = document.getElementById('sectionTimesContainer');
+      const scoreRows = scoreContainer.querySelectorAll('.score-row');
+      
+      timeContainer.innerHTML = '';
+      
+      scoreRows.forEach((row, index) => {
+        const sectionName = row.querySelector('.section-name').value || `大問${index + 1}`;
+        const timeRow = document.createElement('div');
+        timeRow.className = 'score-row';
+        timeRow.style.marginBottom = '0.5rem';
+        timeRow.innerHTML = `
+          <span class="score-label">${sectionName}</span>
+          <div class="score-inputs">
+            <input type="number" class="form-input section-time-input" min="0" placeholder="0" oninput="calculateTotalTime()">
+            <span style="color: var(--gray-500); font-size: 0.875rem;">分</span>
+          </div>
+        `;
+        timeContainer.appendChild(timeRow);
+      });
+    }
+    
+    function calculateTotalTime() {
+      const timeInputs = document.querySelectorAll('#sectionTimesContainer .section-time-input');
+      let total = 0;
+      timeInputs.forEach(input => {
+        total += parseInt(input.value) || 0;
+      });
+      document.getElementById('totalTimeCalc').value = total;
+    }
     
     function initializeDateInputs() {
       const today = new Date().toISOString().split('T')[0];
@@ -1526,23 +2178,79 @@
     }
     
     function initializeAIOptions() {
-      document.querySelectorAll('.ai-option').forEach(option => {
-        option.addEventListener('click', () => {
-          document.querySelectorAll('.ai-option').forEach(o => o.classList.remove('active'));
-          option.classList.add('active');
-          selectedAIType = option.dataset.type;
-          
-          // 科目別相談の場合のみ科目選択を表示
-          const subjectSelectGroup = document.getElementById('subjectSelectGroup');
-          if (selectedAIType === 'subject') {
-            subjectSelectGroup.style.display = 'block';
-          } else {
-            subjectSelectGroup.style.display = 'none';
-          }
-          
-          generatePrompt();
+      // メインカードのイベント
+      document.querySelectorAll('.ai-card').forEach(card => {
+        card.addEventListener('click', () => {
+          selectAIOption(card);
         });
       });
+      
+      // その他オプションのイベント
+      document.querySelectorAll('.ai-option-small').forEach(option => {
+        option.addEventListener('click', () => {
+          selectAIOption(option);
+        });
+      });
+    }
+    
+    function selectAIOption(element) {
+      // すべての選択状態をクリア
+      document.querySelectorAll('.ai-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.ai-option-small').forEach(o => o.classList.remove('active'));
+      
+      // 選択状態を設定
+      element.classList.add('active');
+      selectedAIType = element.dataset.type;
+      
+      // 科目別相談の場合のみ科目選択を表示
+      const subjectSelectGroup = document.getElementById('subjectSelectGroup');
+      const universitySelectGroup = document.getElementById('universitySelectGroup');
+      
+      subjectSelectGroup.style.display = selectedAIType === 'subject' ? 'block' : 'none';
+      universitySelectGroup.style.display = selectedAIType === 'university' ? 'block' : 'none';
+      
+      // 大学選択時は選択肢を動的に生成
+      if (selectedAIType === 'university') {
+        populateUniversitySelect();
+      }
+      
+      generatePrompt();
+    }
+    
+    function toggleMoreOptions() {
+      const moreOptions = document.getElementById('aiMoreOptions');
+      const toggleText = document.getElementById('moreToggleText');
+      
+      if (moreOptions.style.display === 'none') {
+        moreOptions.style.display = 'flex';
+        toggleText.textContent = 'その他の相談 ▲';
+      } else {
+        moreOptions.style.display = 'none';
+        toggleText.textContent = 'その他の相談 ▼';
+      }
+    }
+    
+    function populateUniversitySelect() {
+      const select = document.getElementById('aiUniversitySelect');
+      const redbookLogs = appData.redbookLogs || [];
+      
+      // 過去問データから大学一覧を取得
+      const universities = [...new Set(redbookLogs.map(l => l.university))].filter(Boolean);
+      
+      select.innerHTML = '<option value="">選択してください</option>';
+      universities.forEach(uni => {
+        const option = document.createElement('option');
+        option.value = uni;
+        option.textContent = uni;
+        select.appendChild(option);
+      });
+      
+      if (universities.length === 0) {
+        const option = document.createElement('option');
+        option.value = "";
+        option.textContent = "（過去問データがありません）";
+        select.appendChild(option);
+      }
     }
     
     function loadSettingsFromStorage() {
@@ -1690,33 +2398,64 @@
     
     function renderStats() {
       const logs = appData.studyLogs || [];
+      const redbookLogs = appData.redbookLogs || [];
       const today = new Date().toISOString().split('T')[0];
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       const monthAgo = new Date();
       monthAgo.setDate(monthAgo.getDate() - 30);
       
-      const todayMinutes = logs
+      // 学習記録の時間
+      const studyTodayMinutes = logs
         .filter(log => log.date === today)
         .reduce((sum, log) => sum + (log.minutes || 0), 0);
+      
+      // 赤本記録の時間
+      const redbookTodayMinutes = redbookLogs
+        .filter(log => log.date === today)
+        .reduce((sum, log) => sum + (log.time || 0), 0);
+      
+      const todayMinutes = studyTodayMinutes + redbookTodayMinutes;
       document.getElementById('todayMinutes').textContent = todayMinutes + '分';
       
-      const weekMinutes = logs
+      // 週間の学習時間
+      const studyWeekMinutes = logs
         .filter(log => new Date(log.date) >= weekAgo)
         .reduce((sum, log) => sum + (log.minutes || 0), 0);
+      
+      const redbookWeekMinutes = redbookLogs
+        .filter(log => new Date(log.date) >= weekAgo)
+        .reduce((sum, log) => sum + (log.time || 0), 0);
+      
+      const weekMinutes = studyWeekMinutes + redbookWeekMinutes;
       document.getElementById('weekMinutes').textContent = Math.round(weekMinutes / 60) + '時間';
       
-      const streakDays = calculateStreak(logs);
+      // 連続日数（学習記録と赤本記録の両方を考慮）
+      const allDates = [
+        ...logs.map(log => log.date),
+        ...redbookLogs.map(log => log.date)
+      ];
+      const streakDays = calculateStreak({ dates: allDates });
       document.getElementById('streakDays').textContent = streakDays;
       
-      const monthSessions = logs.filter(log => new Date(log.date) >= monthAgo).length;
-      document.getElementById('totalSessions').textContent = monthSessions;
+      // 学習回数（学習記録 + 赤本記録）
+      const monthStudySessions = logs.filter(log => new Date(log.date) >= monthAgo).length;
+      const monthRedbookSessions = redbookLogs.filter(log => new Date(log.date) >= monthAgo).length;
+      document.getElementById('totalSessions').textContent = monthStudySessions + monthRedbookSessions;
     }
     
-    function calculateStreak(logs) {
-      if (logs.length === 0) return 0;
+    function calculateStreak(input) {
+      // 配列またはオブジェクト形式に対応
+      let dates;
+      if (Array.isArray(input)) {
+        dates = [...new Set(input.map(log => log.date))].sort().reverse();
+      } else if (input.dates) {
+        dates = [...new Set(input.dates)].filter(Boolean).sort().reverse();
+      } else {
+        return 0;
+      }
       
-      const dates = [...new Set(logs.map(log => log.date))].sort().reverse();
+      if (dates.length === 0) return 0;
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
@@ -1743,12 +2482,21 @@
     
     function renderProgress() {
       const logs = appData.studyLogs || [];
+      const redbookLogs = appData.redbookLogs || [];
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       
-      const weekMinutes = logs
+      // 学習記録の週間時間
+      const studyWeekMinutes = logs
         .filter(log => new Date(log.date) >= weekAgo)
         .reduce((sum, log) => sum + (log.minutes || 0), 0);
+      
+      // 赤本記録の週間時間
+      const redbookWeekMinutes = redbookLogs
+        .filter(log => new Date(log.date) >= weekAgo)
+        .reduce((sum, log) => sum + (log.time || 0), 0);
+      
+      const weekMinutes = studyWeekMinutes + redbookWeekMinutes;
       
       const goal = appData.settings?.weeklyGoalMinutes || 1800;
       const percent = Math.min(100, Math.round((weekMinutes / goal) * 100));
@@ -1765,6 +2513,7 @@
     function renderDailyChart() {
       const ctx = document.getElementById('dailyChart').getContext('2d');
       const logs = appData.studyLogs || [];
+      const redbookLogs = appData.redbookLogs || [];
       
       const days = [];
       const subjectData = {};
@@ -1776,6 +2525,7 @@
         const dayLabel = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
         days.push(dayLabel);
         
+        // 学習記録
         const dayLogs = logs.filter(log => log.date === dateStr);
         dayLogs.forEach(log => {
           const subject = categorizeSubject(log.subject);
@@ -1784,12 +2534,22 @@
           }
           subjectData[subject][6 - i] += log.minutes || 0;
         });
+        
+        // 赤本記録
+        const dayRedbookLogs = redbookLogs.filter(log => log.date === dateStr);
+        dayRedbookLogs.forEach(log => {
+          if (!subjectData['過去問']) {
+            subjectData['過去問'] = Array(7).fill(0);
+          }
+          subjectData['過去問'][6 - i] += log.time || 0;
+        });
       }
       
       const colors = {
         '英語': '#0a0a0a',
         '数学': '#525252',
         '国語': '#a3a3a3',
+        '過去問': '#ef4444',
         'その他': '#d4d4d4'
       };
       
@@ -1843,17 +2603,29 @@
     function renderSubjectChart() {
       const ctx = document.getElementById('subjectChart').getContext('2d');
       const logs = appData.studyLogs || [];
+      const redbookLogs = appData.redbookLogs || [];
       
       const monthAgo = new Date();
       monthAgo.setDate(monthAgo.getDate() - 30);
       
       const subjectMinutes = {};
+      
+      // 学習記録
       logs
         .filter(log => new Date(log.date) >= monthAgo)
         .forEach(log => {
           const subject = log.subject || 'その他';
           subjectMinutes[subject] = (subjectMinutes[subject] || 0) + (log.minutes || 0);
         });
+      
+      // 赤本記録
+      const redbookTime = redbookLogs
+        .filter(log => new Date(log.date) >= monthAgo)
+        .reduce((sum, log) => sum + (log.time || 0), 0);
+      
+      if (redbookTime > 0) {
+        subjectMinutes['過去問演習'] = redbookTime;
+      }
       
       const sortedSubjects = Object.entries(subjectMinutes).sort((a, b) => b[1] - a[1]);
       
@@ -2087,6 +2859,11 @@
       `;
       
       container.appendChild(row);
+      
+      // 時間入力モードが大問ごとの場合は同期
+      if (timeInputMode === 'section') {
+        syncSectionTimesWithScores();
+      }
     }
     
     // 大問削除
@@ -2097,6 +2874,11 @@
       if (rows.length > 1) {
         rows[rows.length - 1].remove();
         calculateTotalScore();
+        
+        // 時間入力モードが大問ごとの場合は同期
+        if (timeInputMode === 'section') {
+          syncSectionTimesWithScores();
+        }
       }
     }
     
@@ -2135,11 +2917,30 @@
       document.getElementById('redbookWeakAreas').value = '';
       document.getElementById('redbookMemo').value = '';
       resetSectionScores();
+      
+      // 時間入力モードをリセット
+      timeInputMode = 'total';
+      document.querySelectorAll('.time-toggle-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === 0);
+      });
+      document.getElementById('totalTimeInput').style.display = 'block';
+      document.getElementById('sectionTimeInput').style.display = 'none';
+      document.getElementById('sectionTimesContainer').innerHTML = '';
+      document.getElementById('totalTimeCalc').value = '';
     }
     
     function openAIModal() {
       toggleFab();
       document.getElementById('aiModal').classList.add('active');
+      
+      // 「その他」を閉じた状態にリセット
+      document.getElementById('aiMoreOptions').style.display = 'none';
+      document.getElementById('moreToggleText').textContent = 'その他の相談 ▼';
+      
+      // サブ選択をリセット
+      document.getElementById('subjectSelectGroup').style.display = 'none';
+      document.getElementById('universitySelectGroup').style.display = 'none';
+      
       generatePrompt();
     }
     
@@ -2208,15 +3009,36 @@
       const container = document.getElementById('sectionScoresContainer');
       const rows = container.querySelectorAll('.score-row');
       const sectionScoresArray = [];
-      rows.forEach(row => {
+      
+      // 大問ごとの時間も取得
+      const timeContainer = document.getElementById('sectionTimesContainer');
+      const timeInputs = timeContainer.querySelectorAll('.section-time-input');
+      
+      rows.forEach((row, index) => {
         const name = row.querySelector('.section-name').value || '大問';
         const got = row.querySelector('.section-got').value || '0';
         const max = row.querySelector('.section-max').value || '0';
         if (parseInt(max) > 0) {
-          sectionScoresArray.push(`${name}:${got}/${max}`);
+          let sectionData = `${name}:${got}/${max}`;
+          // 時間入力モードが大問ごとの場合、時間も追加
+          if (timeInputMode === 'section' && timeInputs[index]) {
+            const sectionTime = timeInputs[index].value || '';
+            if (sectionTime) {
+              sectionData += `(${sectionTime}分)`;
+            }
+          }
+          sectionScoresArray.push(sectionData);
         }
       });
       const sectionScores = sectionScoresArray.join(', ');
+      
+      // 総合時間を取得
+      let totalTime = '';
+      if (timeInputMode === 'total') {
+        totalTime = document.getElementById('redbookTime').value ? parseInt(document.getElementById('redbookTime').value) : '';
+      } else {
+        totalTime = document.getElementById('totalTimeCalc').value ? parseInt(document.getElementById('totalTimeCalc').value) : '';
+      }
       
       showLoading();
       
@@ -2228,7 +3050,7 @@
           subject,
           year,
           score,
-          time: document.getElementById('redbookTime').value ? parseInt(document.getElementById('redbookTime').value) : '',
+          time: totalTime,
           sectionScores,
           weakAreas: document.getElementById('redbookWeakAreas').value,
           memo: document.getElementById('redbookMemo').value
@@ -2277,16 +3099,39 @@
         return logs.filter(log => new Date(log.date) >= cutoff);
       };
       
+      const getRedbookLogsInRange = (days) => {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        return redbookLogs.filter(log => new Date(log.date) >= cutoff);
+      };
+      
       const weekLogs = getLogsInRange(7);
       const twoWeekLogs = getLogsInRange(14);
       const monthLogs = getLogsInRange(30);
       
-      // ========== 基本統計 ==========
-      const totalMinutes = logs.reduce((sum, log) => sum + (log.minutes || 0), 0);
-      const weekMinutes = weekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
-      const prevWeekMinutes = twoWeekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0) - weekMinutes;
-      const studyDays = new Set(logs.map(l => l.date)).size;
-      const streak = calculateStreak(logs);
+      const weekRedbookLogs = getRedbookLogsInRange(7);
+      const twoWeekRedbookLogs = getRedbookLogsInRange(14);
+      
+      // ========== 基本統計（赤本時間を含む） ==========
+      const studyMinutes = logs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const redbookMinutes = redbookLogs.reduce((sum, log) => sum + (log.time || 0), 0);
+      const totalMinutes = studyMinutes + redbookMinutes;
+      
+      const studyWeekMinutes = weekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const redbookWeekMinutes = weekRedbookLogs.reduce((sum, log) => sum + (log.time || 0), 0);
+      const weekMinutes = studyWeekMinutes + redbookWeekMinutes;
+      
+      const studyPrevWeekMinutes = twoWeekLogs.reduce((sum, log) => sum + (log.minutes || 0), 0) - studyWeekMinutes;
+      const redbookPrevWeekMinutes = twoWeekRedbookLogs.reduce((sum, log) => sum + (log.time || 0), 0) - redbookWeekMinutes;
+      const prevWeekMinutes = studyPrevWeekMinutes + redbookPrevWeekMinutes;
+      
+      // 学習日数（学習記録と赤本記録の両方を考慮）
+      const allDates = [...new Set([
+        ...logs.map(l => l.date),
+        ...redbookLogs.map(l => l.date)
+      ])];
+      const studyDays = allDates.length;
+      const streak = calculateStreak({ dates: allDates });
       
       // ========== 曜日別パターン ==========
       const dayOfWeekStats = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
@@ -2294,6 +3139,12 @@
       logs.forEach(log => {
         const dow = new Date(log.date).getDay();
         dayOfWeekStats[dow] += log.minutes || 0;
+        dayOfWeekCount[dow]++;
+      });
+      // 赤本時間も曜日別に追加
+      redbookLogs.forEach(log => {
+        const dow = new Date(log.date).getDay();
+        dayOfWeekStats[dow] += log.time || 0;
         dayOfWeekCount[dow]++;
       });
       const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
@@ -2388,17 +3239,26 @@
       if (typePercentage['演習'] < 15) typeBalanceAssessment.push('演習量が不足（実戦力に課題）');
       if (typePercentage['新規'] > 50) typeBalanceAssessment.push('新規学習に偏重（消化不良の恐れ）');
       
-      // ========== 過去問分析 ==========
+      // ========== 過去問分析（大幅拡張） ==========
       const redbookAnalysis = {
         totalAttempts: redbookLogs.length,
+        totalTime: 0,
         avgScore: 0,
         scoresBySubject: {},
         scoreTrend: 'stable',
         weakAreasSummary: {},
-        timeManagement: { adequate: 0, rushed: 0, unknown: 0 }
+        timeManagement: { adequate: 0, rushed: 0, overtime: 0, unknown: 0 },
+        // 新規追加
+        universityAnalysis: {},
+        sectionAnalysis: {},
+        recentPerformance: [],
+        monthlyProgress: {}
       };
       
       if (redbookLogs.length > 0) {
+        // 総演習時間
+        redbookAnalysis.totalTime = redbookLogs.reduce((sum, l) => sum + (l.time || 0), 0);
+        
         redbookAnalysis.avgScore = Math.round(
           redbookLogs.reduce((sum, l) => sum + l.score, 0) / redbookLogs.length
         );
@@ -2421,10 +3281,12 @@
         
         // 得点トレンド（直近5回 vs それ以前）
         if (redbookLogs.length >= 4) {
-          const recent = redbookLogs.slice(0, Math.floor(redbookLogs.length / 2));
-          const older = redbookLogs.slice(Math.floor(redbookLogs.length / 2));
-          const recentAvg = recent.reduce((s, l) => s + l.score, 0) / recent.length;
+          const sorted = [...redbookLogs].sort((a, b) => new Date(a.date) - new Date(b.date));
+          const half = Math.floor(sorted.length / 2);
+          const older = sorted.slice(0, half);
+          const recent = sorted.slice(half);
           const olderAvg = older.reduce((s, l) => s + l.score, 0) / older.length;
+          const recentAvg = recent.reduce((s, l) => s + l.score, 0) / recent.length;
           if (recentAvg > olderAvg + 5) redbookAnalysis.scoreTrend = 'improving';
           else if (recentAvg < olderAvg - 5) redbookAnalysis.scoreTrend = 'declining';
         }
@@ -2440,6 +3302,134 @@
               }
             });
           }
+        });
+        
+        // ========== 大学別詳細分析 ==========
+        const uniGroups = {};
+        redbookLogs.forEach(log => {
+          const uni = log.university || '不明';
+          if (!uniGroups[uni]) {
+            uniGroups[uni] = [];
+          }
+          uniGroups[uni].push(log);
+        });
+        
+        Object.entries(uniGroups).forEach(([uni, logs]) => {
+          const sorted = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
+          const avgScore = Math.round(logs.reduce((s, l) => s + l.score, 0) / logs.length);
+          const avgTime = logs.filter(l => l.time).length > 0
+            ? Math.round(logs.filter(l => l.time).reduce((s, l) => s + l.time, 0) / logs.filter(l => l.time).length)
+            : 0;
+          
+          // 科目別
+          const bySubject = {};
+          logs.forEach(l => {
+            const subj = l.subject || '不明';
+            if (!bySubject[subj]) {
+              bySubject[subj] = { scores: [], times: [], weakAreas: [] };
+            }
+            bySubject[subj].scores.push(l.score);
+            if (l.time) bySubject[subj].times.push(l.time);
+            if (l.weakAreas) {
+              l.weakAreas.split(/[,、]/).forEach(a => {
+                if (a.trim()) bySubject[subj].weakAreas.push(a.trim());
+              });
+            }
+          });
+          
+          const subjectSummary = {};
+          Object.entries(bySubject).forEach(([subj, data]) => {
+            subjectSummary[subj] = {
+              avgScore: Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length),
+              attempts: data.scores.length,
+              avgTime: data.times.length > 0 ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) : null,
+              weakAreas: [...new Set(data.weakAreas)].slice(0, 5)
+            };
+          });
+          
+          // トレンド
+          let trend = 'stable';
+          if (sorted.length >= 3) {
+            const half = Math.floor(sorted.length / 2);
+            const firstHalf = sorted.slice(0, half);
+            const secondHalf = sorted.slice(half);
+            const firstAvg = firstHalf.reduce((s, l) => s + l.score, 0) / firstHalf.length;
+            const secondAvg = secondHalf.reduce((s, l) => s + l.score, 0) / secondHalf.length;
+            if (secondAvg > firstAvg + 3) trend = 'improving';
+            else if (secondAvg < firstAvg - 3) trend = 'declining';
+          }
+          
+          redbookAnalysis.universityAnalysis[uni] = {
+            attempts: logs.length,
+            avgScore,
+            avgTime,
+            highScore: Math.max(...logs.map(l => l.score)),
+            lowScore: Math.min(...logs.map(l => l.score)),
+            trend,
+            bySubject: subjectSummary,
+            recentLogs: sorted.slice(-3).reverse()
+          };
+        });
+        
+        // ========== 大問別分析 ==========
+        const sectionData = {};
+        redbookLogs.forEach(log => {
+          if (log.sectionScores) {
+            // 形式: "大問1:15/20, 大問2:30/40" または "1A:15/30(25分), 1B:10/20(15分)"
+            log.sectionScores.split(',').forEach(section => {
+              const match = section.trim().match(/(.+?):(\d+)\/(\d+)(?:\((\d+)分\))?/);
+              if (match) {
+                const [, name, got, max, time] = match;
+                const key = name.trim();
+                const rate = max > 0 ? Math.round((parseInt(got) / parseInt(max)) * 100) : 0;
+                
+                if (!sectionData[key]) {
+                  sectionData[key] = { scores: [], times: [], subjects: [] };
+                }
+                sectionData[key].scores.push(rate);
+                if (time) sectionData[key].times.push(parseInt(time));
+                sectionData[key].subjects.push(log.subject || '不明');
+              }
+            });
+          }
+        });
+        
+        Object.entries(sectionData).forEach(([name, data]) => {
+          redbookAnalysis.sectionAnalysis[name] = {
+            avgScore: Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length),
+            attempts: data.scores.length,
+            avgTime: data.times.length > 0 ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) : null,
+            subjects: [...new Set(data.subjects)]
+          };
+        });
+        
+        // ========== 直近のパフォーマンス ==========
+        redbookAnalysis.recentPerformance = [...redbookLogs]
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 5)
+          .map(l => ({
+            date: l.date,
+            university: l.university,
+            subject: l.subject,
+            score: l.score,
+            time: l.time,
+            weakAreas: l.weakAreas
+          }));
+        
+        // ========== 月別進捗 ==========
+        redbookLogs.forEach(log => {
+          const month = log.date.substring(0, 7); // YYYY-MM
+          if (!redbookAnalysis.monthlyProgress[month]) {
+            redbookAnalysis.monthlyProgress[month] = { attempts: 0, totalScore: 0, totalTime: 0 };
+          }
+          redbookAnalysis.monthlyProgress[month].attempts++;
+          redbookAnalysis.monthlyProgress[month].totalScore += log.score;
+          redbookAnalysis.monthlyProgress[month].totalTime += log.time || 0;
+        });
+        
+        Object.keys(redbookAnalysis.monthlyProgress).forEach(month => {
+          const data = redbookAnalysis.monthlyProgress[month];
+          data.avgScore = Math.round(data.totalScore / data.attempts);
         });
       }
       
@@ -2526,6 +3516,143 @@
         }
       });
       
+      // ========== 成長分析（新規追加） ==========
+      const growthAnalysis = {
+        // 学習量の推移
+        volumeGrowth: prevWeekMinutes > 0 ? Math.round((weekMinutes - prevWeekMinutes) / prevWeekMinutes * 100) : 0,
+        
+        // 学習習慣スコア（100点満点）
+        habitScore: 0,
+        habitFactors: [],
+        
+        // 手応えの推移
+        moodTrend: { improving: 0, stable: 0, declining: 0 },
+        
+        // 科目別の成長
+        subjectGrowth: {},
+        
+        // 週間の学習パターン
+        weekPattern: {
+          mostProductiveDay: strongDays[0] || '不明',
+          leastProductiveDay: weakDays[0] || '不明',
+          avgDailyMinutes: studyDays > 0 ? Math.round(totalMinutes / studyDays) : 0,
+          consistency: 0 // 学習日の連続性
+        }
+      };
+      
+      // 学習習慣スコアの計算
+      let habitScore = 0;
+      
+      // 1. 継続性（30点満点）
+      if (streak >= 14) { habitScore += 30; growthAnalysis.habitFactors.push('優秀な継続力'); }
+      else if (streak >= 7) { habitScore += 25; growthAnalysis.habitFactors.push('良好な継続力'); }
+      else if (streak >= 3) { habitScore += 15; growthAnalysis.habitFactors.push('継続力向上中'); }
+      else { habitScore += 5; }
+      
+      // 2. 学習量（25点満点）
+      const weeklyHours = weekMinutes / 60;
+      if (weeklyHours >= 30) { habitScore += 25; growthAnalysis.habitFactors.push('十分な学習量'); }
+      else if (weeklyHours >= 20) { habitScore += 20; growthAnalysis.habitFactors.push('適切な学習量'); }
+      else if (weeklyHours >= 10) { habitScore += 15; }
+      else { habitScore += 5; }
+      
+      // 3. バランス（20点満点）
+      const activeSubjects = Object.values(subjectAnalysis).filter(s => s.weekMinutes > 0).length;
+      if (activeSubjects >= 3) { habitScore += 20; growthAnalysis.habitFactors.push('バランス良い学習'); }
+      else if (activeSubjects >= 2) { habitScore += 15; }
+      else { habitScore += 5; }
+      
+      // 4. 復習・演習の実施（15点満点）
+      if (typePercentage['復習'] >= 20 && typePercentage['演習'] >= 15) {
+        habitScore += 15;
+        growthAnalysis.habitFactors.push('定着重視の学習');
+      } else if (typePercentage['復習'] >= 15 || typePercentage['演習'] >= 10) {
+        habitScore += 10;
+      } else {
+        habitScore += 5;
+      }
+      
+      // 5. 過去問演習（10点満点）
+      if (redbookAnalysis.totalAttempts > 0) {
+        const recentRedbook = weekRedbookLogs.length;
+        if (recentRedbook >= 3) { habitScore += 10; growthAnalysis.habitFactors.push('積極的な過去問演習'); }
+        else if (recentRedbook >= 1) { habitScore += 7; }
+        else { habitScore += 3; }
+      }
+      
+      growthAnalysis.habitScore = habitScore;
+      
+      // 科目別の成長分析
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        let growth = 'stable';
+        if (data.weekMinutes > data.prevWeekMinutes * 1.2) growth = 'increasing';
+        else if (data.weekMinutes < data.prevWeekMinutes * 0.8) growth = 'decreasing';
+        
+        // 手応えの集計
+        const totalMood = Object.values(data.moodBreakdown).reduce((a, b) => a + b, 0);
+        const goodRate = totalMood > 0 ? (data.moodBreakdown.excellent + data.moodBreakdown.good) / totalMood * 100 : 0;
+        
+        growthAnalysis.subjectGrowth[cat] = {
+          growth,
+          weekMinutes: data.weekMinutes,
+          prevWeekMinutes: data.prevWeekMinutes,
+          changePercent: data.prevWeekMinutes > 0 ? Math.round((data.weekMinutes - data.prevWeekMinutes) / data.prevWeekMinutes * 100) : 0,
+          goodMoodRate: Math.round(goodRate),
+          recentUnits: data.recentUnits.slice(0, 5)
+        };
+      });
+      
+      // 学習パターンの一貫性（標準偏差を使用）
+      const dayValues = Object.values(dayOfWeekAvg);
+      const avgOfDays = dayValues.reduce((a, b) => a + b, 0) / 7;
+      const variance = dayValues.reduce((sum, val) => sum + Math.pow(val - avgOfDays, 2), 0) / 7;
+      const stdDev = Math.sqrt(variance);
+      // 一貫性スコア: 標準偏差が小さいほど高い（100点満点）
+      growthAnalysis.weekPattern.consistency = avgOfDays > 0 ? Math.max(0, Math.round(100 - (stdDev / avgOfDays * 100))) : 0;
+      
+      // ========== 総合評価（新規追加） ==========
+      const comprehensiveScore = {
+        total: 0,
+        breakdown: {},
+        grade: 'C',
+        summary: ''
+      };
+      
+      // 学習量スコア（25点）
+      let volumeScore = 0;
+      if (weekMinutes >= 1800) volumeScore = 25;
+      else if (weekMinutes >= 1200) volumeScore = 20;
+      else if (weekMinutes >= 600) volumeScore = 15;
+      else volumeScore = Math.round(weekMinutes / 600 * 15);
+      comprehensiveScore.breakdown['学習量'] = volumeScore;
+      
+      // 継続性スコア（25点）
+      let consistencyScore = Math.min(25, Math.round(streak / 14 * 25));
+      comprehensiveScore.breakdown['継続性'] = consistencyScore;
+      
+      // 過去問成績スコア（25点）
+      let examScore = 0;
+      if (redbookAnalysis.avgScore >= 80) examScore = 25;
+      else if (redbookAnalysis.avgScore >= 60) examScore = 20;
+      else if (redbookAnalysis.avgScore >= 40) examScore = 15;
+      else if (redbookAnalysis.avgScore > 0) examScore = 10;
+      comprehensiveScore.breakdown['過去問成績'] = examScore;
+      
+      // バランススコア（25点）
+      let balanceScore = Math.round(activeSubjects / 3 * 15);
+      if (typeBalanceAssessment.length === 0) balanceScore += 10;
+      else balanceScore += Math.max(0, 10 - typeBalanceAssessment.length * 3);
+      comprehensiveScore.breakdown['学習バランス'] = Math.min(25, balanceScore);
+      
+      comprehensiveScore.total = Object.values(comprehensiveScore.breakdown).reduce((a, b) => a + b, 0);
+      
+      // グレード判定
+      if (comprehensiveScore.total >= 90) comprehensiveScore.grade = 'S';
+      else if (comprehensiveScore.total >= 80) comprehensiveScore.grade = 'A';
+      else if (comprehensiveScore.total >= 65) comprehensiveScore.grade = 'B';
+      else if (comprehensiveScore.total >= 50) comprehensiveScore.grade = 'C';
+      else comprehensiveScore.grade = 'D';
+      
       return {
         // 基本情報
         daysUntil,
@@ -2559,11 +3686,430 @@
         risks,
         strengths,
         
+        // 成長分析（新規）
+        growthAnalysis,
+        
+        // 総合評価（新規）
+        comprehensiveScore,
+        
         // 生データ
         weekLogs,
         redbookLogs,
         profile
       };
+    }
+    
+    // ==========================================
+    // 学習分析タブ
+    // ==========================================
+    
+    function renderStudyAnalysis() {
+      const logs = appData.studyLogs || [];
+      if (logs.length === 0) return;
+      
+      // 基本統計
+      const totalMinutes = logs.reduce((sum, l) => sum + (l.minutes || 0), 0);
+      const studyDates = [...new Set(logs.map(l => l.date))];
+      const avgDaily = Math.round(totalMinutes / studyDates.length);
+      
+      document.getElementById('studyTotalHours').textContent = Math.round(totalMinutes / 60);
+      document.getElementById('studyAvgDaily').textContent = avgDaily;
+      document.getElementById('studyTotalDays').textContent = studyDates.length;
+      
+      // 最長連続日数を計算
+      const sortedDates = studyDates.sort();
+      let maxStreak = 1, currentStreak = 1;
+      for (let i = 1; i < sortedDates.length; i++) {
+        const prev = new Date(sortedDates[i-1]);
+        const curr = new Date(sortedDates[i]);
+        const diff = (curr - prev) / (1000 * 60 * 60 * 24);
+        if (diff === 1) {
+          currentStreak++;
+          maxStreak = Math.max(maxStreak, currentStreak);
+        } else {
+          currentStreak = 1;
+        }
+      }
+      document.getElementById('studyMaxStreak').textContent = maxStreak;
+      
+      // 科目別学習時間
+      const subjectTotals = {};
+      logs.forEach(l => {
+        const cat = categorizeSubject(l.subject);
+        subjectTotals[cat] = (subjectTotals[cat] || 0) + (l.minutes || 0);
+      });
+      
+      const maxSubjectTime = Math.max(...Object.values(subjectTotals));
+      const subjectBreakdown = document.getElementById('subjectBreakdown');
+      subjectBreakdown.innerHTML = Object.entries(subjectTotals)
+        .sort((a, b) => b[1] - a[1])
+        .map(([subject, minutes]) => `
+          <div class="breakdown-item">
+            <span class="breakdown-label">${subject}</span>
+            <div class="breakdown-bar-container">
+              <div class="breakdown-bar" style="width: ${(minutes / maxSubjectTime) * 100}%"></div>
+            </div>
+            <span class="breakdown-value">${Math.round(minutes / 60)}時間</span>
+          </div>
+        `).join('');
+      
+      // 曜日別チャート
+      renderDayOfWeekChart(logs);
+      
+      // 学習タイプ別
+      const typeTotals = {};
+      logs.forEach(l => {
+        const type = l.studyType || '未分類';
+        typeTotals[type] = (typeTotals[type] || 0) + (l.minutes || 0);
+      });
+      
+      const maxTypeTime = Math.max(...Object.values(typeTotals));
+      const typeBreakdown = document.getElementById('studyTypeBreakdown');
+      typeBreakdown.innerHTML = Object.entries(typeTotals)
+        .sort((a, b) => b[1] - a[1])
+        .map(([type, minutes]) => {
+          const percent = Math.round((minutes / totalMinutes) * 100);
+          return `
+            <div class="breakdown-item">
+              <span class="breakdown-label">${type}</span>
+              <div class="breakdown-bar-container">
+                <div class="breakdown-bar" style="width: ${(minutes / maxTypeTime) * 100}%"></div>
+              </div>
+              <span class="breakdown-value">${percent}%</span>
+            </div>
+          `;
+        }).join('');
+      
+      // 手応え分析
+      const moodCounts = {};
+      const moods = ['😊', '🙂', '😐', '😣', '😫'];
+      moods.forEach(m => moodCounts[m] = 0);
+      logs.forEach(l => {
+        if (l.mood && moodCounts.hasOwnProperty(l.mood)) {
+          moodCounts[l.mood]++;
+        }
+      });
+      
+      const totalMoods = Object.values(moodCounts).reduce((a, b) => a + b, 0);
+      const moodAnalysis = document.getElementById('moodAnalysis');
+      moodAnalysis.innerHTML = moods.map(mood => {
+        const count = moodCounts[mood];
+        const percent = totalMoods > 0 ? Math.round((count / totalMoods) * 100) : 0;
+        return `
+          <div class="mood-item">
+            <div class="mood-emoji">${mood}</div>
+            <div class="mood-count">${count}</div>
+            <div class="mood-percent">${percent}%</div>
+          </div>
+        `;
+      }).join('');
+      
+      // フィルターオプションを更新
+      updateStudyFilterOptions();
+      
+      // 全記録表示
+      filterStudyRecords();
+    }
+    
+    function renderDayOfWeekChart(logs) {
+      const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+      const dayTotals = [0, 0, 0, 0, 0, 0, 0];
+      const dayCounts = [0, 0, 0, 0, 0, 0, 0];
+      
+      logs.forEach(l => {
+        const date = new Date(l.date);
+        const day = date.getDay();
+        dayTotals[day] += l.minutes || 0;
+        dayCounts[day]++;
+      });
+      
+      const dayAvgs = dayTotals.map((total, i) => dayCounts[i] > 0 ? Math.round(total / dayCounts[i]) : 0);
+      
+      const ctx = document.getElementById('dayOfWeekChart');
+      if (!ctx) return;
+      
+      if (dayOfWeekChart) dayOfWeekChart.destroy();
+      
+      dayOfWeekChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: dayNames,
+          datasets: [{
+            label: '平均学習時間（分）',
+            data: dayAvgs,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+    
+    function updateStudyFilterOptions() {
+      const logs = appData.studyLogs || [];
+      const subjects = [...new Set(logs.map(l => l.subject))].filter(Boolean);
+      
+      const select = document.getElementById('studyFilterSubject');
+      select.innerHTML = '<option value="">全科目</option>' + 
+        subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+    
+    function filterStudyRecords() {
+      const logs = appData.studyLogs || [];
+      const subjectFilter = document.getElementById('studyFilterSubject').value;
+      const periodFilter = document.getElementById('studyFilterPeriod').value;
+      
+      let filtered = [...logs];
+      
+      if (subjectFilter) {
+        filtered = filtered.filter(l => l.subject === subjectFilter);
+      }
+      
+      if (periodFilter !== 'all') {
+        const days = parseInt(periodFilter);
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        filtered = filtered.filter(l => new Date(l.date) >= cutoff);
+      }
+      
+      const container = document.getElementById('allStudyRecords');
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state">該当する記録がありません</div>';
+        return;
+      }
+      
+      container.innerHTML = filtered.map(log => `
+        <div class="record-item">
+          <div class="record-main">
+            <span class="record-subject">${log.subject}</span>
+            <span class="record-time">${log.minutes}分</span>
+          </div>
+          <div class="record-sub">
+            ${log.date} ${log.studyType ? `・${log.studyType}` : ''} ${log.mood || ''}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // ==========================================
+    // 過去問分析タブ
+    // ==========================================
+    
+    function renderRedbookAnalysis() {
+      const logs = appData.redbookLogs || [];
+      if (logs.length === 0) return;
+      
+      // 基本統計
+      const totalCount = logs.length;
+      const avgScore = Math.round(logs.reduce((sum, l) => sum + (l.score || 0), 0) / totalCount);
+      const highScore = Math.max(...logs.map(l => l.score || 0));
+      
+      document.getElementById('redbookTotalCount').textContent = totalCount;
+      document.getElementById('redbookAvgScore').textContent = avgScore + '%';
+      document.getElementById('redbookHighScore').textContent = highScore + '%';
+      
+      // トレンド計算
+      if (logs.length >= 2) {
+        const sorted = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const half = Math.floor(sorted.length / 2);
+        const firstHalf = sorted.slice(0, half);
+        const secondHalf = sorted.slice(half);
+        const firstAvg = firstHalf.reduce((s, l) => s + l.score, 0) / firstHalf.length;
+        const secondAvg = secondHalf.reduce((s, l) => s + l.score, 0) / secondHalf.length;
+        
+        if (secondAvg > firstAvg + 3) {
+          document.getElementById('redbookTrend').textContent = '📈';
+        } else if (secondAvg < firstAvg - 3) {
+          document.getElementById('redbookTrend').textContent = '📉';
+        } else {
+          document.getElementById('redbookTrend').textContent = '➡️';
+        }
+      }
+      
+      // 科目別平均
+      const subjectScores = {};
+      logs.forEach(l => {
+        if (!subjectScores[l.subject]) {
+          subjectScores[l.subject] = { total: 0, count: 0 };
+        }
+        subjectScores[l.subject].total += l.score || 0;
+        subjectScores[l.subject].count++;
+      });
+      
+      const subjectScoresEl = document.getElementById('subjectScores');
+      subjectScoresEl.innerHTML = Object.entries(subjectScores)
+        .map(([subject, data]) => {
+          const avg = Math.round(data.total / data.count);
+          return `
+            <div class="breakdown-item">
+              <span class="breakdown-label">${subject}</span>
+              <div class="breakdown-bar-container">
+                <div class="breakdown-bar" style="width: ${avg}%"></div>
+              </div>
+              <span class="breakdown-value">${avg}%</span>
+            </div>
+          `;
+        }).join('');
+      
+      // 大学別平均
+      const univScores = {};
+      logs.forEach(l => {
+        if (!univScores[l.university]) {
+          univScores[l.university] = { total: 0, count: 0 };
+        }
+        univScores[l.university].total += l.score || 0;
+        univScores[l.university].count++;
+      });
+      
+      const univScoresEl = document.getElementById('universityScores');
+      univScoresEl.innerHTML = Object.entries(univScores)
+        .map(([univ, data]) => {
+          const avg = Math.round(data.total / data.count);
+          return `
+            <div class="breakdown-item">
+              <span class="breakdown-label">${univ}</span>
+              <div class="breakdown-bar-container">
+                <div class="breakdown-bar" style="width: ${avg}%"></div>
+              </div>
+              <span class="breakdown-value">${avg}% (${data.count}回)</span>
+            </div>
+          `;
+        }).join('');
+      
+      // 苦手分野
+      const weakAreas = {};
+      logs.forEach(l => {
+        if (l.weakAreas) {
+          l.weakAreas.split(/[,、]/).forEach(area => {
+            const trimmed = area.trim();
+            if (trimmed) {
+              weakAreas[trimmed] = (weakAreas[trimmed] || 0) + 1;
+            }
+          });
+        }
+      });
+      
+      const weakAreasEl = document.getElementById('weakAreasList');
+      const sortedWeakAreas = Object.entries(weakAreas).sort((a, b) => b[1] - a[1]);
+      
+      if (sortedWeakAreas.length === 0) {
+        weakAreasEl.innerHTML = '<div class="empty-state">間違えた分野のデータがありません</div>';
+      } else {
+        weakAreasEl.innerHTML = sortedWeakAreas.slice(0, 10).map(([area, count]) => {
+          const severity = count >= 3 ? 'high' : count >= 2 ? 'medium' : '';
+          return `
+            <div class="weak-area-item ${severity}">
+              <span class="weak-area-name">${area}</span>
+              <span class="weak-area-count">${count}回</span>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // フィルターオプション更新
+      updateRedbookFilterOptions();
+      
+      // 得点推移チャート
+      updateScoreTrendChart();
+      
+      // 全記録表示
+      filterRedbookRecords();
+    }
+    
+    function updateRedbookFilterOptions() {
+      const logs = appData.redbookLogs || [];
+      const subjects = [...new Set(logs.map(l => l.subject))].filter(Boolean);
+      const universities = [...new Set(logs.map(l => l.university))].filter(Boolean);
+      
+      const subjectSelect = document.getElementById('redbookFilterSubject');
+      subjectSelect.innerHTML = '<option value="">全科目</option>' + 
+        subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+      
+      const univSelect = document.getElementById('redbookFilterUniv');
+      univSelect.innerHTML = '<option value="">全大学</option>' + 
+        universities.map(u => `<option value="${u}">${u}</option>`).join('');
+      
+      const trendSelect = document.getElementById('scoreTrendSubject');
+      trendSelect.innerHTML = '<option value="">全科目</option>' + 
+        subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+    
+    function updateScoreTrendChart() {
+      const logs = appData.redbookLogs || [];
+      const subjectFilter = document.getElementById('scoreTrendSubject').value;
+      
+      let filtered = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
+      if (subjectFilter) {
+        filtered = filtered.filter(l => l.subject === subjectFilter);
+      }
+      
+      const ctx = document.getElementById('scoreTrendChart');
+      if (!ctx) return;
+      
+      if (scoreTrendChart) scoreTrendChart.destroy();
+      
+      scoreTrendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: filtered.map(l => l.date),
+          datasets: [{
+            label: '得点率（%）',
+            data: filtered.map(l => l.score),
+            borderColor: 'rgba(0, 0, 0, 0.8)',
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, max: 100 }
+          }
+        }
+      });
+    }
+    
+    function filterRedbookRecords() {
+      const logs = appData.redbookLogs || [];
+      const subjectFilter = document.getElementById('redbookFilterSubject').value;
+      const univFilter = document.getElementById('redbookFilterUniv').value;
+      
+      let filtered = [...logs];
+      
+      if (subjectFilter) {
+        filtered = filtered.filter(l => l.subject === subjectFilter);
+      }
+      if (univFilter) {
+        filtered = filtered.filter(l => l.university === univFilter);
+      }
+      
+      const container = document.getElementById('allRedbookRecords');
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state">該当する記録がありません</div>';
+        return;
+      }
+      
+      container.innerHTML = filtered.map(log => `
+        <div class="record-item">
+          <div class="record-main">
+            <span class="record-subject">${log.university} ${log.subject}</span>
+            <span class="record-score">${log.score}%</span>
+          </div>
+          <div class="record-sub">
+            ${log.date} ・ ${log.year}年度 ${log.time ? `・${log.time}分` : ''}
+          </div>
+          ${log.sectionScores ? `<div class="record-detail">${log.sectionScores}</div>` : ''}
+        </div>
+      `).join('');
     }
     
     // ==========================================
@@ -2587,10 +4133,22 @@
           prompt = generateWeeklyPrompt(analysis);
           break;
         case 'daily':
-          prompt = generateDailyPrompt(analysis, logs);
+          prompt = generateDailyPrompt(analysis, logs, redbookLogs);
+          break;
+        case 'comprehensive':
+          prompt = generateComprehensivePrompt(analysis);
+          break;
+        case 'growth':
+          prompt = generateGrowthPrompt(analysis);
           break;
         case 'weakness':
           prompt = generateWeaknessPrompt(analysis);
+          break;
+        case 'redbook':
+          prompt = generateRedbookPrompt(analysis);
+          break;
+        case 'university':
+          prompt = generateUniversityPrompt(analysis);
           break;
         case 'prediction':
           prompt = generatePredictionPrompt(analysis);
@@ -2693,9 +4251,20 @@
       
       if (redbookAnalysis.totalAttempts > 0) {
         p += `## 過去問演習状況\n\n`;
-        p += `- 演習回数: ${redbookAnalysis.totalAttempts}回\n`;
+        p += `- 演習回数: ${redbookAnalysis.totalAttempts}回（累計${formatMinutes(redbookAnalysis.totalTime)}）\n`;
         p += `- 平均得点率: ${redbookAnalysis.avgScore}%\n`;
         p += `- 得点傾向: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降気味' : '➡️ 安定'}\n`;
+        
+        // 大学別サマリー
+        const uniKeys = Object.keys(redbookAnalysis.universityAnalysis);
+        if (uniKeys.length > 0) {
+          p += `\n### 大学別成績\n`;
+          uniKeys.forEach(uni => {
+            const uniData = redbookAnalysis.universityAnalysis[uni];
+            const trendIcon = uniData.trend === 'improving' ? '↑' : uniData.trend === 'declining' ? '↓' : '→';
+            p += `- **${uni}**: 平均${uniData.avgScore}%（${uniData.attempts}回）${trendIcon}\n`;
+          });
+        }
         
         if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
           const topWeak = Object.entries(redbookAnalysis.weakAreasSummary)
@@ -2751,22 +4320,457 @@
     }
     
     // ==========================================
+    // 総合診断プロンプト（新規追加）
+    // ==========================================
+    
+    function generateComprehensivePrompt(a) {
+      const { profile, daysUntil, totalMinutes, weekMinutes, prevWeekMinutes, streak, studyDays,
+              subjectAnalysis, typePercentage, typeBalanceAssessment, redbookAnalysis, 
+              goalAnalysis, risks, strengths, growthAnalysis, comprehensiveScore,
+              strongDays, weakDays, dayOfWeekAvg } = a;
+      
+      let p = `あなたは大学受験専門の学習アドバイザーです。以下の受験生のデータを総合的に分析し、詳細な診断レポートを作成してください。
+
+---
+
+# 🎓 総合診断リクエスト
+
+## 受験生プロフィール
+
+**志望校**: ${profile['第1志望'] || '未設定'}`;
+      if (profile['第2志望']) p += `
+**併願校**: ${profile['第2志望']}${profile['第3志望'] ? '、' + profile['第3志望'] : ''}`;
+      p += `
+**試験まで**: ${daysUntil}日（約${Math.ceil(daysUntil / 7)}週間）
+
+---
+
+# 📊 現在の総合スコア
+
+**総合評価: ${comprehensiveScore.total}点 / 100点（${comprehensiveScore.grade}ランク）**
+
+| 項目 | スコア |
+|------|--------|`;
+      Object.entries(comprehensiveScore.breakdown).forEach(([item, score]) => {
+        const bar = '█'.repeat(Math.round(score / 2.5)) + '░'.repeat(10 - Math.round(score / 2.5));
+        p += `
+| ${item} | ${bar} ${score}/25 |`;
+      });
+      
+      p += `
+
+---
+
+# 📈 学習データ詳細
+
+## 学習量の推移
+
+**今週の総学習時間**: ${formatMinutes(weekMinutes)}`;
+      if (prevWeekMinutes > 0) {
+        const change = weekMinutes - prevWeekMinutes;
+        const changePercent = Math.round(change / prevWeekMinutes * 100);
+        p += ` (先週比: ${change >= 0 ? '+' : ''}${formatMinutes(change)}、${changePercent >= 0 ? '+' : ''}${changePercent}%)`;
+      }
+      p += `
+**累計学習時間**: ${formatMinutes(totalMinutes)}（${studyDays}日間）
+**連続学習日数**: ${streak}日
+**1日平均**: ${growthAnalysis.weekPattern.avgDailyMinutes}分
+
+## 学習習慣スコア: ${growthAnalysis.habitScore}点 / 100点
+
+**評価ポイント**:`;
+      growthAnalysis.habitFactors.forEach(factor => {
+        p += `
+- ✅ ${factor}`;
+      });
+      
+      p += `
+
+## 科目別学習状況
+
+`;
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        if (data.totalMinutes > 0 || data.weekMinutes > 0) {
+          const trendIcon = data.trend === 'increasing' ? '📈' : data.trend === 'decreasing' ? '📉' : '➡️';
+          p += `### ${cat} ${trendIcon}
+- 今週: ${formatMinutes(data.weekMinutes)} / 累計: ${formatMinutes(data.totalMinutes)}
+- セッション数: ${data.sessionCount}回`;
+          
+          // 手応え
+          const totalMood = Object.values(data.moodBreakdown).reduce((a, b) => a + b, 0);
+          if (totalMood > 0) {
+            const goodRate = Math.round((data.moodBreakdown.excellent + data.moodBreakdown.good) / totalMood * 100);
+            p += `
+- 手応え: 😊🙂 ${goodRate}% / 😕😫 ${100 - goodRate}%`;
+          }
+          
+          // 最近の学習単元
+          if (data.recentUnits && data.recentUnits.length > 0) {
+            p += `
+- 最近の単元: ${data.recentUnits.slice(0, 3).join('、')}`;
+          }
+          p += `
+
+`;
+        }
+      });
+      
+      p += `## 学習タイプバランス
+
+`;
+      Object.entries(typePercentage).forEach(([type, pct]) => {
+        if (pct > 0) {
+          const bar = '█'.repeat(Math.round(pct / 10)) + '░'.repeat(10 - Math.round(pct / 10));
+          p += `- ${type}: ${bar} ${pct}%
+`;
+        }
+      });
+      
+      if (typeBalanceAssessment.length > 0) {
+        p += `
+⚠️ **バランス上の課題**: ${typeBalanceAssessment.join('、')}
+`;
+      }
+      
+      p += `
+## 学習パターン分析
+
+**曜日別平均学習時間**:
+`;
+      Object.entries(dayOfWeekAvg).forEach(([day, min]) => {
+        const bar = '▓'.repeat(Math.round(min / 30));
+        p += `- ${day}曜: ${bar} ${min}分
+`;
+      });
+      
+      p += `
+- 最も集中できる曜日: **${strongDays.join('・')}曜日**
+- 学習が少ない曜日: **${weakDays.join('・')}曜日**
+- パターン一貫性: ${growthAnalysis.weekPattern.consistency}%
+`;
+      
+      if (redbookAnalysis.totalAttempts > 0) {
+        p += `
+## 過去問演習分析
+
+**演習回数**: ${redbookAnalysis.totalAttempts}回
+**累計時間**: ${formatMinutes(redbookAnalysis.totalTime)}
+**平均得点率**: ${redbookAnalysis.avgScore}%
+**得点傾向**: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降中' : '➡️ 安定'}
+
+`;
+        // 科目別
+        if (Object.keys(redbookAnalysis.scoresBySubject).length > 0) {
+          p += `**科目別平均**:
+`;
+          Object.entries(redbookAnalysis.scoresBySubject).forEach(([subj, score]) => {
+            p += `- ${subj}: ${score}%
+`;
+          });
+        }
+        
+        // 苦手分野
+        if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+          const topWeak = Object.entries(redbookAnalysis.weakAreasSummary)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+          p += `
+**頻出の苦手分野**:
+`;
+          topWeak.forEach(([area, count]) => {
+            p += `- ⚠️ ${area}（${count}回出現）
+`;
+          });
+        }
+      }
+      
+      if (goalAnalysis.length > 0) {
+        p += `
+## 目標達成状況
+
+`;
+        goalAnalysis.forEach(g => {
+          const icon = g.feasibility === 'likely' ? '🟢' : g.feasibility === 'possible' ? '🟡' : '🔴';
+          p += `**${g.subject}** ${icon}
+- 現状: ${g.current}% → 目標: ${g.target}%（**+${g.gap}pt必要**）
+- 達成可能性: ${g.feasibility === 'likely' ? '高い' : g.feasibility === 'possible' ? '可能' : '要努力'}
+
+`;
+        });
+      }
+      
+      if (strengths.length > 0) {
+        p += `## 💪 強み・良い点
+`;
+        strengths.forEach(s => p += `- ${s.message}
+`);
+      }
+      
+      if (risks.length > 0) {
+        p += `
+## ⚠️ 課題・改善点
+`;
+        risks.forEach(r => {
+          const icon = r.severity === 'high' ? '🔴' : r.severity === 'medium' ? '🟡' : '🟢';
+          p += `- ${icon} ${r.message}
+`;
+        });
+      }
+      
+      p += `
+---
+
+# 🎯 相談内容
+
+上記のデータを総合的に分析し、以下の形式で**詳細な診断レポート**を作成してください。
+
+## 回答に含めてほしいこと
+
+1. **総合評価**（5段階で評定 + 200字程度のサマリー）
+   - 現在の学習状況を客観的に評価
+   - 最も良い点と最も改善すべき点
+
+2. **学習習慣の診断**
+   - 継続性、学習量、バランスの評価
+   - 曜日別パターンから見える改善点
+   - 具体的な習慣改善の提案
+
+3. **科目別の詳細分析**
+   - 各科目の現状と課題
+   - 手応えデータから見える心理面の分析
+   - 優先的に取り組むべき科目と理由
+
+4. **過去問演習の評価**（データがある場合）
+   - 得点傾向の分析
+   - 苦手分野への対策提案
+   - 今後の演習計画
+
+5. **目標達成に向けたロードマップ**
+   - 残り${daysUntil}日で何をすべきか
+   - 週単位のマイルストーン
+   - 現実的な目標設定の提案
+
+6. **今すぐ実行すべきアクション3つ**
+   - 優先度順に具体的な行動を提示`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 成長分析プロンプト（新規追加）
+    // ==========================================
+    
+    function generateGrowthPrompt(a) {
+      const { profile, daysUntil, totalMinutes, weekMinutes, prevWeekMinutes, streak, studyDays,
+              subjectAnalysis, redbookAnalysis, growthAnalysis, comprehensiveScore,
+              strongDays, weakDays, dayOfWeekAvg } = a;
+      
+      let p = `あなたは学習データ分析の専門家です。以下の受験生の成長データを分析し、成長を加速させるための具体的なアドバイスをください。
+
+---
+
+# 📈 成長分析リクエスト
+
+## 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+**連続学習日数**: ${streak}日
+**総学習日数**: ${studyDays}日
+
+---
+
+# 🔄 学習量の推移
+
+**今週 vs 先週**:
+- 今週: ${formatMinutes(weekMinutes)}
+- 先週: ${formatMinutes(prevWeekMinutes)}
+- 変化: ${growthAnalysis.volumeGrowth >= 0 ? '+' : ''}${growthAnalysis.volumeGrowth}%
+
+**累計学習時間**: ${formatMinutes(totalMinutes)}
+
+---
+
+# 🏆 学習習慣スコア: ${growthAnalysis.habitScore}点 / 100点
+
+**内訳**:
+`;
+      
+      // 習慣スコアの詳細
+      const habitCategories = [
+        { name: '継続性', max: 30, desc: '毎日の学習習慣' },
+        { name: '学習量', max: 25, desc: '週間の学習時間' },
+        { name: 'バランス', max: 20, desc: '複数科目の学習' },
+        { name: '定着度', max: 15, desc: '復習・演習の実施' },
+        { name: '実戦力', max: 10, desc: '過去問演習' }
+      ];
+      
+      habitCategories.forEach(cat => {
+        p += `- ${cat.name}（${cat.desc}）: /${cat.max}点
+`;
+      });
+      
+      p += `
+**評価ポイント**:
+`;
+      if (growthAnalysis.habitFactors.length > 0) {
+        growthAnalysis.habitFactors.forEach(factor => {
+          p += `✅ ${factor}
+`;
+        });
+      } else {
+        p += `（まだ十分なデータがありません）
+`;
+      }
+      
+      p += `
+---
+
+# 📊 科目別の成長状況
+
+`;
+      Object.entries(growthAnalysis.subjectGrowth).forEach(([cat, data]) => {
+        if (data.weekMinutes > 0 || data.prevWeekMinutes > 0) {
+          const trendIcon = data.growth === 'increasing' ? '📈' : data.growth === 'decreasing' ? '📉' : '➡️';
+          p += `## ${cat} ${trendIcon}
+
+- **今週**: ${formatMinutes(data.weekMinutes)}
+- **先週**: ${formatMinutes(data.prevWeekMinutes)}
+- **変化**: ${data.changePercent >= 0 ? '+' : ''}${data.changePercent}%
+- **手応え良好率**: ${data.goodMoodRate}%`;
+          
+          if (data.recentUnits && data.recentUnits.length > 0) {
+            p += `
+- **最近学習した単元**: ${data.recentUnits.join('、')}`;
+          }
+          p += `
+
+`;
+        }
+      });
+      
+      p += `---
+
+# 📅 学習パターン分析
+
+## 曜日別の学習時間（平均）
+
+`;
+      const maxDayMin = Math.max(...Object.values(dayOfWeekAvg));
+      Object.entries(dayOfWeekAvg).forEach(([day, min]) => {
+        const barLength = maxDayMin > 0 ? Math.round(min / maxDayMin * 20) : 0;
+        const bar = '█'.repeat(barLength) + '░'.repeat(20 - barLength);
+        p += `${day}曜: ${bar} ${min}分
+`;
+      });
+      
+      p += `
+**最も集中できる曜日**: ${strongDays.join('・')}曜日
+**学習が少ない曜日**: ${weakDays.join('・')}曜日
+
+## パターン一貫性スコア: ${growthAnalysis.weekPattern.consistency}%
+
+（高いほど毎日均等に学習できている）
+`;
+      
+      if (redbookAnalysis.totalAttempts > 0) {
+        p += `
+---
+
+# 📕 過去問演習の成長
+
+**演習回数**: ${redbookAnalysis.totalAttempts}回
+**平均得点率**: ${redbookAnalysis.avgScore}%
+**得点傾向**: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中！' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降中（要注意）' : '➡️ 安定'}
+
+`;
+        // 月別進捗があれば表示
+        if (Object.keys(redbookAnalysis.monthlyProgress).length > 1) {
+          p += `**月別の推移**:
+`;
+          Object.entries(redbookAnalysis.monthlyProgress)
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .slice(-3)
+            .forEach(([month, data]) => {
+              p += `- ${month}: ${data.attempts}回演習、平均${data.avgScore}%
+`;
+            });
+        }
+        
+        if (Object.keys(redbookAnalysis.scoresBySubject).length > 0) {
+          p += `
+**科目別の得点率**:
+`;
+          Object.entries(redbookAnalysis.scoresBySubject).forEach(([subj, score]) => {
+            const scoreBar = '█'.repeat(Math.round(score / 10)) + '░'.repeat(10 - Math.round(score / 10));
+            p += `- ${subj}: ${scoreBar} ${score}%
+`;
+          });
+        }
+      }
+      
+      p += `
+---
+
+# 🎯 相談内容
+
+上記の成長データを分析し、**成長を加速させるための具体的なアドバイス**をください。
+
+## 回答に含めてほしいこと
+
+1. **成長状況の評価**
+   - 良い成長が見られる点
+   - 停滞または後退している点
+   - データから見える私の学習スタイルの特徴
+
+2. **学習習慣の改善提案**
+   - 習慣スコアを上げるための具体的なアクション
+   - 曜日別パターンを活かした学習計画
+   - 継続性を高めるためのコツ
+
+3. **科目別の成長戦略**
+   - 各科目の成長率を上げるための方法
+   - 手応えが悪い科目への対処法
+   - 効率的な時間配分の提案
+
+4. **過去問演習の改善点**（データがある場合）
+   - 得点を上げるための具体的な対策
+   - 演習頻度や方法の改善提案
+
+5. **次の2週間で達成すべき成長目標**
+   - 定量的な目標（学習時間、得点率など）
+   - 定性的な目標（習慣、メンタルなど）
+
+6. **モチベーション維持のアドバイス**
+   - 私のデータから見える強みを活かす方法
+   - 成長を実感するためのポイント`;
+      
+      return p;
+    }
+    
+    // ==========================================
     // 今日の振り返りプロンプト
     // ==========================================
     
-    function generateDailyPrompt(a, allLogs) {
+    function generateDailyPrompt(a, allLogs, allRedbookLogs) {
       const { profile, daysUntil, weekMinutes, streak, subjectAnalysis } = a;
+      const redbookLogs = allRedbookLogs || [];
       const today = new Date();
       const todayStr = today.toISOString().split('T')[0];
       const todayLogs = allLogs.filter(log => log.date === todayStr);
-      const todayMinutes = todayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const todayRedbookLogs = redbookLogs.filter(log => log.date === todayStr);
+      const todayStudyMinutes = todayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const todayRedbookMinutes = todayRedbookLogs.reduce((sum, log) => sum + (log.time || 0), 0);
+      const todayMinutes = todayStudyMinutes + todayRedbookMinutes;
       
       // 昨日のログ
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = yesterday.toISOString().split('T')[0];
       const yesterdayLogs = allLogs.filter(log => log.date === yesterdayStr);
-      const yesterdayMinutes = yesterdayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const yesterdayRedbookLogs = redbookLogs.filter(log => log.date === yesterdayStr);
+      const yesterdayMinutes = yesterdayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0)
+                             + yesterdayRedbookLogs.reduce((sum, log) => sum + (log.time || 0), 0);
       
       let p = `あなたは大学受験専門の学習コーチです。今日の学習を振り返り、明日以降のアドバイスをください。
 
@@ -2775,11 +4779,16 @@
 # 📅 今日の学習記録
 
 **日付**: ${todayStr}（試験まであと${daysUntil}日）
-**本日の学習時間**: ${formatMinutes(todayMinutes)}`;
+**本日の総学習時間**: ${formatMinutes(todayMinutes)}`;
+      
+      if (todayStudyMinutes > 0 && todayRedbookMinutes > 0) {
+        p += `（学習${formatMinutes(todayStudyMinutes)} + 過去問${formatMinutes(todayRedbookMinutes)}）`;
+      }
       
       if (yesterdayMinutes > 0) {
         const diff = todayMinutes - yesterdayMinutes;
-        p += `（昨日比: ${diff >= 0 ? '+' : ''}${formatMinutes(diff)}）`;
+        p += `
+**昨日比**: ${diff >= 0 ? '+' : ''}${formatMinutes(diff)} ${diff > 0 ? '📈' : diff < 0 ? '📉' : '➡️'}`;
       }
       
       p += `
@@ -2789,7 +4798,7 @@
 `;
       
       if (todayLogs.length > 0) {
-        p += `## 学習内容の詳細\n\n`;
+        p += `## 📚 学習内容の詳細\n\n`;
         todayLogs.forEach(log => {
           const moodText = {
             '😊': '絶好調',
@@ -2818,7 +4827,24 @@
           if (struggling.length > 0) p += `- 💦 苦戦: ${struggling.join('、')}\n`;
           p += `\n`;
         }
-      } else {
+      }
+      
+      // 今日の過去問演習
+      if (todayRedbookLogs.length > 0) {
+        p += `## 📕 今日の過去問演習\n\n`;
+        todayRedbookLogs.forEach(log => {
+          const scoreIcon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
+          p += `### ${log.university} ${log.subject || ''} ${log.year}年\n`;
+          p += `- 得点率: ${scoreIcon} **${log.score}%**\n`;
+          if (log.time) p += `- 解答時間: ${log.time}分\n`;
+          if (log.sectionScores) p += `- 大問別: ${log.sectionScores}\n`;
+          if (log.weakAreas) p += `- ⚠️ 間違えた分野: **${log.weakAreas}**\n`;
+          if (log.memo) p += `- 振り返り: ${log.memo}\n`;
+          p += `\n`;
+        });
+      }
+      
+      if (todayLogs.length === 0 && todayRedbookLogs.length === 0) {
         p += `## 今日の学習\n\n`;
         p += `※まだ今日の学習記録がありません。\n\n`;
       }
@@ -3569,6 +5595,870 @@ ${selectedSubject}の成績を効率的に上げるためのアドバイスを�
 ### 6. 残り${daysUntil}日で点数を上げるための提案
 
 優先度の高い順に、具体的な対策を提案してください。`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 過去問戦略プロンプト（新規追加）
+    // ==========================================
+    
+    function generateRedbookPrompt(a) {
+      const { profile, daysUntil, redbookAnalysis, redbookLogs, goalAnalysis } = a;
+      
+      if (redbookLogs.length === 0) {
+        return `過去問演習の記録がありません。
+
+まず過去問を解いて記録をつけてから、このプロンプトをご利用ください。
+
+過去問演習を記録する際は：
+1. 大学名・科目・年度
+2. 得点と配点
+3. 解答時間
+4. 大問ごとの得点
+5. 間違えた分野
+
+これらを記録しておくと、より精度の高い戦略を立てられます。`;
+      }
+      
+      let p = `あなたは大学受験の過去問分析のエキスパートです。以下の過去問演習データを詳細に分析し、本番で最大限の得点を取るための戦略を提案してください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+**過去問演習回数**: ${redbookAnalysis.totalAttempts}回
+**総演習時間**: ${formatMinutes(redbookAnalysis.totalTime)}
+**平均得点率**: ${redbookAnalysis.avgScore}%
+
+---
+
+# 📊 過去問演習の全記録
+
+`;
+      
+      // 日付順に詳細を表示
+      const sortedLogs = [...redbookLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      sortedLogs.forEach((log, index) => {
+        const scoreIcon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
+        p += `## ${index + 1}. ${log.university} ${log.subject || ''} ${log.year}年（${log.date}）\n\n`;
+        p += `- 得点率: ${scoreIcon} **${log.score}%**\n`;
+        if (log.time) p += `- 解答時間: **${log.time}分**\n`;
+        if (log.sectionScores) {
+          p += `- 大問別得点:\n`;
+          log.sectionScores.split(',').forEach(section => {
+            const match = section.trim().match(/(.+?):(\d+)\/(\d+)(?:\((\d+)分\))?/);
+            if (match) {
+              const [, name, got, max, time] = match;
+              const rate = max > 0 ? Math.round((parseInt(got) / parseInt(max)) * 100) : 0;
+              const rateIcon = rate >= 70 ? '🟢' : rate >= 50 ? '🟡' : '🔴';
+              p += `  - ${name}: ${got}/${max}点（${rate}%）${rateIcon}`;
+              if (time) p += ` [${time}分]`;
+              p += `\n`;
+            }
+          });
+        }
+        if (log.weakAreas) p += `- ⚠️ 間違えた分野: **${log.weakAreas}**\n`;
+        if (log.memo) p += `- 振り返り: ${log.memo}\n`;
+        p += `\n`;
+      });
+      
+      // 大問別分析
+      if (Object.keys(redbookAnalysis.sectionAnalysis).length > 0) {
+        p += `# 📝 大問別パフォーマンス分析\n\n`;
+        p += `| 大問 | 平均得点率 | 演習回数 | 平均時間 |\n`;
+        p += `|------|-----------|----------|----------|\n`;
+        
+        const sortedSections = Object.entries(redbookAnalysis.sectionAnalysis)
+          .sort((a, b) => a[1].avgScore - b[1].avgScore);
+        
+        sortedSections.forEach(([name, data]) => {
+          const icon = data.avgScore >= 70 ? '🟢' : data.avgScore >= 50 ? '🟡' : '🔴';
+          const timeStr = data.avgTime ? `${data.avgTime}分` : '-';
+          p += `| ${name} | ${icon} ${data.avgScore}% | ${data.attempts}回 | ${timeStr} |\n`;
+        });
+        
+        // 苦手大問の特定
+        const weakSections = sortedSections.filter(([, d]) => d.avgScore < 50);
+        if (weakSections.length > 0) {
+          p += `\n**⚠️ 要対策の大問**: ${weakSections.map(([n]) => n).join('、')}\n`;
+        }
+        p += `\n`;
+      }
+      
+      // 大学別分析
+      if (Object.keys(redbookAnalysis.universityAnalysis).length > 0) {
+        p += `# 🏫 大学別パフォーマンス\n\n`;
+        
+        Object.entries(redbookAnalysis.universityAnalysis).forEach(([uni, data]) => {
+          const trendIcon = data.trend === 'improving' ? '📈' : data.trend === 'declining' ? '📉' : '➡️';
+          p += `## ${uni} ${trendIcon}\n\n`;
+          p += `- 演習回数: ${data.attempts}回\n`;
+          p += `- 平均得点率: **${data.avgScore}%**（最高${data.highScore}% / 最低${data.lowScore}%）\n`;
+          if (data.avgTime) p += `- 平均解答時間: ${data.avgTime}分\n`;
+          
+          // 科目別
+          if (Object.keys(data.bySubject).length > 0) {
+            p += `- 科目別:\n`;
+            Object.entries(data.bySubject).forEach(([subj, subjData]) => {
+              p += `  - ${subj}: ${subjData.avgScore}%（${subjData.attempts}回）`;
+              if (subjData.weakAreas.length > 0) {
+                p += ` ← 苦手: ${subjData.weakAreas.slice(0, 3).join('、')}`;
+              }
+              p += `\n`;
+            });
+          }
+          p += `\n`;
+        });
+      }
+      
+      // 苦手分野ランキング
+      if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+        p += `# 🔴 繰り返し間違える分野（深刻度順）\n\n`;
+        
+        const sorted = Object.entries(redbookAnalysis.weakAreasSummary)
+          .sort((a, b) => b[1] - a[1]);
+        
+        sorted.forEach(([area, count], index) => {
+          const severity = count >= 3 ? '🔴 最優先' : count >= 2 ? '🟡 要対策' : '🟢 注意';
+          p += `${index + 1}. **${area}**（${count}回）- ${severity}\n`;
+        });
+        p += `\n`;
+      }
+      
+      // 月別進捗
+      if (Object.keys(redbookAnalysis.monthlyProgress).length > 1) {
+        p += `# 📈 月別演習状況\n\n`;
+        p += `| 月 | 演習回数 | 平均得点率 | 演習時間 |\n`;
+        p += `|-----|---------|-----------|----------|\n`;
+        
+        Object.entries(redbookAnalysis.monthlyProgress)
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .forEach(([month, data]) => {
+            p += `| ${month} | ${data.attempts}回 | ${data.avgScore}% | ${formatMinutes(data.totalTime)} |\n`;
+          });
+        p += `\n`;
+      }
+      
+      p += `---
+
+# 🎯 分析リクエスト
+
+上記の過去問演習データを分析し、本番で最大限の得点を取るための戦略を提案してください。
+
+## 回答に含めてほしいこと
+
+### 1. 現状の総合評価
+
+- 過去問演習の量は十分か
+- 得点傾向から見える強み・弱み
+- 時間配分の傾向
+
+### 2. 大問別の戦略
+
+各大問について：
+- 得点を伸ばしやすい大問（集中対策すべき）
+- 現状維持でOKの大問
+- 思い切って捨てることを検討すべき大問
+
+### 3. 時間配分の提案
+
+- 各大問への推奨時間配分
+- 解く順番のアドバイス
+- 見直し時間の確保方法
+
+### 4. 苦手分野の克服プラン
+
+優先度の高い順に：
+- 具体的な対策方法
+- 使うべき教材
+- 必要な学習時間の目安
+
+### 5. 残り${daysUntil}日の過去問演習計画
+
+- 何年分をどの順番で解くべきか
+- 復習のタイミング
+- 直前期の仕上げ方`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 大学別対策プロンプト（新規追加）
+    // ==========================================
+    
+    function generateUniversityPrompt(a) {
+      const selectedUniversity = document.getElementById('aiUniversitySelect').value;
+      if (!selectedUniversity) {
+        return '↑上の「対策したい大学」を選択してください。\n\n過去問演習の記録がない場合は、まず過去問を解いて記録をつけてください。';
+      }
+      
+      const { profile, daysUntil, redbookAnalysis, redbookLogs, subjectAnalysis, goalAnalysis } = a;
+      const uniData = redbookAnalysis.universityAnalysis[selectedUniversity];
+      
+      if (!uniData) {
+        return `「${selectedUniversity}」の過去問演習記録がありません。\n\nまず過去問を解いて記録をつけてから、このプロンプトをご利用ください。`;
+      }
+      
+      const uniLogs = redbookLogs.filter(l => l.university === selectedUniversity);
+      const sortedLogs = [...uniLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      let p = `あなたは「${selectedUniversity}」の入試対策に精通した受験コーチです。以下のデータを分析し、この大学に合格するための具体的な戦略を提案してください。
+
+---
+
+# 📋 基本情報
+
+**対象大学**: ${selectedUniversity}
+**志望順位**: ${profile['第1志望'] === selectedUniversity ? '第1志望 ⭐' : profile['第2志望'] === selectedUniversity ? '第2志望' : profile['第3志望'] === selectedUniversity ? '第3志望' : '志望校'}
+**試験まで**: ${daysUntil}日
+
+---
+
+# 📊 ${selectedUniversity}の演習成績
+
+**演習回数**: ${uniData.attempts}回
+**平均得点率**: ${uniData.avgScore}%
+**最高得点**: ${uniData.highScore}%
+**最低得点**: ${uniData.lowScore}%
+**傾向**: ${uniData.trend === 'improving' ? '📈 上昇中（良い傾向）' : uniData.trend === 'declining' ? '📉 下降気味（要注意）' : '➡️ 安定'}
+${uniData.avgTime ? `**平均解答時間**: ${uniData.avgTime}分` : ''}
+
+`;
+      
+      // 科目別成績
+      if (Object.keys(uniData.bySubject).length > 0) {
+        p += `## 科目別成績\n\n`;
+        p += `| 科目 | 平均得点率 | 演習回数 | 苦手分野 |\n`;
+        p += `|------|-----------|----------|----------|\n`;
+        
+        Object.entries(uniData.bySubject).forEach(([subj, data]) => {
+          const icon = data.avgScore >= 70 ? '🟢' : data.avgScore >= 50 ? '🟡' : '🔴';
+          const weakStr = data.weakAreas.length > 0 ? data.weakAreas.slice(0, 2).join('、') : '-';
+          p += `| ${subj} | ${icon} ${data.avgScore}% | ${data.attempts}回 | ${weakStr} |\n`;
+        });
+        p += `\n`;
+      }
+      
+      // 全演習記録
+      p += `## 演習履歴（新しい順）\n\n`;
+      
+      sortedLogs.forEach((log, index) => {
+        const scoreIcon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
+        p += `### ${index + 1}. ${log.subject || '総合'} ${log.year}年（${log.date}）\n\n`;
+        p += `- 得点率: ${scoreIcon} **${log.score}%**\n`;
+        if (log.time) p += `- 解答時間: ${log.time}分\n`;
+        
+        if (log.sectionScores) {
+          p += `- 大問別:\n`;
+          log.sectionScores.split(',').forEach(section => {
+            const match = section.trim().match(/(.+?):(\d+)\/(\d+)(?:\((\d+)分\))?/);
+            if (match) {
+              const [, name, got, max, time] = match;
+              const rate = max > 0 ? Math.round((parseInt(got) / parseInt(max)) * 100) : 0;
+              const rateIcon = rate >= 70 ? '🟢' : rate >= 50 ? '🟡' : '🔴';
+              p += `  - ${name}: ${got}/${max}（${rate}%）${rateIcon}`;
+              if (time) p += ` [${time}分]`;
+              p += `\n`;
+            }
+          });
+        }
+        
+        if (log.weakAreas) p += `- ⚠️ 間違えた分野: ${log.weakAreas}\n`;
+        if (log.memo) p += `- メモ: ${log.memo}\n`;
+        p += `\n`;
+      });
+      
+      // 苦手分野集計
+      const uniWeakAreas = {};
+      uniLogs.forEach(log => {
+        if (log.weakAreas) {
+          log.weakAreas.split(/[,、]/).forEach(area => {
+            const trimmed = area.trim();
+            if (trimmed) {
+              uniWeakAreas[trimmed] = (uniWeakAreas[trimmed] || 0) + 1;
+            }
+          });
+        }
+      });
+      
+      if (Object.keys(uniWeakAreas).length > 0) {
+        p += `## ⚠️ この大学でよく間違える分野\n\n`;
+        
+        Object.entries(uniWeakAreas)
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([area, count]) => {
+            const severity = count >= 2 ? '🔴 最優先' : '🟡 要対策';
+            p += `- **${area}**（${count}回）- ${severity}\n`;
+          });
+        p += `\n`;
+      }
+      
+      // 関連する学習データ
+      p += `## 📚 関連する学習状況\n\n`;
+      
+      Object.keys(uniData.bySubject).forEach(subj => {
+        const cat = categorizeSubject(subj);
+        const studyData = subjectAnalysis[cat];
+        if (studyData) {
+          p += `### ${cat}\n`;
+          p += `- 累計学習時間: ${formatMinutes(studyData.totalMinutes)}\n`;
+          p += `- 今週の学習時間: ${formatMinutes(studyData.weekMinutes)}\n`;
+          p += `- 学習回数: ${studyData.sessionCount}回\n\n`;
+        }
+      });
+      
+      // 目標との比較
+      const relevantGoal = goalAnalysis.find(g => 
+        Object.keys(uniData.bySubject).some(s => categorizeSubject(s) === g.subject)
+      );
+      
+      if (relevantGoal || goalAnalysis.length > 0) {
+        p += `## 🎯 目標設定\n\n`;
+        goalAnalysis.forEach(g => {
+          const icon = g.feasibility === 'likely' ? '🟢' : g.feasibility === 'possible' ? '🟡' : '🔴';
+          p += `- ${g.subject}: 現状${g.current}% → 目標${g.target}%（+${g.gap}pt必要）${icon}\n`;
+        });
+        p += `\n`;
+      }
+      
+      p += `---
+
+# 🎯 分析リクエスト
+
+「${selectedUniversity}」に合格するための具体的な戦略を提案してください。
+
+## 回答に含めてほしいこと
+
+### 1. 現状の合格可能性
+
+- 現在の演習成績から見た合格可能性
+- 伸びしろのある科目・分野
+- 危険信号が出ている点
+
+### 2. ${selectedUniversity}の入試傾向分析
+
+- 出題傾向の特徴（わかる範囲で）
+- 配点の重み
+- 合格最低点の目安
+
+### 3. 科目別の対策方針
+
+各科目について：
+- 目標得点率
+- 優先して対策すべき分野
+- 効果的な学習方法
+
+### 4. 時間配分・解答戦略
+
+- 推奨する解答順序
+- 各大問への時間配分
+- 取るべき問題・捨てる問題の判断基準
+
+### 5. 残り${daysUntil}日の対策プラン
+
+- 週ごとのマイルストーン
+- やるべきことの優先順位
+- 直前期の仕上げ方
+
+### 6. 当日のメンタル・戦略アドバイス
+
+- 試験当日の心構え
+- 想定外の事態への対処法`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 過去問戦略プロンプト
+    // ==========================================
+    
+    function generateRedbookPrompt(a) {
+      const { profile, daysUntil, redbookAnalysis, goalAnalysis, redbookLogs, subjectAnalysis } = a;
+      
+      // 過去問の詳細分析
+      const universityStats = {};
+      const subjectStats = {};
+      
+      redbookLogs.forEach(log => {
+        // 大学別
+        if (!universityStats[log.university]) {
+          universityStats[log.university] = { scores: [], times: [], count: 0 };
+        }
+        universityStats[log.university].scores.push(log.score);
+        if (log.time) universityStats[log.university].times.push(log.time);
+        universityStats[log.university].count++;
+        
+        // 科目別
+        const subject = log.subject || '不明';
+        if (!subjectStats[subject]) {
+          subjectStats[subject] = { scores: [], times: [], count: 0 };
+        }
+        subjectStats[subject].scores.push(log.score);
+        if (log.time) subjectStats[subject].times.push(log.time);
+        subjectStats[subject].count++;
+      });
+      
+      let p = `あなたは大学受験の過去問対策のエキスパートです。以下のデータを分析し、過去問演習の戦略を立ててください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}`;
+      if (profile['第2志望']) p += `
+**併願校**: ${profile['第2志望']}${profile['第3志望'] ? '、' + profile['第3志望'] : ''}`;
+      p += `
+**試験まで**: ${daysUntil}日
+
+---
+
+# 📕 過去問演習の全体像
+
+**演習回数**: ${redbookAnalysis.totalAttempts}回
+**平均得点率**: ${redbookAnalysis.avgScore}%
+**得点傾向**: ${redbookAnalysis.scoreTrend === 'improving' ? '📈 上昇中' : redbookAnalysis.scoreTrend === 'declining' ? '📉 下降気味' : '➡️ 安定'}
+
+`;
+      
+      // 大学別の成績
+      if (Object.keys(universityStats).length > 0) {
+        p += `## 🏫 大学別の成績\n\n`;
+        p += `| 大学 | 演習回数 | 平均得点率 | 平均時間 | 傾向 |\n`;
+        p += `|------|----------|------------|----------|------|\n`;
+        Object.entries(universityStats).forEach(([uni, data]) => {
+          const avgScore = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
+          const avgTime = data.times.length > 0 
+            ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) + '分'
+            : '-';
+          const trend = data.scores.length >= 2 
+            ? (data.scores[data.scores.length - 1] > data.scores[0] ? '↑' : data.scores[data.scores.length - 1] < data.scores[0] ? '↓' : '→')
+            : '-';
+          const icon = avgScore >= 70 ? '🟢' : avgScore >= 50 ? '🟡' : '🔴';
+          p += `| ${uni} | ${data.count}回 | ${icon} ${avgScore}% | ${avgTime} | ${trend} |\n`;
+        });
+        p += `\n`;
+      }
+      
+      // 科目別の成績
+      if (Object.keys(subjectStats).length > 0) {
+        p += `## 📚 科目別の成績\n\n`;
+        Object.entries(subjectStats).forEach(([subject, data]) => {
+          const avgScore = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
+          const avgTime = data.times.length > 0 
+            ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length)
+            : null;
+          const icon = avgScore >= 70 ? '🟢' : avgScore >= 50 ? '🟡' : '🔴';
+          p += `- **${subject}**: ${icon} 平均${avgScore}%（${data.count}回）`;
+          if (avgTime) p += ` ⏱️${avgTime}分`;
+          p += `\n`;
+        });
+        p += `\n`;
+      }
+      
+      // 繰り返し間違える分野
+      if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+        p += `## ⚠️ 繰り返し間違える分野\n\n`;
+        const sorted = Object.entries(redbookAnalysis.weakAreasSummary).sort((a, b) => b[1] - a[1]);
+        sorted.forEach(([area, count]) => {
+          const severity = count >= 3 ? '🔴' : count >= 2 ? '🟡' : '⚪';
+          p += `- ${severity} **${area}**: ${count}回\n`;
+        });
+        p += `\n`;
+      }
+      
+      // 全演習記録
+      p += `## 📝 演習記録（新しい順）\n\n`;
+      [...redbookLogs].reverse().slice(0, 10).forEach(log => {
+        const icon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
+        p += `### ${log.date} ${log.university} ${log.subject || ''} ${log.year}年\n`;
+        p += `- 得点率: ${icon} **${log.score}%**\n`;
+        if (log.time) p += `- 解答時間: ${log.time}分\n`;
+        if (log.sectionScores) p += `- 大問別: ${log.sectionScores}\n`;
+        if (log.weakAreas) p += `- 間違えた分野: ${log.weakAreas}\n`;
+        if (log.memo) p += `- 振り返り: ${log.memo}\n`;
+        p += `\n`;
+      });
+      
+      p += `---
+
+# 🎯 相談内容
+
+過去問演習の戦略について、具体的なアドバイスをください。
+
+## 回答に含めてほしいこと
+
+1. **現状の評価**
+   - 過去問演習の進み具合は順調か
+   - 得点率から見える課題
+
+2. **今後の演習計画**
+   - どの大学の過去問を優先すべきか
+   - 何年分くらい解くべきか
+   - 演習頻度の目安
+
+3. **弱点分野への対処**
+   - 繰り返し間違える分野の具体的な対策
+   - インプットに戻るべきか、演習を続けるべきか
+
+4. **時間配分の改善**
+   - 解答時間は適切か
+   - スピードを上げるべき大問
+
+5. **試験直前の過去問活用法**
+   - 新しい年度を解くべきか、復習すべきか`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 大問別攻略プロンプト
+    // ==========================================
+    
+    function generateSectionPrompt(a) {
+      const { profile, daysUntil, redbookLogs, redbookAnalysis } = a;
+      
+      // 大問別のデータを解析
+      const sectionData = {};
+      
+      redbookLogs.forEach(log => {
+        if (!log.sectionScores) return;
+        
+        const subject = log.subject || '不明';
+        if (!sectionData[subject]) {
+          sectionData[subject] = {};
+        }
+        
+        // 大問別スコアをパース（例: "大問1:15/20(10分), 大問2:20/30(15分)"）
+        const sections = log.sectionScores.split(/[,、]/).map(s => s.trim());
+        sections.forEach(section => {
+          const match = section.match(/(.+?):(\d+)\/(\d+)(?:\((\d+)分?\))?/);
+          if (match) {
+            const [, name, got, max, time] = match;
+            if (!sectionData[subject][name]) {
+              sectionData[subject][name] = { scores: [], times: [], maxScores: [] };
+            }
+            const rate = Math.round((parseInt(got) / parseInt(max)) * 100);
+            sectionData[subject][name].scores.push(rate);
+            sectionData[subject][name].maxScores.push(parseInt(max));
+            if (time) sectionData[subject][name].times.push(parseInt(time));
+          }
+        });
+      });
+      
+      let p = `あなたは大学入試問題の分析エキスパートです。大問ごとの傾向を分析し、攻略法を提案してください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+**過去問演習回数**: ${redbookAnalysis.totalAttempts}回
+
+---
+
+# 🧩 大問別の得点分析
+
+`;
+      
+      if (Object.keys(sectionData).length === 0) {
+        p += `※大問別のデータがまだありません。赤本フォームで大問ごとの得点を入力すると、詳細な分析ができます。\n\n`;
+      } else {
+        Object.entries(sectionData).forEach(([subject, sections]) => {
+          p += `## ${subject}\n\n`;
+          p += `| 大問 | 平均得点率 | 配点目安 | 平均時間 | 安定度 | 判定 |\n`;
+          p += `|------|------------|----------|----------|--------|------|\n`;
+          
+          const sectionAnalysis = [];
+          Object.entries(sections).forEach(([name, data]) => {
+            const avgScore = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
+            const avgMax = Math.round(data.maxScores.reduce((a, b) => a + b, 0) / data.maxScores.length);
+            const avgTime = data.times.length > 0 
+              ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) + '分'
+              : '-';
+            
+            const variance = data.scores.length > 1
+              ? data.scores.reduce((sum, s) => sum + Math.pow(s - avgScore, 2), 0) / data.scores.length
+              : 0;
+            const stability = variance < 100 ? '安定' : variance < 400 ? 'やや不安定' : '不安定';
+            
+            const icon = avgScore >= 70 ? '🟢 得意' : avgScore >= 50 ? '🟡 普通' : '🔴 苦手';
+            
+            p += `| ${name} | ${avgScore}% | ${avgMax}点 | ${avgTime} | ${stability} | ${icon} |\n`;
+            
+            sectionAnalysis.push({
+              name,
+              avgScore,
+              category: avgScore >= 70 ? 'strong' : avgScore >= 50 ? 'normal' : 'weak'
+            });
+          });
+          
+          const strong = sectionAnalysis.filter(s => s.category === 'strong');
+          const weak = sectionAnalysis.filter(s => s.category === 'weak');
+          
+          if (strong.length > 0 || weak.length > 0) {
+            p += `\n**戦略ポイント**:\n`;
+            if (strong.length > 0) p += `- ✅ 得点源: ${strong.map(s => s.name).join('、')}\n`;
+            if (weak.length > 0) p += `- ⚠️ 要強化: ${weak.map(s => s.name).join('、')}\n`;
+          }
+          p += `\n`;
+        });
+      }
+      
+      if (Object.keys(redbookAnalysis.weakAreasSummary).length > 0) {
+        p += `## ⚠️ よく間違える分野\n\n`;
+        Object.entries(redbookAnalysis.weakAreasSummary)
+          .sort((a, b) => b[1] - a[1])
+          .forEach(([area, count]) => {
+            p += `- **${area}**: ${count}回\n`;
+          });
+        p += `\n`;
+      }
+      
+      p += `---
+
+# 🎯 相談内容
+
+大問ごとの攻略戦略を立ててください。
+
+## 回答に含めてほしいこと
+
+1. **大問別の優先順位** - どの大問から解くべきか、時間配分の目安
+2. **得意な大問の活用法** - 確実に得点するポイント
+3. **苦手な大問への対策** - 具体的な学習方法、捨て問の判断基準
+4. **時間管理戦略** - 各大問の目標解答時間
+5. **試験当日の解答順序** - 最適な順序の提案`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 大学別対策プロンプト
+    // ==========================================
+    
+    function generateUniversityPrompt(a) {
+      const { profile, daysUntil, redbookLogs, redbookAnalysis, goalAnalysis } = a;
+      
+      const selectedUniversity = document.getElementById('aiUniversitySelect')?.value;
+      if (!selectedUniversity) {
+        return '↑上の「対策したい大学」を選択してください。';
+      }
+      
+      const uniLogs = redbookLogs.filter(log => log.university === selectedUniversity);
+      
+      if (uniLogs.length === 0) {
+        return `「${selectedUniversity}」の過去問演習データがまだありません。\n\n先に過去問を解いて記録してから、この機能をご利用ください。`;
+      }
+      
+      const subjectScores = {};
+      const weakAreas = {};
+      
+      uniLogs.forEach(log => {
+        const subject = log.subject || '不明';
+        if (!subjectScores[subject]) {
+          subjectScores[subject] = { scores: [], times: [] };
+        }
+        subjectScores[subject].scores.push(log.score);
+        if (log.time) subjectScores[subject].times.push(log.time);
+        
+        if (log.weakAreas) {
+          log.weakAreas.split(/[,、]/).forEach(area => {
+            const trimmed = area.trim();
+            if (trimmed) weakAreas[trimmed] = (weakAreas[trimmed] || 0) + 1;
+          });
+        }
+      });
+      
+      let p = `あなたは「${selectedUniversity}」の入試対策のエキスパートです。以下のデータを分析し、合格に向けた具体的な戦略を立ててください。
+
+---
+
+# 🏫 ${selectedUniversity} 対策
+
+**試験まで**: ${daysUntil}日
+**演習回数**: ${uniLogs.length}回
+**平均得点率**: ${Math.round(uniLogs.reduce((s, l) => s + l.score, 0) / uniLogs.length)}%
+
+## 📚 科目別の成績
+
+| 科目 | 演習回数 | 平均得点率 | 最高点 | 最低点 | 平均時間 |
+|------|----------|------------|--------|--------|----------|
+`;
+      Object.entries(subjectScores).forEach(([subject, data]) => {
+        const avg = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
+        const max = Math.max(...data.scores);
+        const min = Math.min(...data.scores);
+        const avgTime = data.times.length > 0 
+          ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length) + '分' : '-';
+        const icon = avg >= 70 ? '🟢' : avg >= 50 ? '🟡' : '🔴';
+        p += `| ${subject} | ${data.scores.length}回 | ${icon} ${avg}% | ${max}% | ${min}% | ${avgTime} |\n`;
+      });
+      
+      if (Object.keys(weakAreas).length > 0) {
+        p += `\n## ⚠️ この大学でよく間違える分野\n\n`;
+        Object.entries(weakAreas).sort((a, b) => b[1] - a[1]).forEach(([area, count]) => {
+          p += `- **${area}**: ${count}回\n`;
+        });
+      }
+      
+      p += `\n## 📝 演習記録\n\n`;
+      [...uniLogs].reverse().forEach(log => {
+        const icon = log.score >= 70 ? '🟢' : log.score >= 50 ? '🟡' : '🔴';
+        p += `- ${log.date} ${log.subject || ''} ${log.year}年: ${icon} ${log.score}%`;
+        if (log.time) p += ` (${log.time}分)`;
+        if (log.weakAreas) p += ` → ${log.weakAreas}`;
+        p += `\n`;
+      });
+      
+      p += `
+---
+
+# 🎯 相談内容
+
+${selectedUniversity}に合格するための具体的な対策を教えてください。
+
+## 回答に含めてほしいこと
+
+1. **現状の評価** - 合格可能性の客観的判断
+2. **この大学の出題傾向** - 過去問から読み取れる特徴
+3. **科目別の対策** - 各科目の目標点と重点対策分野
+4. **残り${daysUntil}日の学習計画** - 週ごとの目標
+5. **試験当日の戦略** - 時間配分、解答順序`;
+      
+      return p;
+    }
+    
+    // ==========================================
+    // 時間効率分析プロンプト
+    // ==========================================
+    
+    function generateEfficiencyPrompt(a) {
+      const { profile, daysUntil, totalMinutes, studyDays,
+              subjectAnalysis, redbookLogs } = a;
+      
+      const efficiencyData = {};
+      
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        const studyTime = data.totalMinutes;
+        const catLogs = redbookLogs
+          .filter(l => categorizeSubject(l.subject) === cat)
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        if (studyTime > 0 && catLogs.length >= 2) {
+          const firstScore = catLogs[0].score;
+          const lastScore = catLogs[catLogs.length - 1].score;
+          const growth = lastScore - firstScore;
+          const hoursSpent = studyTime / 60;
+          const efficiency = growth / hoursSpent;
+          
+          efficiencyData[cat] = {
+            studyTime, hoursSpent, firstScore, lastScore, growth, efficiency,
+            attempts: catLogs.length
+          };
+        } else if (studyTime > 0) {
+          efficiencyData[cat] = {
+            studyTime, hoursSpent: studyTime / 60,
+            firstScore: null, lastScore: catLogs[0]?.score || null,
+            growth: null, efficiency: null, attempts: catLogs.length
+          };
+        }
+      });
+      
+      const typeAnalysis = {};
+      Object.entries(subjectAnalysis).forEach(([cat, data]) => {
+        Object.entries(data.typeBreakdown || {}).forEach(([type, minutes]) => {
+          if (!typeAnalysis[type]) typeAnalysis[type] = { totalMinutes: 0 };
+          typeAnalysis[type].totalMinutes += minutes;
+        });
+      });
+      
+      const efficiencyRanking = Object.entries(efficiencyData)
+        .filter(([, data]) => data.efficiency !== null)
+        .sort((a, b) => b[1].efficiency - a[1].efficiency);
+      
+      let p = `あなたは学習効率の分析エキスパートです。以下のデータから時間対効果を分析し、学習効率を上げるアドバイスをください。
+
+---
+
+# 📋 基本情報
+
+**志望校**: ${profile['第1志望'] || '未設定'}
+**試験まで**: ${daysUntil}日
+**累計学習時間**: ${formatMinutes(totalMinutes)}（約${Math.round(totalMinutes / 60)}時間）
+**学習日数**: ${studyDays}日
+**1日平均**: ${studyDays > 0 ? Math.round(totalMinutes / studyDays) : 0}分
+
+---
+
+# ⏱️ 時間対効果の分析
+
+`;
+      
+      if (efficiencyRanking.length > 0) {
+        p += `## 科目別の学習効率\n\n`;
+        p += `| 科目 | 学習時間 | 成長 | 効率 | 判定 |\n`;
+        p += `|------|----------|------|------|------|\n`;
+        
+        efficiencyRanking.forEach(([cat, data]) => {
+          const growthStr = data.growth >= 0 ? `+${data.growth}pt` : `${data.growth}pt`;
+          const effStr = data.efficiency.toFixed(2) + 'pt/h';
+          const rating = data.efficiency > 1 ? '🟢 高効率' : data.efficiency > 0.3 ? '🟡 普通' : '🔴 要改善';
+          p += `| ${cat} | ${formatMinutes(data.studyTime)} | ${data.firstScore}%→${data.lastScore}%（${growthStr}） | ${effStr} | ${rating} |\n`;
+        });
+        p += `\n`;
+        
+        if (efficiencyRanking.length >= 2) {
+          const best = efficiencyRanking[0];
+          const worst = efficiencyRanking[efficiencyRanking.length - 1];
+          p += `**効率分析サマリー**:\n`;
+          p += `- 🏆 最も効率が良い: **${best[0]}**（${best[1].efficiency.toFixed(2)}pt/時間）\n`;
+          p += `- ⚠️ 効率改善が必要: **${worst[0]}**（${worst[1].efficiency.toFixed(2)}pt/時間）\n\n`;
+        }
+      } else {
+        p += `※過去問を複数回解くと、科目別の学習効率が分析できます。\n\n`;
+      }
+      
+      const noDataSubjects = Object.entries(efficiencyData)
+        .filter(([, data]) => data.efficiency === null && data.studyTime > 60);
+      
+      if (noDataSubjects.length > 0) {
+        p += `## ⚠️ 効率測定できていない科目\n\n`;
+        noDataSubjects.forEach(([cat, data]) => {
+          p += `- **${cat}**: ${formatMinutes(data.studyTime)}学習済み → 過去問で成果を測定しましょう\n`;
+        });
+        p += `\n`;
+      }
+      
+      if (Object.keys(typeAnalysis).length > 0) {
+        p += `## 📊 学習タイプ別の時間配分\n\n`;
+        const sortedTypes = Object.entries(typeAnalysis).sort((a, b) => b[1].totalMinutes - a[1].totalMinutes);
+        const totalTypeMinutes = sortedTypes.reduce((sum, [, data]) => sum + data.totalMinutes, 0);
+        
+        sortedTypes.forEach(([type, data]) => {
+          const pct = totalTypeMinutes > 0 ? Math.round((data.totalMinutes / totalTypeMinutes) * 100) : 0;
+          const bar = '█'.repeat(Math.round(pct / 10)) + '░'.repeat(10 - Math.round(pct / 10));
+          p += `- **${type}**: ${bar} ${pct}%（${formatMinutes(data.totalMinutes)}）\n`;
+        });
+        p += `\n`;
+      }
+      
+      p += `---
+
+# 🎯 相談内容
+
+学習効率を上げるための具体的なアドバイスをください。
+
+## 回答に含めてほしいこと
+
+1. **現在の学習効率の評価** - 科目ごとの効率は適切か
+2. **効率が悪い科目の改善策** - なぜ効率が悪いのか、どう改善すべきか
+3. **学習タイプのバランス** - インプットとアウトプットの比率は適切か
+4. **時間配分の最適化** - 各科目に割くべき時間の目安
+5. **残り${daysUntil}日で効率を最大化するコツ**`;
       
       return p;
     }
