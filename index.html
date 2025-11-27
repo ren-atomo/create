@@ -2480,7 +2480,7 @@
         </div>
         
         <div class="version-info">
-          <span id="appVersionDisplay">v1.7.5</span>
+          <span id="appVersionDisplay">v1.7.7</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -2531,9 +2531,22 @@
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.7.5';
+    const APP_VERSION = '1.7.7';
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
     const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxppU_VWeV9IwVl-5tY7o0vuMCqRURoH0fltq_mo7JSegCv5VI-X1QjG7khcATLlj7vGQ/exec';
+    
+    // ローカル時刻で日付文字列を作成（タイムゾーン問題を回避）
+    function formatDateLocal(date) {
+      const d = date instanceof Date ? date : new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    function getTodayStr() {
+      return formatDateLocal(new Date());
+    }
     
     (function checkVersion() {
       const storedVersion = localStorage.getItem('appVersion');
@@ -2673,7 +2686,7 @@
     }
     
     function initializeDateInputs() {
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayStr();
       document.getElementById('studyDate').value = today;
       document.getElementById('redbookDate').value = today;
     }
@@ -2995,7 +3008,7 @@
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
-      return div.innerHTML;
+      return div.innerHTML.replace(/\n/g, '<br>');
     }
     
     function renderCountdown() {
@@ -3011,7 +3024,7 @@
     function renderStats() {
       const logs = appData.studyLogs || [];
       const redbookLogs = appData.redbookLogs || [];
-      const today = new Date().toISOString().split('T')[0];
+      const today = getTodayStr();
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       const monthAgo = new Date();
@@ -3080,19 +3093,20 @@
       }
       
       if (dates.length === 0) return 0;
+      
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
       let streak = 0;
       let currentDate = new Date(today);
       
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatDateLocal(today);
       if (!dates.includes(todayStr)) {
         currentDate.setDate(currentDate.getDate() - 1);
       }
       
       for (let i = 0; i < 365; i++) {
-        const dateStr = currentDate.toISOString().split('T')[0];
+        const dateStr = formatDateLocal(currentDate);
         if (dates.includes(dateStr)) {
           streak++;
           currentDate.setDate(currentDate.getDate() - 1);
@@ -3168,7 +3182,7 @@
       for (let i = 6; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
+        const dateStr = formatDateLocal(date);
         const dayLabel = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
         days.push(dayLabel);
         
@@ -3482,7 +3496,7 @@
     }
     
     function resetStudyForm() {
-      document.getElementById('studyDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('studyDate').value = getTodayStr();
       document.querySelectorAll('#subjectButtons .btn-option').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#studyTypeButtons .btn-option').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#timeButtons .btn-option').forEach(b => b.classList.remove('active'));
@@ -3742,7 +3756,7 @@
     }
     
     function resetRedbookForm() {
-      document.getElementById('redbookDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('redbookDate').value = getTodayStr();
       document.getElementById('redbookUniversity').value = '';
       document.getElementById('redbookSubject').value = '';
       document.getElementById('redbookYear').value = '';
@@ -4123,12 +4137,6 @@
       } finally {
         sendBtn.disabled = false;
       }
-    }
-    
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML.replace(/\n/g, '<br>');
     }
     
     function saveSettings() {
@@ -5832,7 +5840,7 @@
       const { profile, daysUntil, weekMinutes, streak, subjectAnalysis } = a;
       const redbookLogs = allRedbookLogs || [];
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = formatDateLocal(today);
       const todayLogs = allLogs.filter(log => log.date === todayStr);
       const todayRedbookLogs = redbookLogs.filter(log => log.date === todayStr);
       const todayStudyMinutes = todayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0);
@@ -5842,7 +5850,7 @@
       // 昨日のログ
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayStr = formatDateLocal(yesterday);
       const yesterdayLogs = allLogs.filter(log => log.date === yesterdayStr);
       const yesterdayRedbookLogs = redbookLogs.filter(log => log.date === yesterdayStr);
       const yesterdayMinutes = yesterdayLogs.reduce((sum, log) => sum + (log.minutes || 0), 0)
