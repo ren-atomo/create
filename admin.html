@@ -166,8 +166,7 @@
     .subject-bar-fill.kokugo { background: #81A1C1; }
     .subject-bar-fill.sugaku { background: #88C0D0; }
     .subject-bar-fill.eigo { background: #A3BE8C; }
-    .subject-bar-fill.rika { background: #EBCB8B; }
-    .subject-bar-fill.shakai { background: #D08770; }
+    .subject-bar-fill.kakomon { background: #B48EAD; }
 
     .week-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 120px; padding-top: 1rem; }
     .week-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
@@ -279,7 +278,7 @@
           <input type="text" class="form-input" id="setupApiUrl" placeholder="https://script.google.com/...">
         </div>
         <button class="btn btn-primary" onclick="connectApi()">接続する</button>
-        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--gray-400);" id="setupVersionDisplay">v1.1.4</div>
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--gray-400);" id="setupVersionDisplay">v1.1.6</div>
       </div>
     </main>
   </div>
@@ -289,7 +288,7 @@
       <div class="header-content">
         <div>
           <h1 class="header-title">📊 学習状況レポート</h1>
-          <p class="header-subtitle"><span id="lastUpdated">最終更新: --</span> | <span id="versionDisplay">v1.1.4</span></p>
+          <p class="header-subtitle"><span id="lastUpdated">最終更新: --</span> | <span id="versionDisplay">v1.1.6</span></p>
         </div>
         <div class="header-right">
           <div class="student-name" id="studentName">--</div>
@@ -448,7 +447,7 @@
     // ==========================================
     // バージョン管理
     // ==========================================
-    const APP_VERSION = '1.1.4';
+    const APP_VERSION = '1.1.6';
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
     const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxppU_VWeV9IwVl-5tY7o0vuMCqRURoH0fltq_mo7JSegCv5VI-X1QjG7khcATLlj7vGQ/exec';
     
@@ -535,9 +534,14 @@
       const now = new Date();
 
       const weekStart = getWeekStart(now);
-      const weekMinutes = logs.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const weekStudyMinutes = logs.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const weekRedbookMinutes = redbooks.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.time || 0), 0);
+      const weekMinutes = weekStudyMinutes + weekRedbookMinutes;
+      
       const lastWeekStart = new Date(weekStart); lastWeekStart.setDate(lastWeekStart.getDate() - 7);
-      const lastWeekMinutes = logs.filter(log => { const d = new Date(log.date); return d >= lastWeekStart && d < weekStart; }).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const lastWeekStudyMinutes = logs.filter(log => { const d = new Date(log.date); return d >= lastWeekStart && d < weekStart; }).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const lastWeekRedbookMinutes = redbooks.filter(log => { const d = new Date(log.date); return d >= lastWeekStart && d < weekStart; }).reduce((sum, log) => sum + (log.time || 0), 0);
+      const lastWeekMinutes = lastWeekStudyMinutes + lastWeekRedbookMinutes;
 
       document.getElementById('weeklyTime').innerHTML = `${weekMinutes}<span class="stat-unit">分</span>`;
       const weekDiff = weekMinutes - lastWeekMinutes;
@@ -546,10 +550,15 @@
       weekChangeEl.textContent = weekDiff > 0 ? `↑ ${weekDiff}分` : weekDiff < 0 ? `↓ ${Math.abs(weekDiff)}分` : '→ 同じ';
 
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      const monthMinutes = logs.filter(log => new Date(log.date) >= monthStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const monthStudyMinutes = logs.filter(log => new Date(log.date) >= monthStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const monthRedbookMinutes = redbooks.filter(log => new Date(log.date) >= monthStart).reduce((sum, log) => sum + (log.time || 0), 0);
+      const monthMinutes = monthStudyMinutes + monthRedbookMinutes;
+      
       const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-      const lastMonthMinutes = logs.filter(log => { const d = new Date(log.date); return d >= lastMonthStart && d <= lastMonthEnd; }).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const lastMonthStudyMinutes = logs.filter(log => { const d = new Date(log.date); return d >= lastMonthStart && d <= lastMonthEnd; }).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const lastMonthRedbookMinutes = redbooks.filter(log => { const d = new Date(log.date); return d >= lastMonthStart && d <= lastMonthEnd; }).reduce((sum, log) => sum + (log.time || 0), 0);
+      const lastMonthMinutes = lastMonthStudyMinutes + lastMonthRedbookMinutes;
 
       document.getElementById('monthlyTime').innerHTML = `${monthMinutes}<span class="stat-unit">分</span>`;
       const monthDiff = monthMinutes - lastMonthMinutes;
@@ -557,7 +566,9 @@
       monthChangeEl.className = 'stat-change ' + (monthDiff > 0 ? 'up' : monthDiff < 0 ? 'down' : 'neutral');
       monthChangeEl.textContent = monthDiff > 0 ? `↑ ${monthDiff}分` : monthDiff < 0 ? `↓ ${Math.abs(monthDiff)}分` : '→ 同じ';
 
-      const streakDays = calculateStreak(logs);
+      // 連続日数（学習記録＋赤本記録）
+      const allDates = [...logs.map(log => log.date), ...redbooks.map(log => log.date)];
+      const streakDays = calculateStreak(allDates);
       document.getElementById('streakDays').innerHTML = `${streakDays}<span class="stat-unit">日</span>`;
       const streakEl = document.getElementById('streakStatus');
       streakEl.className = 'stat-change ' + (streakDays >= 7 ? 'up' : 'neutral');
@@ -578,6 +589,7 @@
 
     function renderWeekChart() {
       const logs = appData.studyLogs || [];
+      const redbooks = appData.redbookLogs || [];
       const now = new Date();
       const weekStart = getWeekStart(now);
       const goal = appData.settings?.weeklyGoalMinutes || 1800;
@@ -588,7 +600,9 @@
       for (let i = 0; i < 7; i++) {
         const date = new Date(weekStart); date.setDate(date.getDate() + i);
         const dateStr = formatDateISO(date);
-        const minutes = logs.filter(log => log.date === dateStr).reduce((sum, log) => sum + (log.minutes || 0), 0);
+        const studyMinutes = logs.filter(log => log.date === dateStr).reduce((sum, log) => sum + (log.minutes || 0), 0);
+        const redbookMinutes = redbooks.filter(log => log.date === dateStr).reduce((sum, log) => sum + (log.time || 0), 0);
+        const minutes = studyMinutes + redbookMinutes;
         dailyMinutes.push({ day: days[i], minutes, isToday: dateStr === formatDateISO(now) });
         if (minutes > maxMinutes) maxMinutes = minutes;
       }
@@ -607,19 +621,32 @@
 
     function renderSubjectBars() {
       const logs = appData.studyLogs || [];
+      const redbooks = appData.redbookLogs || [];
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      const subjects = ['国語', '数学', '英語', '理科', '社会'];
-      const subjectMinutes = {};
+      const subjects = ['国語', '数学', '英語', '過去問'];
+      const subjectMinutes = { '国語': 0, '数学': 0, '英語': 0, '過去問': 0 };
       let maxMinutes = 1;
 
+      // 学習記録を科目別に集計
+      logs.filter(log => new Date(log.date) >= monthStart).forEach(log => {
+        const cat = categorizeSubject(log.subject);
+        if (subjectMinutes.hasOwnProperty(cat)) {
+          subjectMinutes[cat] += log.minutes || 0;
+        }
+      });
+      
+      // 赤本記録を「過去問」に集計
+      redbooks.filter(log => new Date(log.date) >= monthStart).forEach(log => {
+        subjectMinutes['過去問'] += log.time || 0;
+      });
+      
+      // 最大値を計算
       subjects.forEach(s => {
-        const minutes = logs.filter(log => log.subject === s && new Date(log.date) >= monthStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
-        subjectMinutes[s] = minutes;
-        if (minutes > maxMinutes) maxMinutes = minutes;
+        if (subjectMinutes[s] > maxMinutes) maxMinutes = subjectMinutes[s];
       });
 
-      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '理科': 'rika', '社会': 'shakai' };
+      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '過去問': 'kakomon' };
       document.getElementById('subjectBars').innerHTML = subjects.map(s => `
         <div class="subject-bar">
           <div class="subject-bar-header">
@@ -638,7 +665,7 @@
       const container = document.getElementById('goalsProgress');
       if (goals.length === 0) { container.innerHTML = '<div style="color: var(--gray-400); text-align: center; padding: 1rem;">目標が設定されていません</div>'; return; }
 
-      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '理科': 'rika', '社会': 'shakai' };
+      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '過去問': 'kakomon' };
       container.innerHTML = goals.map(goal => {
         const progress = Math.min(100, Math.round((goal.current / goal.target) * 100));
         const isAchieved = goal.current >= goal.target;
@@ -723,6 +750,7 @@
 
     function renderCalendar() {
       const logs = appData.studyLogs || [];
+      const redbooks = appData.redbookLogs || [];
       const now = new Date();
       const year = now.getFullYear(), month = now.getMonth();
       document.getElementById('calendarMonth').textContent = `${year}年${month + 1}月`;
@@ -730,11 +758,22 @@
       const firstDay = new Date(year, month, 1).getDay();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       const dailyMinutes = {};
+      
+      // 学習記録
       logs.forEach(log => {
         const d = new Date(log.date);
         if (d.getFullYear() === year && d.getMonth() === month) {
           const day = d.getDate();
           dailyMinutes[day] = (dailyMinutes[day] || 0) + (log.minutes || 0);
+        }
+      });
+      
+      // 赤本記録
+      redbooks.forEach(log => {
+        const d = new Date(log.date);
+        if (d.getFullYear() === year && d.getMonth() === month) {
+          const day = d.getDate();
+          dailyMinutes[day] = (dailyMinutes[day] || 0) + (log.time || 0);
         }
       });
 
@@ -753,15 +792,17 @@
 
     function renderAlert() {
       const logs = appData.studyLogs || [];
+      const redbooks = appData.redbookLogs || [];
       const now = new Date();
       const banner = document.getElementById('alertBanner');
       const icon = document.getElementById('alertIcon');
       const text = document.getElementById('alertText');
 
       const threeDaysAgo = new Date(now); threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-      const recentLogs = logs.filter(log => new Date(log.date) >= threeDaysAgo);
+      const recentStudyLogs = logs.filter(log => new Date(log.date) >= threeDaysAgo);
+      const recentRedbookLogs = redbooks.filter(log => new Date(log.date) >= threeDaysAgo);
 
-      if (recentLogs.length === 0) {
+      if (recentStudyLogs.length === 0 && recentRedbookLogs.length === 0) {
         banner.style.display = 'flex';
         banner.className = 'alert-banner danger';
         icon.textContent = '⚠️';
@@ -770,7 +811,9 @@
       }
 
       const weekStart = getWeekStart(now);
-      const weekMinutes = logs.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const weekStudyMinutes = logs.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const weekRedbookMinutes = redbooks.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.time || 0), 0);
+      const weekMinutes = weekStudyMinutes + weekRedbookMinutes;
       const goal = appData.settings?.weeklyGoalMinutes || 1800;
       const progress = weekMinutes / goal;
       const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
@@ -813,9 +856,32 @@
     function formatDateISO(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
     function getWeekStart(date) { const d = new Date(date); const day = d.getDay(); d.setDate(d.getDate() - day + (day === 0 ? -6 : 1)); return d; }
 
-    function calculateStreak(logs) {
-      if (logs.length === 0) return 0;
-      const dates = [...new Set(logs.map(log => log.date))].sort().reverse();
+    function categorizeSubject(subject) {
+      const english = ['単語', '文法', '長文', '音読', 'リスニング', '英語', '英語R', '英語L'];
+      const math = ['数学1A', '数学2B', '数学', '数学IA', '数学IIB', '数学IIIC'];
+      const japanese = ['現代文', '古文', '漢文', '国語'];
+      if (english.includes(subject)) return '英語';
+      if (math.includes(subject)) return '数学';
+      if (japanese.includes(subject)) return '国語';
+      return 'その他';
+    }
+
+    function calculateStreak(input) {
+      // 配列またはログオブジェクト配列に対応
+      let dates;
+      if (input.length === 0) return 0;
+      if (typeof input[0] === 'string') {
+        // 日付文字列の配列
+        dates = [...new Set(input)].filter(Boolean).sort().reverse();
+      } else if (input[0].date) {
+        // ログオブジェクトの配列
+        dates = [...new Set(input.map(log => log.date))].sort().reverse();
+      } else {
+        return 0;
+      }
+      
+      if (dates.length === 0) return 0;
+      
       const today = formatDateISO(new Date());
       const yesterday = formatDateISO(new Date(Date.now() - 86400000));
       if (dates[0] !== today && dates[0] !== yesterday) return 0;
