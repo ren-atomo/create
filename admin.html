@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学習状況レポート - 受験サポート</title>
+  <style>
+    :root {
+      --black: #1a1a1a;
+      --white: #ffffff;
+      --gray-50: #fafafa;
+      --gray-100: #f4f4f5;
+      --gray-200: #e4e4e7;
+      --gray-300: #d4d4d8;
+      --gray-400: #a1a1aa;
+      --gray-500: #71717a;
+      --gray-600: #52525b;
+      --gray-700: #3f3f46;
+      --danger: #BF616A;
+      --danger-bg: #fef2f2;
+      --success: #A3BE8C;
+      --success-bg: #f0fdf4;
+      --warning: #EBCB8B;
+      --warning-bg: #fffbeb;
+      --info: #88C0D0;
+      --info-bg: #f0f9ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title { font-size: 1.25rem; font-weight: 600; color: var(--black); }
+    .header-subtitle { font-size: 0.875rem; color: var(--gray-500); }
+
+    .header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+    .student-name {
+      font-weight: 600;
+      color: var(--gray-700);
+      padding: 0.5rem 1rem;
+      background: var(--gray-100);
+      border-radius: 6px;
+    }
+
+    .refresh-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--gray-600);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .refresh-btn:hover { background: var(--gray-50); }
+
+    .main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+    .alert-banner {
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .alert-banner.success { background: var(--success-bg); border: 1px solid #bbf7d0; color: #166534; }
+    .alert-banner.warning { background: var(--warning-bg); border: 1px solid #fde68a; color: #92400e; }
+    .alert-banner.danger { background: var(--danger-bg); border: 1px solid #fecaca; color: #991b1b; }
+
+    .alert-icon { font-size: 1.25rem; }
+    .alert-text { flex: 1; font-size: 0.9375rem; }
+
+    .grid { display: grid; gap: 1.5rem; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    @media (max-width: 900px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid-2, .grid-4 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .card-body { padding: 1.25rem; }
+
+    .card-footer {
+      padding: 0.875rem 1.25rem;
+      border-top: 1px solid var(--gray-100);
+      background: var(--gray-50);
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+    }
+
+    .stat-card { padding: 1.25rem; }
+    .stat-label { font-size: 0.8125rem; color: var(--gray-500); margin-bottom: 0.5rem; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--black); line-height: 1.2; }
+    .stat-unit { font-size: 1rem; font-weight: 400; color: var(--gray-500); margin-left: 0.25rem; }
+
+    .stat-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8125rem;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .stat-change.up { background: var(--success-bg); color: #166534; }
+    .stat-change.down { background: var(--danger-bg); color: #991b1b; }
+    .stat-change.neutral { background: var(--gray-100); color: var(--gray-600); }
+
+    .subject-bar { margin-bottom: 1rem; }
+    .subject-bar:last-child { margin-bottom: 0; }
+    .subject-bar-header { display: flex; justify-content: space-between; margin-bottom: 0.375rem; }
+    .subject-bar-name { font-size: 0.875rem; font-weight: 500; color: var(--gray-700); }
+    .subject-bar-value { font-size: 0.875rem; color: var(--gray-600); }
+    .subject-bar-track { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+    .subject-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .subject-bar-fill.kokugo { background: #81A1C1; }
+    .subject-bar-fill.sugaku { background: #88C0D0; }
+    .subject-bar-fill.eigo { background: #A3BE8C; }
+    .subject-bar-fill.rika { background: #EBCB8B; }
+    .subject-bar-fill.shakai { background: #D08770; }
+
+    .week-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 120px; padding-top: 1rem; }
+    .week-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .week-bar-fill { width: 100%; max-width: 40px; background: var(--info); border-radius: 4px 4px 0 0; min-height: 4px; }
+    .week-bar-fill.today { background: var(--black); }
+    .week-bar-label { font-size: 0.75rem; color: var(--gray-500); }
+    .week-bar-value { font-size: 0.6875rem; color: var(--gray-400); }
+
+    .record-list { max-height: 400px; overflow-y: auto; }
+    .record-item { padding: 0.875rem 0; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; }
+    .record-item:last-child { border-bottom: none; }
+    .record-info { flex: 1; }
+    .record-main { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.25rem; }
+    .record-date { font-size: 0.75rem; color: var(--gray-400); }
+    .record-subject { font-weight: 600; color: var(--gray-700); }
+    .record-type { font-size: 0.75rem; color: var(--gray-500); background: var(--gray-100); padding: 0.125rem 0.5rem; border-radius: 4px; }
+    .record-detail { font-size: 0.8125rem; color: var(--gray-500); }
+    .record-value { text-align: right; }
+    .record-time { font-weight: 600; color: var(--gray-700); }
+    .record-mood { font-size: 1rem; }
+    .record-score { font-weight: 700; padding: 0.25rem 0.625rem; border-radius: 4px; }
+    .record-score.high { background: var(--success-bg); color: #166534; }
+    .record-score.mid { background: var(--warning-bg); color: #92400e; }
+    .record-score.low { background: var(--danger-bg); color: #991b1b; }
+
+    .score-trend { display: flex; flex-direction: column; gap: 0.75rem; }
+    .score-trend-item { display: flex; align-items: center; gap: 0.75rem; }
+    .score-trend-uni { width: 80px; font-size: 0.8125rem; color: var(--gray-600); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .score-trend-bars { flex: 1; display: flex; gap: 0.25rem; }
+    .score-trend-bar { height: 24px; min-width: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; font-weight: 600; color: white; }
+
+    .goal-item { margin-bottom: 1rem; }
+    .goal-item:last-child { margin-bottom: 0; }
+    .goal-header { display: flex; justify-content: space-between; margin-bottom: 0.375rem; }
+    .goal-name { font-size: 0.875rem; font-weight: 500; color: var(--gray-700); }
+    .goal-values { font-size: 0.8125rem; color: var(--gray-500); }
+    .goal-bar { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+    .goal-fill { height: 100%; border-radius: 4px; }
+    .goal-achieved { display: inline-flex; font-size: 0.75rem; color: #166534; background: var(--success-bg); padding: 0.125rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; }
+
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+    .calendar-header { text-align: center; font-size: 0.75rem; color: var(--gray-400); padding: 0.5rem 0; }
+    .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; border-radius: 4px; }
+    .calendar-day.empty { background: transparent; }
+    .calendar-day.no-study { background: var(--gray-50); color: var(--gray-400); }
+    .calendar-day.studied { background: var(--info-bg); color: var(--info); font-weight: 600; }
+    .calendar-day.studied-high { background: var(--info); color: white; font-weight: 600; }
+    .calendar-day.today { border: 2px solid var(--black); }
+
+    .tabs { display: flex; gap: 0.25rem; margin-bottom: 1rem; border-bottom: 1px solid var(--gray-200); }
+    .tab-btn { padding: 0.75rem 1rem; border: none; background: transparent; color: var(--gray-500); font-size: 0.875rem; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tab-btn:hover { color: var(--gray-700); }
+    .tab-btn.active { color: var(--black); border-bottom-color: var(--black); }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.2s; }
+    .loading-overlay.active { opacity: 1; visibility: visible; }
+    .loading-spinner { width: 48px; height: 48px; border: 3px solid var(--gray-200); border-top-color: var(--black); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .loading-text { font-size: 0.9375rem; color: var(--gray-500); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--black); color: var(--white); padding: 0.875rem 1.25rem; border-radius: 8px; font-size: 0.875rem; opacity: 0; transition: all 0.3s; z-index: 2000; }
+    .toast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.error { background: var(--danger); }
+
+    .setup-card { max-width: 500px; margin: 3rem auto; padding: 2rem; }
+    .setup-title { font-size: 1.25rem; font-weight: 600; color: var(--black); margin-bottom: 0.5rem; text-align: center; }
+    .setup-desc { font-size: 0.9375rem; color: var(--gray-500); margin-bottom: 1.5rem; text-align: center; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--gray-600); margin-bottom: 0.5rem; }
+    .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--gray-200); border-radius: 8px; font-size: 0.9375rem; }
+    .form-input:focus { outline: none; border-color: var(--gray-400); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 500; cursor: pointer; width: 100%; }
+    .btn-primary { background: var(--black); color: var(--white); }
+    .btn-primary:hover { background: var(--gray-700); }
+
+    @media print { .header { position: static; } .refresh-btn { display: none; } .card { break-inside: avoid; } }
+
+    /* チャット */
+    .chat-container { display: flex; flex-direction: column; height: 500px; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; background: var(--gray-50); border-radius: 8px; }
+    .chat-message { max-width: 80%; padding: 0.75rem 1rem; border-radius: 12px; font-size: 0.9375rem; line-height: 1.5; word-wrap: break-word; }
+    .chat-message.admin { align-self: flex-end; background: var(--black); color: var(--white); border-bottom-right-radius: 4px; }
+    .chat-message.student { align-self: flex-start; background: var(--white); color: var(--gray-700); border: 1px solid var(--gray-200); border-bottom-left-radius: 4px; }
+    .chat-message-time { font-size: 0.6875rem; color: var(--gray-400); margin-top: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
+    .chat-message.admin .chat-message-time { color: rgba(255,255,255,0.6); justify-content: flex-end; }
+    .chat-read-status { font-size: 0.625rem; opacity: 0.8; }
+    .chat-input-area { padding: 1rem 0 0 0; display: flex; gap: 0.5rem; }
+    .chat-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--gray-200); border-radius: 24px; font-size: 0.9375rem; resize: none; font-family: inherit; }
+    .chat-input:focus { outline: none; border-color: var(--gray-400); }
+    .chat-send-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--black); color: var(--white); border: none; font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .chat-send-btn:hover { background: var(--gray-700); }
+    .chat-send-btn:disabled { background: var(--gray-300); cursor: not-allowed; }
+    .chat-empty { text-align: center; color: var(--gray-400); padding: 2rem; }
+    .chat-date-divider { text-align: center; font-size: 0.75rem; color: var(--gray-400); padding: 0.5rem 0; }
+    .chat-badge { background: var(--danger); color: white; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 10px; margin-left: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div id="setupScreen" style="display: none;">
+    <main class="main">
+      <div class="card setup-card">
+        <div class="setup-title">📊 学習状況レポート</div>
+        <div class="setup-desc">学習データに接続するために<br>Apps Script URLを入力してください</div>
+        <div class="form-group">
+          <label class="form-label">Apps Script URL</label>
+          <input type="text" class="form-input" id="setupApiUrl" placeholder="https://script.google.com/...">
+        </div>
+        <button class="btn btn-primary" onclick="connectApi()">接続する</button>
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--gray-400);" id="setupVersionDisplay">v1.1.1</div>
+      </div>
+    </main>
+  </div>
+
+  <div id="mainScreen" style="display: none;">
+    <header class="header">
+      <div class="header-content">
+        <div>
+          <h1 class="header-title">📊 学習状況レポート</h1>
+          <p class="header-subtitle"><span id="lastUpdated">最終更新: --</span> | <span id="versionDisplay">v1.1.1</span></p>
+        </div>
+        <div class="header-right">
+          <div class="student-name" id="studentName">--</div>
+          <button class="refresh-btn" onclick="loadData()">🔄 更新</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div id="alertBanner" class="alert-banner" style="display: none;">
+        <span class="alert-icon" id="alertIcon">⚠️</span>
+        <span class="alert-text" id="alertText"></span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('overview')">📈 概要</button>
+        <button class="tab-btn" onclick="switchTab('study')">📖 学習記録</button>
+        <button class="tab-btn" onclick="switchTab('redbook')">📕 過去問</button>
+        <button class="tab-btn" onclick="switchTab('calendar')">📅 カレンダー</button>
+        <button class="tab-btn" onclick="switchTab('chat')">💬 チャット<span class="chat-badge" id="chatBadge" style="display: none;">0</span></button>
+      </div>
+
+      <section class="section active" id="overviewSection">
+        <div class="grid grid-4" style="margin-bottom: 1.5rem;">
+          <div class="card stat-card">
+            <div class="stat-label">今週の学習時間</div>
+            <div class="stat-value" id="weeklyTime">0<span class="stat-unit">分</span></div>
+            <div class="stat-change neutral" id="weeklyChange">--</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">今月の学習時間</div>
+            <div class="stat-value" id="monthlyTime">0<span class="stat-unit">分</span></div>
+            <div class="stat-change neutral" id="monthlyChange">--</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">連続学習</div>
+            <div class="stat-value" id="streakDays">0<span class="stat-unit">日</span></div>
+            <div class="stat-change neutral" id="streakStatus">--</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">過去問平均</div>
+            <div class="stat-value" id="avgScore">-<span class="stat-unit">%</span></div>
+            <div class="stat-change neutral" id="scoreChange">--</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-bottom: 1.5rem;">
+          <div class="card">
+            <div class="card-header"><span class="card-title">📊 今週の学習時間</span></div>
+            <div class="card-body"><div class="week-chart" id="weekChart"></div></div>
+            <div class="card-footer" id="weekTotal">合計: 0分 / 目標: 1800分</div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">📚 科目別学習時間（今月）</span></div>
+            <div class="card-body" id="subjectBars"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header"><span class="card-title">🎯 目標進捗</span></div>
+            <div class="card-body" id="goalsProgress"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">📈 過去問成績（直近5回）</span></div>
+            <div class="card-body" id="scoreTrend"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="studySection">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📖 学習記録一覧</span>
+            <span style="font-size: 0.875rem; color: var(--gray-500);" id="studyCount">0件</span>
+          </div>
+          <div class="card-body"><div class="record-list" id="studyList"></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="redbookSection">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📕 過去問記録一覧</span>
+            <span style="font-size: 0.875rem; color: var(--gray-500);" id="redbookCount">0件</span>
+          </div>
+          <div class="card-body"><div class="record-list" id="redbookList"></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="calendarSection">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📅 学習カレンダー</span>
+            <span style="font-size: 0.875rem; color: var(--gray-500);" id="calendarMonth">--</span>
+          </div>
+          <div class="card-body"><div class="calendar" id="calendar"></div></div>
+          <div class="card-footer">
+            <span style="display: inline-flex; align-items: center; gap: 0.5rem; margin-right: 1rem;">
+              <span style="width: 12px; height: 12px; background: var(--info-bg); border-radius: 2px;"></span> 学習あり
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+              <span style="width: 12px; height: 12px; background: var(--info); border-radius: 2px;"></span> 60分以上
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="chatSection">
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">💬 メッセージ</span>
+              <span style="font-size: 0.875rem; color: var(--gray-500);" id="chatCount">0件</span>
+            </div>
+            <div class="card-body">
+              <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                  <div class="chat-empty">メッセージはありません</div>
+                </div>
+                <div class="chat-input-area">
+                  <textarea class="chat-input" id="chatInput" placeholder="メッセージを入力..." rows="1" onkeydown="handleChatKeydown(event)"></textarea>
+                  <button class="chat-send-btn" onclick="sendChatMessage()" id="chatSendBtn">➤</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">⚙️ チャット設定</span>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">チャット用 Apps Script URL</label>
+                <input type="text" class="form-input" id="chatApiUrl" placeholder="https://script.google.com/...">
+                <p style="font-size: 0.75rem; color: var(--gray-400); margin-top: 0.25rem;">
+                  メインアプリと同じURLを設定してください
+                </p>
+              </div>
+              <button class="btn btn-primary" onclick="saveChatSettings()" style="margin-top: 1rem;">設定を保存</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">読み込み中...</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ==========================================
+    // バージョン管理
+    // ==========================================
+    const APP_VERSION = '1.1.1';
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
+    const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxvjWvqJYH5uazChrghHLifemAFs7mnfoo5f5MSppTTtCgAF72MLtVn9SH_Aq8ZFLnMhw/exec';
+    
+    (function checkVersion() {
+      const storedVersion = localStorage.getItem('adminAppVersion');
+      
+      if (storedVersion !== APP_VERSION) {
+        console.log(`Admin updated: ${storedVersion || 'none'} → ${APP_VERSION}`);
+        
+        // URLを最新のデフォルトに更新
+        localStorage.setItem('adminApiUrl', DEFAULT_API_URL);
+        localStorage.setItem('adminChatUrl', DEFAULT_CHAT_URL);
+        
+        // バージョンを保存
+        localStorage.setItem('adminAppVersion', APP_VERSION);
+      }
+    })();
+    
+    // ==========================================
+    // メイン
+    // ==========================================
+    let appData = { studyLogs: [], redbookLogs: [], goals: [], profile: {}, settings: {} };
+    let API_URL = localStorage.getItem('adminApiUrl') || DEFAULT_API_URL;
+    let CHAT_URL = localStorage.getItem('adminChatUrl') || DEFAULT_CHAT_URL;
+    let chatMessages = [];
+    let chatReadStatus = { studentLastRead: null, adminLastRead: null };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // バージョン表示
+      document.getElementById('versionDisplay').textContent = `v${APP_VERSION}`;
+      document.getElementById('setupVersionDisplay').textContent = `v${APP_VERSION}`;
+      
+      // デフォルトURLが設定されているので常にメイン画面を表示
+      document.getElementById('setupScreen').style.display = 'none';
+      document.getElementById('mainScreen').style.display = 'block';
+      loadData();
+      initChat();
+    });
+
+    function connectApi() {
+      const apiUrl = document.getElementById('setupApiUrl').value.trim();
+      if (!apiUrl) { showToast('URLを入力してください', 'error'); return; }
+      localStorage.setItem('adminApiUrl', apiUrl);
+      API_URL = apiUrl;
+      document.getElementById('setupScreen').style.display = 'none';
+      document.getElementById('mainScreen').style.display = 'block';
+      loadData();
+    }
+
+    async function loadData() {
+      showLoading();
+      try {
+        const response = await fetch(`${API_URL}?action=getData`);
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+        appData = data;
+        renderAll();
+        document.getElementById('lastUpdated').textContent = `最終更新: ${new Date().toLocaleString('ja-JP')}`;
+      } catch (error) {
+        showToast('データ取得エラー: ' + error.message, 'error');
+      } finally { hideLoading(); }
+    }
+
+    function renderAll() {
+      renderStudentName(); renderStats(); renderWeekChart(); renderSubjectBars();
+      renderGoals(); renderScoreTrend(); renderStudyList(); renderRedbookList();
+      renderCalendar(); renderAlert();
+    }
+
+    function renderStudentName() {
+      const profile = appData.profile || {};
+      const name = profile['名前'] || profile['name'] || '';
+      const el = document.getElementById('studentName');
+      if (name) {
+        el.textContent = `👤 ${name}`;
+        el.style.display = 'block';
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    function renderStats() {
+      const logs = appData.studyLogs || [];
+      const redbooks = appData.redbookLogs || [];
+      const now = new Date();
+
+      const weekStart = getWeekStart(now);
+      const weekMinutes = logs.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const lastWeekStart = new Date(weekStart); lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+      const lastWeekMinutes = logs.filter(log => { const d = new Date(log.date); return d >= lastWeekStart && d < weekStart; }).reduce((sum, log) => sum + (log.minutes || 0), 0);
+
+      document.getElementById('weeklyTime').innerHTML = `${weekMinutes}<span class="stat-unit">分</span>`;
+      const weekDiff = weekMinutes - lastWeekMinutes;
+      const weekChangeEl = document.getElementById('weeklyChange');
+      weekChangeEl.className = 'stat-change ' + (weekDiff > 0 ? 'up' : weekDiff < 0 ? 'down' : 'neutral');
+      weekChangeEl.textContent = weekDiff > 0 ? `↑ ${weekDiff}分` : weekDiff < 0 ? `↓ ${Math.abs(weekDiff)}分` : '→ 同じ';
+
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const monthMinutes = logs.filter(log => new Date(log.date) >= monthStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+      const lastMonthMinutes = logs.filter(log => { const d = new Date(log.date); return d >= lastMonthStart && d <= lastMonthEnd; }).reduce((sum, log) => sum + (log.minutes || 0), 0);
+
+      document.getElementById('monthlyTime').innerHTML = `${monthMinutes}<span class="stat-unit">分</span>`;
+      const monthDiff = monthMinutes - lastMonthMinutes;
+      const monthChangeEl = document.getElementById('monthlyChange');
+      monthChangeEl.className = 'stat-change ' + (monthDiff > 0 ? 'up' : monthDiff < 0 ? 'down' : 'neutral');
+      monthChangeEl.textContent = monthDiff > 0 ? `↑ ${monthDiff}分` : monthDiff < 0 ? `↓ ${Math.abs(monthDiff)}分` : '→ 同じ';
+
+      const streakDays = calculateStreak(logs);
+      document.getElementById('streakDays').innerHTML = `${streakDays}<span class="stat-unit">日</span>`;
+      const streakEl = document.getElementById('streakStatus');
+      streakEl.className = 'stat-change ' + (streakDays >= 7 ? 'up' : 'neutral');
+      streakEl.textContent = streakDays >= 14 ? '🔥 すごい！' : streakDays >= 7 ? '✨ いい調子！' : streakDays >= 3 ? '📈 継続中' : '頑張ろう！';
+
+      if (redbooks.length > 0) {
+        const avgScore = Math.round(redbooks.reduce((sum, r) => sum + (r.score || 0), 0) / redbooks.length);
+        document.getElementById('avgScore').innerHTML = `${avgScore}<span class="stat-unit">%</span>`;
+        const recent = redbooks.slice(0, 5), older = redbooks.slice(5, 10);
+        if (older.length > 0) {
+          const diff = Math.round(recent.reduce((s, r) => s + r.score, 0) / recent.length - older.reduce((s, r) => s + r.score, 0) / older.length);
+          const scoreChangeEl = document.getElementById('scoreChange');
+          scoreChangeEl.className = 'stat-change ' + (diff > 0 ? 'up' : diff < 0 ? 'down' : 'neutral');
+          scoreChangeEl.textContent = diff > 0 ? `↑ ${diff}%` : diff < 0 ? `↓ ${Math.abs(diff)}%` : '→ 安定';
+        }
+      }
+    }
+
+    function renderWeekChart() {
+      const logs = appData.studyLogs || [];
+      const now = new Date();
+      const weekStart = getWeekStart(now);
+      const goal = appData.settings?.weeklyGoalMinutes || 1800;
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+      const dailyMinutes = [];
+      let maxMinutes = 60;
+
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(weekStart); date.setDate(date.getDate() + i);
+        const dateStr = formatDateISO(date);
+        const minutes = logs.filter(log => log.date === dateStr).reduce((sum, log) => sum + (log.minutes || 0), 0);
+        dailyMinutes.push({ day: days[i], minutes, isToday: dateStr === formatDateISO(now) });
+        if (minutes > maxMinutes) maxMinutes = minutes;
+      }
+
+      document.getElementById('weekChart').innerHTML = dailyMinutes.map(d => `
+        <div class="week-bar">
+          <div class="week-bar-value">${d.minutes > 0 ? d.minutes + '分' : ''}</div>
+          <div class="week-bar-fill ${d.isToday ? 'today' : ''}" style="height: ${Math.max(4, (d.minutes / maxMinutes) * 100)}px;"></div>
+          <div class="week-bar-label">${d.day}</div>
+        </div>
+      `).join('');
+
+      const total = dailyMinutes.reduce((s, d) => s + d.minutes, 0);
+      document.getElementById('weekTotal').textContent = `合計: ${total}分 / 目標: ${goal}分 (${Math.round(total / goal * 100)}%)`;
+    }
+
+    function renderSubjectBars() {
+      const logs = appData.studyLogs || [];
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const subjects = ['国語', '数学', '英語', '理科', '社会'];
+      const subjectMinutes = {};
+      let maxMinutes = 1;
+
+      subjects.forEach(s => {
+        const minutes = logs.filter(log => log.subject === s && new Date(log.date) >= monthStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+        subjectMinutes[s] = minutes;
+        if (minutes > maxMinutes) maxMinutes = minutes;
+      });
+
+      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '理科': 'rika', '社会': 'shakai' };
+      document.getElementById('subjectBars').innerHTML = subjects.map(s => `
+        <div class="subject-bar">
+          <div class="subject-bar-header">
+            <span class="subject-bar-name">${s}</span>
+            <span class="subject-bar-value">${subjectMinutes[s]}分</span>
+          </div>
+          <div class="subject-bar-track">
+            <div class="subject-bar-fill ${classes[s]}" style="width: ${(subjectMinutes[s] / maxMinutes) * 100}%"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderGoals() {
+      const goals = appData.goals || [];
+      const container = document.getElementById('goalsProgress');
+      if (goals.length === 0) { container.innerHTML = '<div style="color: var(--gray-400); text-align: center; padding: 1rem;">目標が設定されていません</div>'; return; }
+
+      const classes = { '国語': 'kokugo', '数学': 'sugaku', '英語': 'eigo', '理科': 'rika', '社会': 'shakai' };
+      container.innerHTML = goals.map(goal => {
+        const progress = Math.min(100, Math.round((goal.current / goal.target) * 100));
+        const isAchieved = goal.current >= goal.target;
+        return `
+          <div class="goal-item">
+            <div class="goal-header">
+              <span class="goal-name">${goal.subject}${isAchieved ? '<span class="goal-achieved">🏆 達成！</span>' : ''}</span>
+              <span class="goal-values">${goal.current}% → ${goal.target}%</span>
+            </div>
+            <div class="goal-bar"><div class="goal-fill subject-bar-fill ${classes[goal.subject] || 'kokugo'}" style="width: ${progress}%"></div></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderScoreTrend() {
+      const redbooks = appData.redbookLogs || [];
+      const container = document.getElementById('scoreTrend');
+      if (redbooks.length === 0) { container.innerHTML = '<div style="color: var(--gray-400); text-align: center; padding: 1rem;">過去問記録がありません</div>'; return; }
+
+      const byUni = {};
+      redbooks.forEach(r => { if (!byUni[r.university]) byUni[r.university] = []; if (byUni[r.university].length < 5) byUni[r.university].push(r); });
+      const getColor = (score) => score >= 70 ? '#A3BE8C' : score >= 50 ? '#EBCB8B' : '#BF616A';
+
+      container.innerHTML = Object.entries(byUni).slice(0, 5).map(([uni, records]) => `
+        <div class="score-trend-item">
+          <div class="score-trend-uni" title="${uni}">${uni}</div>
+          <div class="score-trend-bars">
+            ${records.reverse().map(r => `<div class="score-trend-bar" style="background: ${getColor(r.score)}; flex: 1;" title="${r.date} ${r.subject} ${r.year}年">${r.score}</div>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStudyList() {
+      const logs = appData.studyLogs || [];
+      document.getElementById('studyCount').textContent = `${logs.length}件`;
+      const container = document.getElementById('studyList');
+      if (logs.length === 0) { container.innerHTML = '<div style="color: var(--gray-400); text-align: center; padding: 2rem;">記録がありません</div>'; return; }
+
+      container.innerHTML = logs.slice(0, 50).map(log => `
+        <div class="record-item">
+          <div class="record-info">
+            <div class="record-main">
+              <span class="record-date">${formatDate(log.date)}</span>
+              <span class="record-subject">${log.subject}</span>
+              ${log.studyType ? `<span class="record-type">${log.studyType}</span>` : ''}
+            </div>
+            ${log.unit || log.memo ? `<div class="record-detail">${log.unit || ''} ${log.memo ? '/ ' + log.memo : ''}</div>` : ''}
+          </div>
+          <div class="record-value">
+            <div class="record-time">${log.minutes}分</div>
+            <div class="record-mood">${log.mood || ''}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderRedbookList() {
+      const logs = appData.redbookLogs || [];
+      document.getElementById('redbookCount').textContent = `${logs.length}件`;
+      const container = document.getElementById('redbookList');
+      if (logs.length === 0) { container.innerHTML = '<div style="color: var(--gray-400); text-align: center; padding: 2rem;">記録がありません</div>'; return; }
+
+      container.innerHTML = logs.slice(0, 50).map(log => {
+        const scoreClass = log.score >= 70 ? 'high' : log.score >= 50 ? 'mid' : 'low';
+        return `
+          <div class="record-item">
+            <div class="record-info">
+              <div class="record-main">
+                <span class="record-date">${formatDate(log.date)}</span>
+                <span class="record-subject">${log.university}</span>
+                <span class="record-type">${log.subject} ${log.year}年</span>
+              </div>
+              ${log.memo || log.weakAreas ? `<div class="record-detail">${log.weakAreas ? '⚠️ ' + log.weakAreas : ''} ${log.memo ? '/ ' + log.memo : ''}</div>` : ''}
+            </div>
+            <div class="record-value"><div class="record-score ${scoreClass}">${log.score}%</div></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCalendar() {
+      const logs = appData.studyLogs || [];
+      const now = new Date();
+      const year = now.getFullYear(), month = now.getMonth();
+      document.getElementById('calendarMonth').textContent = `${year}年${month + 1}月`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const dailyMinutes = {};
+      logs.forEach(log => {
+        const d = new Date(log.date);
+        if (d.getFullYear() === year && d.getMonth() === month) {
+          const day = d.getDate();
+          dailyMinutes[day] = (dailyMinutes[day] || 0) + (log.minutes || 0);
+        }
+      });
+
+      const today = now.getDate();
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+      let html = days.map(d => `<div class="calendar-header">${d}</div>`).join('');
+      for (let i = 0; i < firstDay; i++) html += '<div class="calendar-day empty"></div>';
+      for (let day = 1; day <= daysInMonth; day++) {
+        const minutes = dailyMinutes[day] || 0;
+        let cls = minutes > 0 ? (minutes >= 60 ? 'studied-high' : 'studied') : 'no-study';
+        if (day === today) cls += ' today';
+        html += `<div class="calendar-day ${cls}" title="${day}日: ${minutes}分">${day}</div>`;
+      }
+      document.getElementById('calendar').innerHTML = html;
+    }
+
+    function renderAlert() {
+      const logs = appData.studyLogs || [];
+      const now = new Date();
+      const banner = document.getElementById('alertBanner');
+      const icon = document.getElementById('alertIcon');
+      const text = document.getElementById('alertText');
+
+      const threeDaysAgo = new Date(now); threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      const recentLogs = logs.filter(log => new Date(log.date) >= threeDaysAgo);
+
+      if (recentLogs.length === 0) {
+        banner.style.display = 'flex';
+        banner.className = 'alert-banner danger';
+        icon.textContent = '⚠️';
+        text.textContent = '3日以上学習記録がありません。声をかけてあげてください。';
+        return;
+      }
+
+      const weekStart = getWeekStart(now);
+      const weekMinutes = logs.filter(log => new Date(log.date) >= weekStart).reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const goal = appData.settings?.weeklyGoalMinutes || 1800;
+      const progress = weekMinutes / goal;
+      const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
+      const expectedProgress = dayOfWeek / 7;
+
+      if (progress < expectedProgress * 0.5) {
+        banner.style.display = 'flex';
+        banner.className = 'alert-banner warning';
+        icon.textContent = '📢';
+        text.textContent = `今週の学習ペースが遅れています（目標の${Math.round(progress * 100)}%）。`;
+        return;
+      }
+
+      if (progress >= 1) {
+        banner.style.display = 'flex';
+        banner.className = 'alert-banner success';
+        icon.textContent = '🎉';
+        text.textContent = '今週の目標を達成しました！よく頑張っています。';
+        return;
+      }
+
+      banner.style.display = 'none';
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(`${tab}Section`).classList.add('active');
+      
+      // チャットタブに切り替えた時
+      if (tab === 'chat') {
+        document.getElementById('chatBadge').style.display = 'none';
+        loadChatMessages();
+        markChatAsRead();
+      }
+    }
+
+    function formatDate(dateStr) { if (!dateStr) return ''; const d = new Date(dateStr); return `${d.getMonth() + 1}/${d.getDate()}`; }
+    function formatDateISO(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
+    function getWeekStart(date) { const d = new Date(date); const day = d.getDay(); d.setDate(d.getDate() - day + (day === 0 ? -6 : 1)); return d; }
+
+    function calculateStreak(logs) {
+      if (logs.length === 0) return 0;
+      const dates = [...new Set(logs.map(log => log.date))].sort().reverse();
+      const today = formatDateISO(new Date());
+      const yesterday = formatDateISO(new Date(Date.now() - 86400000));
+      if (dates[0] !== today && dates[0] !== yesterday) return 0;
+      let streak = 1;
+      for (let i = 1; i < dates.length; i++) {
+        const diff = (new Date(dates[i - 1]) - new Date(dates[i])) / 86400000;
+        if (diff === 1) streak++; else break;
+      }
+      return streak;
+    }
+
+    function showLoading() { document.getElementById('loadingOverlay').classList.add('active'); }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+    function showToast(message, type = '') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast active';
+      if (type) toast.classList.add(type);
+      setTimeout(() => toast.classList.remove('active'), 3000);
+    }
+
+    // ==========================================
+    // チャット機能
+    // ==========================================
+    function initChat() {
+      document.getElementById('chatApiUrl').value = CHAT_URL;
+      if (CHAT_URL) {
+        loadChatMessages();
+        setInterval(checkNewMessages, 30000);
+      }
+    }
+
+    // チャット用JSONP関数
+    function chatJsonp(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'chatCallback_' + Date.now();
+        const script = document.createElement('script');
+        
+        window[callbackName] = function(data) {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(data);
+        };
+        
+        script.onerror = function() {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('JSONP request failed'));
+        };
+        
+        const separator = url.includes('?') ? '&' : '?';
+        script.src = `${url}${separator}callback=${callbackName}`;
+        document.body.appendChild(script);
+        
+        setTimeout(() => {
+          if (window[callbackName]) {
+            delete window[callbackName];
+            if (script.parentNode) document.body.removeChild(script);
+            reject(new Error('JSONP timeout'));
+          }
+        }, 10000);
+      });
+    }
+
+    async function loadChatMessages() {
+      if (!CHAT_URL) return;
+      try {
+        const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
+        if (data.error) throw new Error(data.error);
+        chatMessages = data.messages || [];
+        if (data.readStatus) {
+          chatReadStatus = data.readStatus;
+        }
+        renderChatMessages();
+        updateChatBadge();
+        document.getElementById('chatCount').textContent = `${chatMessages.length}件`;
+      } catch (error) {
+        console.error('Chat load error:', error);
+      }
+    }
+
+    async function checkNewMessages() {
+      if (!CHAT_URL) return;
+      try {
+        const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
+        if (data.readStatus) {
+          chatReadStatus = data.readStatus;
+        }
+        if (data.messages && data.messages.length > chatMessages.length) {
+          chatMessages = data.messages;
+          renderChatMessages();
+          document.getElementById('chatCount').textContent = `${chatMessages.length}件`;
+        }
+        updateChatBadge();
+      } catch (error) {
+        console.error('Chat check error:', error);
+      }
+    }
+
+    async function markChatAsRead() {
+      if (!CHAT_URL) return;
+      try {
+        await chatJsonp(`${CHAT_URL}?action=markAsRead&role=admin`);
+        chatReadStatus.adminLastRead = new Date().toISOString();
+        updateChatBadge();
+      } catch (error) {
+        console.error('Mark as read error:', error);
+      }
+    }
+
+    function updateChatBadge() {
+      const badge = document.getElementById('chatBadge');
+      
+      // adminが最後に読んだ時刻より後のstudentメッセージをカウント
+      const lastRead = chatReadStatus.adminLastRead ? new Date(chatReadStatus.adminLastRead) : new Date(0);
+      const unreadCount = chatMessages.filter(m => 
+        m.sender === 'student' && new Date(m.timestamp) > lastRead
+      ).length;
+      
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function renderChatMessages() {
+      const container = document.getElementById('chatMessages');
+      if (chatMessages.length === 0) {
+        container.innerHTML = '<div class="chat-empty">メッセージはありません</div>';
+        return;
+      }
+
+      // studentが最後に読んだ時刻
+      const studentLastRead = chatReadStatus.studentLastRead ? new Date(chatReadStatus.studentLastRead) : null;
+
+      let lastDate = '';
+      container.innerHTML = chatMessages.map(msg => {
+        const date = new Date(msg.timestamp);
+        const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+        const timeStr = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        let dateDivider = '';
+        if (dateStr !== lastDate) {
+          dateDivider = `<div class="chat-date-divider">${dateStr}</div>`;
+          lastDate = dateStr;
+        }
+        
+        // 自分のメッセージが既読かどうか
+        let readStatus = '';
+        if (msg.sender === 'admin' && studentLastRead && date <= studentLastRead) {
+          readStatus = '<span class="chat-read-status">既読</span>';
+        }
+        
+        return `
+          ${dateDivider}
+          <div class="chat-message ${msg.sender}">
+            <div>${escapeHtml(msg.message)}</div>
+            <div class="chat-message-time">${timeStr}${readStatus}</div>
+          </div>
+        `;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function handleChatKeydown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendChatMessage();
+      }
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      if (!message || !CHAT_URL) return;
+
+      const sendBtn = document.getElementById('chatSendBtn');
+      sendBtn.disabled = true;
+
+      try {
+        // JSONPを使用（CORS回避）
+        const params = new URLSearchParams({
+          action: 'sendMessage',
+          sender: 'admin',
+          message: message
+        });
+        
+        const data = await chatJsonp(`${CHAT_URL}?${params.toString()}`);
+        if (data.error) throw new Error(data.error);
+        input.value = '';
+        await loadChatMessages();
+      } catch (error) {
+        showToast('送信エラー: ' + error.message, 'error');
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    function saveChatSettings() {
+      const chatUrl = document.getElementById('chatApiUrl').value.trim();
+      localStorage.setItem('adminChatUrl', chatUrl);
+      CHAT_URL = chatUrl;
+      showToast('チャット設定を保存しました');
+      if (chatUrl) loadChatMessages();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML.replace(/\n/g, '<br>');
+    }
+  </script>
+</body>
+</html>
