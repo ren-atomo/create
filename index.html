@@ -578,6 +578,232 @@
       color: var(--gray-400);
     }
 
+    /* チャットボタン（ヘッダー） */
+    .chat-header-btn {
+      position: relative;
+      font-size: 1.25rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .chat-header-badge {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: #BF616A;
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 600;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    /* チャットモーダル */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 60vh;
+      max-height: 500px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: var(--gray-50);
+    }
+
+    .chat-message {
+      max-width: 80%;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .chat-message.student {
+      align-self: flex-end;
+      background: var(--black);
+      color: var(--white);
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-message.admin {
+      align-self: flex-start;
+      background: var(--white);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-200);
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-message-time {
+      font-size: 0.6875rem;
+      color: var(--gray-400);
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chat-message.student .chat-message-time {
+      color: rgba(255, 255, 255, 0.6);
+      justify-content: flex-end;
+    }
+
+    .chat-read-status {
+      font-size: 0.625rem;
+      opacity: 0.8;
+    }
+
+    .chat-input-area {
+      padding: 1rem;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      gap: 0.5rem;
+      background: var(--white);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 24px;
+      font-size: 0.9375rem;
+      resize: none;
+      max-height: 100px;
+      font-family: inherit;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--gray-400);
+    }
+
+    .chat-send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .chat-send-btn:hover {
+      background: var(--gray-700);
+    }
+
+    .chat-send-btn:disabled {
+      background: var(--gray-300);
+      cursor: not-allowed;
+    }
+
+    .chat-empty {
+      text-align: center;
+      color: var(--gray-400);
+      padding: 2rem;
+    }
+
+    .chat-date-divider {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      padding: 0.5rem 0;
+    }
+
+    /* 応援バナー */
+    .cheer-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.875rem 1rem;
+      margin: -1rem -1rem 1rem -1rem;
+      position: relative;
+      overflow: hidden;
+      animation: bannerSlideIn 0.5s ease;
+    }
+
+    @keyframes bannerSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .cheer-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    .cheer-banner-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cheer-banner-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .cheer-banner-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cheer-banner-message {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .cheer-banner-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .cheer-banner-close:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
     /* 連続日数バッジ */
     .streak-badge {
       display: inline-flex;
@@ -1575,6 +1801,10 @@
     <div class="header-content">
       <div class="logo">Study Tracker</div>
       <div class="header-actions">
+        <button class="btn btn-ghost chat-header-btn" onclick="openChat()" id="chatHeaderBtn" style="display: none;">
+          💬
+          <span class="chat-header-badge" id="chatHeaderBadge" style="display: none;">0</span>
+        </button>
         <button class="btn btn-ghost" onclick="openSettingsModal()">設定</button>
         <button class="btn btn-ghost" onclick="refreshData()">更新</button>
       </div>
@@ -1601,6 +1831,10 @@
   <main class="main">
     <!-- ==================== Dashboard Tab ==================== -->
     <div class="tab-content active" id="tab-dashboard">
+    
+    <!-- 応援バナー -->
+    <div id="cheerBanner" style="display: none;"></div>
+    
     <!-- Hero -->
     <section class="hero">
       <div class="hero-countdown">
@@ -2221,6 +2455,13 @@
           <label class="form-label">共通テスト日</label>
           <input type="date" class="form-input" id="settingsExamDate">
         </div>
+        <div class="form-group">
+          <label class="form-label">チャットURL（任意）</label>
+          <input type="text" class="form-input" id="settingsChatUrl" placeholder="https://script.google.com/...">
+          <p style="font-size: 0.75rem; color: var(--gray-400); margin-top: 0.25rem;">
+            メッセージ機能を有効にします
+          </p>
+        </div>
         
         <!-- データ管理セクション -->
         <div class="form-group" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
@@ -2239,7 +2480,7 @@
         </div>
         
         <div class="version-info">
-          <span id="appVersionDisplay">v1.4.0</span>
+          <span id="appVersionDisplay">v1.7.1</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -2267,12 +2508,32 @@
     </div>
   </div>
 
+  <!-- チャットモーダル -->
+  <div class="modal-overlay" id="chatModal">
+    <div class="modal" style="max-width: 450px; padding: 0;">
+      <div class="modal-header" style="padding: 1rem 1.25rem;">
+        <h2 class="modal-title">💬 メッセージ</h2>
+        <button class="modal-close" onclick="closeChat()">×</button>
+      </div>
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-empty">メッセージはありません</div>
+        </div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chatInput" placeholder="メッセージを入力..." rows="1" onkeydown="handleChatKeydown(event)"></textarea>
+          <button class="chat-send-btn" onclick="sendChatMessage()" id="chatSendBtn">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.5.1';
-    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwMcgFgV_UFoSYJDNiHWrvGvRtWY3cUt8ZfGTqj4RArOf7hYyX38_Zh5gpheG1XPTgzdQ/exec';
+    const APP_VERSION = '1.7.1';
+    const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
+    const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxvjWvqJYH5uazChrghHLifemAFs7mnfoo5f5MSppTTtCgAF72MLtVn9SH_Aq8ZFLnMhw/exec';
     
     (function checkVersion() {
       const storedVersion = localStorage.getItem('appVersion');
@@ -2280,8 +2541,9 @@
       if (storedVersion !== APP_VERSION) {
         console.log(`App updated: ${storedVersion || 'none'} → ${APP_VERSION}`);
         
-        // API URLを最新のデフォルトに更新
+        // URLを最新のデフォルトに更新
         localStorage.setItem('apiUrl', DEFAULT_API_URL);
+        localStorage.setItem('chatUrl', DEFAULT_CHAT_URL);
         
         // バージョンを保存
         localStorage.setItem('appVersion', APP_VERSION);
@@ -2299,6 +2561,7 @@
     // メイン
     // ==========================================
     let API_URL = localStorage.getItem('apiUrl') || DEFAULT_API_URL;
+    let CHAT_URL = localStorage.getItem('chatUrl') || DEFAULT_CHAT_URL;
     let appData = {
       studyLogs: [],
       redbookLogs: [],
@@ -2324,9 +2587,11 @@
       initializeButtonGroups();
       initializeAIOptions();
       loadSettingsFromStorage();
+      initChat(); // チャット初期化
       
       if (API_URL) {
         refreshData();
+        loadCheerMessages(); // 応援メッセージを読み込み
       } else {
         hideLoading();
       }
@@ -2647,6 +2912,7 @@
     }
     
     function renderDashboard() {
+      renderCheerBanner();
       renderCountdown();
       renderStats();
       renderProgress();
@@ -2654,6 +2920,82 @@
       renderGoals();
       renderStudyRecords();
       renderRedbookRecords();
+    }
+    
+    // ==========================================
+    // 応援メッセージ
+    // ==========================================
+    let cheerMessages = [];
+    let cheerDismissed = {};
+    
+    async function loadCheerMessages() {
+      try {
+        const response = await fetch(`${API_URL}?action=getActiveCheerMessages&callback=?`);
+        const text = await response.text();
+        const json = text.replace(/^\?\(/, '').replace(/\);?$/, '');
+        const data = JSON.parse(json);
+        
+        if (data.messages) {
+          cheerMessages = data.messages;
+          // ローカルストレージから非表示済みを取得
+          const dismissed = localStorage.getItem('cheerDismissed');
+          if (dismissed) {
+            cheerDismissed = JSON.parse(dismissed);
+          }
+          renderCheerBanner();
+        }
+      } catch (error) {
+        console.log('Cheer messages not available');
+      }
+    }
+    
+    function renderCheerBanner() {
+      const container = document.getElementById('cheerBanner');
+      if (!container) return;
+      
+      // 表示可能なメッセージをフィルタ
+      const now = new Date();
+      const activeMessages = cheerMessages.filter(msg => {
+        // 非表示済みチェック
+        if (cheerDismissed[msg.id]) return false;
+        
+        const start = new Date(msg.startTime);
+        const end = new Date(msg.endTime);
+        return now >= start && now <= end;
+      });
+      
+      if (activeMessages.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+      
+      // ランダムに1つ選択（または最新のもの）
+      const msg = activeMessages[0];
+      
+      container.style.display = 'block';
+      container.innerHTML = `
+        <div class="cheer-banner">
+          <button class="cheer-banner-close" onclick="dismissCheer('${msg.id}')" title="閉じる">×</button>
+          <div class="cheer-banner-content">
+            <span class="cheer-banner-icon">📣</span>
+            <div class="cheer-banner-text">
+              <div class="cheer-banner-message">${escapeHtml(msg.message)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function dismissCheer(id) {
+      cheerDismissed[id] = true;
+      localStorage.setItem('cheerDismissed', JSON.stringify(cheerDismissed));
+      renderCheerBanner();
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
     
     function renderCountdown() {
@@ -3179,7 +3521,6 @@
       }
     }
     
-    // 記録削除
     // ==========================================
     // データ管理
     // ==========================================
@@ -3267,6 +3608,7 @@
       `).join('');
     }
     
+    // 記録削除
     async function deleteStudyLog(index) {
       if (!confirm('この学習記録を削除しますか？')) return;
       
@@ -3443,6 +3785,7 @@
       document.getElementById('settingsApiUrl').value = API_URL;
       document.getElementById('settingsWeeklyGoal').value = appData.settings?.weeklyGoalMinutes || 1800;
       document.getElementById('settingsExamDate').value = localStorage.getItem('examDate') || '2026-01-17';
+      document.getElementById('settingsChatUrl').value = CHAT_URL;
       document.getElementById('appVersionDisplay').textContent = `v${APP_VERSION}`;
       document.getElementById('settingsModal').classList.add('active');
     }
@@ -3565,21 +3908,250 @@
       }
     }
     
+    // ==========================================
+    // チャット機能
+    // ==========================================
+    let chatMessages = [];
+    let chatReadStatus = { studentLastRead: null, adminLastRead: null };
+    
+    function initChat() {
+      if (CHAT_URL) {
+        document.getElementById('chatHeaderBtn').style.display = 'flex';
+        loadChatMessages();
+        // 30秒ごとに新着チェック
+        setInterval(checkNewMessages, 30000);
+      } else {
+        document.getElementById('chatHeaderBtn').style.display = 'none';
+      }
+    }
+    
+    // チャット用JSONP関数
+    function chatJsonp(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'chatCallback_' + Date.now();
+        const script = document.createElement('script');
+        
+        window[callbackName] = function(data) {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(data);
+        };
+        
+        script.onerror = function() {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('JSONP request failed'));
+        };
+        
+        const separator = url.includes('?') ? '&' : '?';
+        script.src = `${url}${separator}callback=${callbackName}`;
+        document.body.appendChild(script);
+        
+        // タイムアウト
+        setTimeout(() => {
+          if (window[callbackName]) {
+            delete window[callbackName];
+            if (script.parentNode) document.body.removeChild(script);
+            reject(new Error('JSONP timeout'));
+          }
+        }, 10000);
+      });
+    }
+    
+    async function loadChatMessages() {
+      if (!CHAT_URL) return;
+      
+      try {
+        const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
+        
+        if (data.error) throw new Error(data.error);
+        
+        chatMessages = data.messages || [];
+        if (data.readStatus) {
+          chatReadStatus = data.readStatus;
+        }
+        renderChatMessages();
+        updateChatBadge();
+        
+      } catch (error) {
+        console.error('Chat load error:', error);
+      }
+    }
+    
+    async function checkNewMessages() {
+      if (!CHAT_URL) return;
+      
+      try {
+        const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
+        
+        if (data.readStatus) {
+          chatReadStatus = data.readStatus;
+        }
+        
+        if (data.messages && data.messages.length > chatMessages.length) {
+          chatMessages = data.messages;
+          renderChatMessages();
+        }
+        updateChatBadge();
+      } catch (error) {
+        console.error('Chat check error:', error);
+      }
+    }
+    
+    async function markChatAsRead() {
+      if (!CHAT_URL) return;
+      
+      try {
+        await chatJsonp(`${CHAT_URL}?action=markAsRead&role=student`);
+        // 既読状態を更新
+        chatReadStatus.studentLastRead = new Date().toISOString();
+        updateChatBadge();
+      } catch (error) {
+        console.error('Mark as read error:', error);
+      }
+    }
+    
+    function updateChatBadge() {
+      const badge = document.getElementById('chatHeaderBadge');
+      
+      // studentが最後に読んだ時刻より後のadminメッセージをカウント
+      const lastRead = chatReadStatus.studentLastRead ? new Date(chatReadStatus.studentLastRead) : new Date(0);
+      const unreadCount = chatMessages.filter(m => 
+        m.sender === 'admin' && new Date(m.timestamp) > lastRead
+      ).length;
+      
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+    
+    function renderChatMessages() {
+      const container = document.getElementById('chatMessages');
+      
+      if (chatMessages.length === 0) {
+        container.innerHTML = '<div class="chat-empty">メッセージはありません</div>';
+        return;
+      }
+      
+      // adminが最後に読んだ時刻
+      const adminLastRead = chatReadStatus.adminLastRead ? new Date(chatReadStatus.adminLastRead) : null;
+      
+      let lastDate = '';
+      container.innerHTML = chatMessages.map(msg => {
+        const date = new Date(msg.timestamp);
+        const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+        const timeStr = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+        
+        let dateDivider = '';
+        if (dateStr !== lastDate) {
+          dateDivider = `<div class="chat-date-divider">${dateStr}</div>`;
+          lastDate = dateStr;
+        }
+        
+        // 自分のメッセージが既読かどうか
+        let readStatus = '';
+        if (msg.sender === 'student' && adminLastRead && date <= adminLastRead) {
+          readStatus = '<span class="chat-read-status">既読</span>';
+        }
+        
+        return `
+          ${dateDivider}
+          <div class="chat-message ${msg.sender}">
+            <div>${escapeHtml(msg.message)}</div>
+            <div class="chat-message-time">${timeStr}${readStatus}</div>
+          </div>
+        `;
+      }).join('');
+      
+      // スクロールを最下部へ
+      container.scrollTop = container.scrollHeight;
+    }
+    
+    function openChat() {
+      document.getElementById('chatModal').classList.add('active');
+      document.getElementById('chatHeaderBadge').style.display = 'none';
+      loadChatMessages();
+      
+      // 既読マークを送信
+      markChatAsRead();
+      
+      // スクロールを最下部へ
+      setTimeout(() => {
+        const container = document.getElementById('chatMessages');
+        container.scrollTop = container.scrollHeight;
+      }, 100);
+    }
+    
+    function closeChat() {
+      document.getElementById('chatModal').classList.remove('active');
+    }
+    
+    function handleChatKeydown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendChatMessage();
+      }
+    }
+    
+    async function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (!message || !CHAT_URL) return;
+      
+      const sendBtn = document.getElementById('chatSendBtn');
+      sendBtn.disabled = true;
+      
+      try {
+        // JSONPを使用（CORS回避）
+        const params = new URLSearchParams({
+          action: 'sendMessage',
+          sender: 'student',
+          message: message
+        });
+        
+        const data = await chatJsonp(`${CHAT_URL}?${params.toString()}`);
+        
+        if (data.error) throw new Error(data.error);
+        
+        input.value = '';
+        await loadChatMessages();
+        
+      } catch (error) {
+        showToast('送信エラー: ' + error.message, 'error');
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML.replace(/\n/g, '<br>');
+    }
+    
     function saveSettings() {
       const apiUrl = document.getElementById('settingsApiUrl').value.trim();
       const weeklyGoal = document.getElementById('settingsWeeklyGoal').value;
       const examDate = document.getElementById('settingsExamDate').value;
+      const chatUrl = document.getElementById('settingsChatUrl').value.trim();
       
       localStorage.setItem('apiUrl', apiUrl);
       localStorage.setItem('weeklyGoal', weeklyGoal);
       localStorage.setItem('examDate', examDate);
+      localStorage.setItem('chatUrl', chatUrl);
       
       API_URL = apiUrl;
+      CHAT_URL = chatUrl;
       appData.settings.weeklyGoalMinutes = parseInt(weeklyGoal);
       
       closeSettingsModal();
       showToast('設定を保存しました');
       
+      initChat();
       if (apiUrl) refreshData();
     }
     
