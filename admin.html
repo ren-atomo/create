@@ -279,7 +279,7 @@
           <input type="text" class="form-input" id="setupApiUrl" placeholder="https://script.google.com/...">
         </div>
         <button class="btn btn-primary" onclick="connectApi()">接続する</button>
-        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--gray-400);" id="setupVersionDisplay">v1.1.1</div>
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--gray-400);" id="setupVersionDisplay">v1.1.4</div>
       </div>
     </main>
   </div>
@@ -289,7 +289,7 @@
       <div class="header-content">
         <div>
           <h1 class="header-title">📊 学習状況レポート</h1>
-          <p class="header-subtitle"><span id="lastUpdated">最終更新: --</span> | <span id="versionDisplay">v1.1.1</span></p>
+          <p class="header-subtitle"><span id="lastUpdated">最終更新: --</span> | <span id="versionDisplay">v1.1.4</span></p>
         </div>
         <div class="header-right">
           <div class="student-name" id="studentName">--</div>
@@ -448,9 +448,9 @@
     // ==========================================
     // バージョン管理
     // ==========================================
-    const APP_VERSION = '1.1.1';
+    const APP_VERSION = '1.1.4';
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
-    const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxvjWvqJYH5uazChrghHLifemAFs7mnfoo5f5MSppTTtCgAF72MLtVn9SH_Aq8ZFLnMhw/exec';
+    const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxppU_VWeV9IwVl-5tY7o0vuMCqRURoH0fltq_mo7JSegCv5VI-X1QjG7khcATLlj7vGQ/exec';
     
     (function checkVersion() {
       const storedVersion = localStorage.getItem('adminAppVersion');
@@ -474,7 +474,6 @@
     let API_URL = localStorage.getItem('adminApiUrl') || DEFAULT_API_URL;
     let CHAT_URL = localStorage.getItem('adminChatUrl') || DEFAULT_CHAT_URL;
     let chatMessages = [];
-    let chatReadStatus = { studentLastRead: null, adminLastRead: null };
 
     document.addEventListener('DOMContentLoaded', () => {
       // バージョン表示
@@ -887,9 +886,6 @@
         const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
         if (data.error) throw new Error(data.error);
         chatMessages = data.messages || [];
-        if (data.readStatus) {
-          chatReadStatus = data.readStatus;
-        }
         renderChatMessages();
         updateChatBadge();
         document.getElementById('chatCount').textContent = `${chatMessages.length}件`;
@@ -902,10 +898,7 @@
       if (!CHAT_URL) return;
       try {
         const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
-        if (data.readStatus) {
-          chatReadStatus = data.readStatus;
-        }
-        if (data.messages && data.messages.length > chatMessages.length) {
+        if (data.messages) {
           chatMessages = data.messages;
           renderChatMessages();
           document.getElementById('chatCount').textContent = `${chatMessages.length}件`;
@@ -918,9 +911,21 @@
 
     async function markChatAsRead() {
       if (!CHAT_URL) return;
+      
+      // 未読のstudentメッセージのIDを収集
+      const unreadIds = chatMessages
+        .filter(m => m.sender === 'student' && !m.readByAdmin)
+        .map(m => m.id);
+      
+      if (unreadIds.length === 0) return;
+      
       try {
-        await chatJsonp(`${CHAT_URL}?action=markAsRead&role=admin`);
-        chatReadStatus.adminLastRead = new Date().toISOString();
+        await chatJsonp(`${CHAT_URL}?action=markAsRead&role=admin&ids=${unreadIds.join(',')}`);
+        // ローカルの既読状態も更新
+        chatMessages.forEach(m => {
+          if (m.sender === 'student') m.readByAdmin = true;
+        });
+        renderChatMessages();
         updateChatBadge();
       } catch (error) {
         console.error('Mark as read error:', error);
@@ -930,10 +935,9 @@
     function updateChatBadge() {
       const badge = document.getElementById('chatBadge');
       
-      // adminが最後に読んだ時刻より後のstudentメッセージをカウント
-      const lastRead = chatReadStatus.adminLastRead ? new Date(chatReadStatus.adminLastRead) : new Date(0);
+      // 未読のstudentメッセージをカウント（readByAdmin === false）
       const unreadCount = chatMessages.filter(m => 
-        m.sender === 'student' && new Date(m.timestamp) > lastRead
+        m.sender === 'student' && !m.readByAdmin
       ).length;
       
       if (unreadCount > 0) {
@@ -951,9 +955,6 @@
         return;
       }
 
-      // studentが最後に読んだ時刻
-      const studentLastRead = chatReadStatus.studentLastRead ? new Date(chatReadStatus.studentLastRead) : null;
-
       let lastDate = '';
       container.innerHTML = chatMessages.map(msg => {
         const date = new Date(msg.timestamp);
@@ -965,9 +966,9 @@
           lastDate = dateStr;
         }
         
-        // 自分のメッセージが既読かどうか
+        // 自分（admin）のメッセージが相手（student）に読まれたか
         let readStatus = '';
-        if (msg.sender === 'admin' && studentLastRead && date <= studentLastRead) {
+        if (msg.sender === 'admin' && msg.readByStudent) {
           readStatus = '<span class="chat-read-status">既読</span>';
         }
         
