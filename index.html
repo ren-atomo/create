@@ -2480,7 +2480,7 @@
         </div>
         
         <div class="version-info">
-          <span id="appVersionDisplay">v1.7.1</span>
+          <span id="appVersionDisplay">v1.7.5</span>
         </div>
       </div>
       <div class="modal-footer">
@@ -2531,9 +2531,9 @@
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.7.1';
+    const APP_VERSION = '1.7.5';
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
-    const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxvjWvqJYH5uazChrghHLifemAFs7mnfoo5f5MSppTTtCgAF72MLtVn9SH_Aq8ZFLnMhw/exec';
+    const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxppU_VWeV9IwVl-5tY7o0vuMCqRURoH0fltq_mo7JSegCv5VI-X1QjG7khcATLlj7vGQ/exec';
     
     (function checkVersion() {
       const storedVersion = localStorage.getItem('appVersion');
@@ -3912,7 +3912,6 @@
     // チャット機能
     // ==========================================
     let chatMessages = [];
-    let chatReadStatus = { studentLastRead: null, adminLastRead: null };
     
     function initChat() {
       if (CHAT_URL) {
@@ -3967,9 +3966,6 @@
         if (data.error) throw new Error(data.error);
         
         chatMessages = data.messages || [];
-        if (data.readStatus) {
-          chatReadStatus = data.readStatus;
-        }
         renderChatMessages();
         updateChatBadge();
         
@@ -3984,11 +3980,7 @@
       try {
         const data = await chatJsonp(`${CHAT_URL}?action=getMessages`);
         
-        if (data.readStatus) {
-          chatReadStatus = data.readStatus;
-        }
-        
-        if (data.messages && data.messages.length > chatMessages.length) {
+        if (data.messages) {
           chatMessages = data.messages;
           renderChatMessages();
         }
@@ -4001,10 +3993,20 @@
     async function markChatAsRead() {
       if (!CHAT_URL) return;
       
+      // 未読のadminメッセージのIDを収集
+      const unreadIds = chatMessages
+        .filter(m => m.sender === 'admin' && !m.readByStudent)
+        .map(m => m.id);
+      
+      if (unreadIds.length === 0) return;
+      
       try {
-        await chatJsonp(`${CHAT_URL}?action=markAsRead&role=student`);
-        // 既読状態を更新
-        chatReadStatus.studentLastRead = new Date().toISOString();
+        await chatJsonp(`${CHAT_URL}?action=markAsRead&role=student&ids=${unreadIds.join(',')}`);
+        // ローカルの既読状態も更新
+        chatMessages.forEach(m => {
+          if (m.sender === 'admin') m.readByStudent = true;
+        });
+        renderChatMessages();
         updateChatBadge();
       } catch (error) {
         console.error('Mark as read error:', error);
@@ -4014,10 +4016,9 @@
     function updateChatBadge() {
       const badge = document.getElementById('chatHeaderBadge');
       
-      // studentが最後に読んだ時刻より後のadminメッセージをカウント
-      const lastRead = chatReadStatus.studentLastRead ? new Date(chatReadStatus.studentLastRead) : new Date(0);
+      // 未読のadminメッセージをカウント（readByStudent === false）
       const unreadCount = chatMessages.filter(m => 
-        m.sender === 'admin' && new Date(m.timestamp) > lastRead
+        m.sender === 'admin' && !m.readByStudent
       ).length;
       
       if (unreadCount > 0) {
@@ -4036,9 +4037,6 @@
         return;
       }
       
-      // adminが最後に読んだ時刻
-      const adminLastRead = chatReadStatus.adminLastRead ? new Date(chatReadStatus.adminLastRead) : null;
-      
       let lastDate = '';
       container.innerHTML = chatMessages.map(msg => {
         const date = new Date(msg.timestamp);
@@ -4051,9 +4049,9 @@
           lastDate = dateStr;
         }
         
-        // 自分のメッセージが既読かどうか
+        // 自分（student）のメッセージが相手（admin）に読まれたか
         let readStatus = '';
-        if (msg.sender === 'student' && adminLastRead && date <= adminLastRead) {
+        if (msg.sender === 'student' && msg.readByAdmin) {
           readStatus = '<span class="chat-read-status">既読</span>';
         }
         
