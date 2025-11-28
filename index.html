@@ -27,6 +27,8 @@
       --gray-100: #f5f5f5;
       --gray-50: #fafafa;
       --white: #ffffff;
+      --primary: #5E81AC;
+      --primary-dark: #4C6A8E;
       --success: #22c55e;
       --warning: #eab308;
       --danger: #ef4444;
@@ -281,6 +283,10 @@
       gap: 0.75rem;
     }
 
+    .stats-grid.stats-grid-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
     .stat-item {
       background: var(--white);
       border: 1px solid var(--gray-200);
@@ -316,11 +322,108 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 0.5rem;
       }
+      .stats-grid.stats-grid-5 {
+        grid-template-columns: repeat(5, 1fr);
+      }
       .stat-item {
         padding: 0.75rem 0.5rem;
       }
       .stat-value {
         font-size: 1.25rem;
+      }
+      .stats-grid.stats-grid-5 .stat-value {
+        font-size: 1rem;
+      }
+      .stats-grid.stats-grid-5 .stat-label {
+        font-size: 0.625rem;
+      }
+    }
+
+    /* Week Overview - Calendar + Chart */
+    .week-overview {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .week-calendar-card,
+    .week-chart-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 1.25rem;
+    }
+
+    .week-card-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 1rem;
+    }
+
+    .week-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+    }
+
+    .week-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .week-day-label {
+      font-size: 0.625rem;
+      font-weight: 500;
+      color: var(--gray-400);
+      text-transform: uppercase;
+    }
+
+    .week-day-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--gray-100);
+      color: var(--gray-400);
+      transition: all 0.2s ease;
+    }
+
+    .week-day-circle.studied {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .week-day-circle.today {
+      border: 2px solid var(--primary);
+    }
+
+    .week-day-circle.today.studied {
+      border-color: var(--primary-dark);
+    }
+
+    .week-day-minutes {
+      font-size: 0.625rem;
+      color: var(--gray-500);
+    }
+
+    .week-chart-container {
+      height: 140px;
+    }
+
+    @media (max-width: 768px) {
+      .week-overview {
+        grid-template-columns: 1fr;
+      }
+      .week-chart-container {
+        height: 120px;
       }
     }
 
@@ -1124,67 +1227,210 @@
       font-style: italic;
     }
 
-    /* 今日のメモセクション */
-    .today-memos-section {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
+    /* Insights Section */
+    .insights-section {
       margin-bottom: 1.5rem;
     }
 
-    .today-memos-header {
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .insight-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .insight-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--gray-100);
     }
 
-    .today-memos-title {
-      font-size: 0.875rem;
+    .insight-icon {
+      font-size: 1.125rem;
+    }
+
+    .insight-title {
+      font-size: 0.8125rem;
       font-weight: 600;
-      color: var(--gray-900);
+      color: var(--gray-700);
     }
 
-    .today-memos-list {
+    .insight-list {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
 
-    .today-memo-item {
+    .insight-item {
       display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+      color: var(--gray-700);
+      padding: 0.375rem 0;
+    }
+
+    .insight-item-icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      text-align: center;
+    }
+
+    .insight-item.positive { color: #059669; }
+    .insight-item.warning { color: #D97706; }
+    .insight-item.info { color: #2563EB; }
+
+    .recommendation-card {
+      background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+      border-color: #86EFAC;
+    }
+
+    .recommendation-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .recommendation-card-solo {
+      background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+      border: 1px solid #86EFAC;
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .recommendation-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .recommendation-header-icon {
+      font-size: 1.125rem;
+    }
+
+    .recommendation-header-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .recommendation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+
+    .recommendation-item {
+      display: flex;
+      align-items: center;
       gap: 0.625rem;
       padding: 0.625rem 0.75rem;
+      background: var(--white);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .recommendation-item:hover {
+      border-color: #22C55E;
+      transform: translateX(2px);
+    }
+
+    .recommendation-item-icon {
+      font-size: 1rem;
+    }
+
+    .recommendation-item-text {
+      flex: 1;
+      color: var(--gray-700);
+    }
+
+    .recommendation-item-reason {
+      font-size: 0.6875rem;
+      color: var(--gray-500);
+    }
+
+    .recommendation-item-arrow {
+      color: var(--gray-400);
+      font-size: 0.75rem;
+    }
+
+    /* Growth Chart */
+    .growth-chart-container {
+      margin-top: 1rem;
+    }
+
+    .growth-summary {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 0.75rem;
       background: var(--gray-50);
       border-radius: 8px;
       font-size: 0.8125rem;
-      line-height: 1.45;
     }
 
-    .today-memo-subject {
-      flex-shrink: 0;
-      font-weight: 600;
-      color: var(--gray-700);
-      min-width: 3.5rem;
+    .growth-summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
     }
 
-    .today-memo-text {
-      color: var(--gray-600);
-      flex: 1;
-    }
-
-    .today-memo-time {
-      flex-shrink: 0;
+    .growth-summary-label {
       font-size: 0.6875rem;
-      color: var(--gray-400);
+      color: var(--gray-500);
     }
 
-    .today-memos-empty {
+    .growth-summary-value {
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .growth-summary-value.positive {
+      color: #059669;
+    }
+
+    .growth-summary-value.negative {
+      color: #DC2626;
+    }
+
+    .growth-empty {
       text-align: center;
+      padding: 2rem 1rem;
       color: var(--gray-400);
+      font-size: 0.875rem;
+    }
+
+    /* Dashboard Growth Chart */
+    .growth-select-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .growth-select-row .form-select {
+      flex: 1;
+      padding: 0.5rem 0.625rem;
       font-size: 0.8125rem;
-      padding: 0.5rem;
     }
 
     /* Modal */
@@ -2131,10 +2377,18 @@
           </button>
         </div>
       </div>
-      <div class="stats-grid">
+      <div class="stats-grid stats-grid-5">
         <div class="stat-item">
           <div class="stat-value" id="weekMinutes">0h</div>
           <div class="stat-label">今週</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="totalHours">0h</div>
+          <div class="stat-label">累計</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="avgMinutes">0分</div>
+          <div class="stat-label">平均/日</div>
         </div>
         <div class="stat-item">
           <div class="stat-value" id="streakDays">0</div>
@@ -2147,14 +2401,32 @@
       </div>
     </section>
 
-    <!-- Today's Memos -->
-    <section class="today-memos-section" id="todayMemosSection" style="display: none;">
-      <div class="today-memos-header">
-        <span>📝</span>
-        <span class="today-memos-title">今日のメモ</span>
+    <!-- A: Weekly Calendar + B: Daily Chart -->
+    <section class="week-overview">
+      <div class="week-calendar-card">
+        <h4 class="week-card-title">📅 今週の学習</h4>
+        <div class="week-calendar" id="weekCalendar">
+          <!-- Rendered by JS -->
+        </div>
       </div>
-      <div class="today-memos-list" id="todayMemosList">
-        <!-- Rendered by JS -->
+      <div class="week-chart-card">
+        <h4 class="week-card-title">📊 日別学習時間</h4>
+        <div class="week-chart-container">
+          <canvas id="dashDailyChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommendations Only -->
+    <section class="recommendation-section" id="recommendationSection" style="display: none;">
+      <div class="recommendation-card-solo">
+        <div class="recommendation-header">
+          <span class="recommendation-header-icon">💪</span>
+          <span class="recommendation-header-title">今日のおすすめ</span>
+        </div>
+        <div class="recommendation-list" id="recommendationList">
+          <!-- Rendered by JS -->
+        </div>
       </div>
     </section>
 
@@ -2168,22 +2440,6 @@
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
       <div id="progressCelebration"></div>
-    </section>
-
-    <!-- Charts -->
-    <section class="grid-2">
-      <div class="card">
-        <h3 class="card-title"><span class="card-title-icon">📈</span> 日別学習時間</h3>
-        <div class="chart-container">
-          <canvas id="dailyChart"></canvas>
-        </div>
-      </div>
-      <div class="card">
-        <h3 class="card-title"><span class="card-title-icon">📊</span> 科目別割合</h3>
-        <div class="chart-container">
-          <canvas id="subjectChart"></canvas>
-        </div>
-      </div>
     </section>
 
     <!-- Goals -->
@@ -2235,6 +2491,30 @@
         <div class="stat-item">
           <div class="stat-value" id="studyMaxStreak">0</div>
           <div class="stat-label">最長連続</div>
+        </div>
+      </section>
+
+      <!-- Insights (moved from dashboard) -->
+      <section class="card" id="insightsCard" style="display: none;">
+        <h3 class="card-title"><span class="card-title-icon">💡</span> インサイト</h3>
+        <div class="insight-list" id="insightsListStudy">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Weekly Charts -->
+      <section class="grid-2">
+        <div class="card">
+          <h3 class="card-title"><span class="card-title-icon">📈</span> 日別学習時間</h3>
+          <div class="chart-container">
+            <canvas id="dailyChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title"><span class="card-title-icon">📊</span> 科目別割合</h3>
+          <div class="chart-container">
+            <canvas id="subjectChart"></canvas>
+          </div>
         </div>
       </section>
 
@@ -2351,6 +2631,26 @@
         <h3 class="card-title">⚠️ 頻出の苦手分野</h3>
         <div id="weakAreasList" class="weak-areas-list">
           <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Growth Progress by University -->
+      <section class="card">
+        <h3 class="card-title"><span class="card-title-icon">📈</span> 成長グラフ</h3>
+        <div class="filter-row">
+          <select class="form-input form-select filter-select" id="growthUnivSelect" onchange="updateGrowthSubjects(); renderGrowthChart()">
+            <option value="">大学を選択</option>
+          </select>
+          <select class="form-input form-select filter-select" id="growthSubjectSelect" onchange="renderGrowthChart()">
+            <option value="">科目を選択</option>
+          </select>
+        </div>
+        <div class="growth-chart-container" id="growthChartContainer" style="display: none;">
+          <canvas id="growthChart"></canvas>
+          <div class="growth-summary" id="growthSummary"></div>
+        </div>
+        <div class="growth-empty" id="growthEmpty">
+          <p>大学と科目を選択すると、得点の推移が表示されます</p>
         </div>
       </section>
 
@@ -2821,7 +3121,7 @@
     // ==========================================
     // バージョン管理 & キャッシュクリア
     // ==========================================
-    const APP_VERSION = '1.8.6';
+    const APP_VERSION = '2.0.0';
     const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbygSI6dft0E2d_D0isU4lAlWuuQgWRMlizHOdMTDqt8w1Igpud6nvpvN1Gy1t2AyLGpBw/exec';
     const DEFAULT_CHAT_URL = 'https://script.google.com/macros/s/AKfycbxppU_VWeV9IwVl-5tY7o0vuMCqRURoH0fltq_mo7JSegCv5VI-X1QjG7khcATLlj7vGQ/exec';
     
@@ -3382,75 +3682,570 @@
       const monthRedbookSessions = redbookLogs.filter(log => new Date(log.date) >= monthAgo).length;
       document.getElementById('totalSessions').textContent = monthStudySessions + monthRedbookSessions;
       
-      // 今日のメモを表示
-      renderTodayMemos();
+      // C: 累計学習時間
+      const totalStudyMinutes = logs.reduce((sum, log) => sum + (log.minutes || 0), 0);
+      const totalRedbookMinutes = redbookLogs.reduce((sum, log) => sum + (log.time || 0), 0);
+      const totalMinutes = totalStudyMinutes + totalRedbookMinutes;
+      const totalHours = Math.round(totalMinutes / 60);
+      document.getElementById('totalHours').textContent = totalHours + 'h';
+      
+      // C: 平均学習時間（学習日のみ）
+      const allDatesSet = new Set([
+        ...logs.map(log => log.date),
+        ...redbookLogs.map(log => log.date)
+      ]);
+      const studyDays = allDatesSet.size || 1;
+      const avgMinutes = Math.round(totalMinutes / studyDays);
+      document.getElementById('avgMinutes').textContent = avgMinutes + '分';
+      
+      // A: 週間カレンダーを描画
+      renderWeekCalendar(logs, redbookLogs);
+      
+      // B: 日別チャートを描画
+      renderDashDailyChart(logs, redbookLogs);
+      
+      // おすすめを表示
+      renderInsights();
     }
     
-    function renderTodayMemos() {
-      const container = document.getElementById('todayMemosSection');
-      const list = document.getElementById('todayMemosList');
-      const today = getTodayStr();
+    // A: 週間カレンダー描画
+    function renderWeekCalendar(logs, redbookLogs) {
+      const container = document.getElementById('weekCalendar');
+      if (!container) return;
       
-      // 今日のメモ付き記録を収集
-      const todayMemos = [];
+      const today = new Date();
+      const dayOfWeek = today.getDay(); // 0=日, 1=月...
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - dayOfWeek); // 週の始まり（日曜）
       
-      // 学習記録からメモを収集
+      const dayLabels = ['日', '月', '火', '水', '木', '金', '土'];
+      let html = '';
+      
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startOfWeek);
+        date.setDate(startOfWeek.getDate() + i);
+        const dateStr = date.toISOString().split('T')[0];
+        const isToday = dateStr === getTodayStr();
+        
+        // その日の学習時間を計算
+        const studyMins = logs.filter(l => l.date === dateStr).reduce((sum, l) => sum + (l.minutes || 0), 0);
+        const redbookMins = redbookLogs.filter(l => l.date === dateStr).reduce((sum, l) => sum + (l.time || 0), 0);
+        const totalMins = studyMins + redbookMins;
+        const studied = totalMins > 0;
+        
+        html += `
+          <div class="week-day">
+            <span class="week-day-label">${dayLabels[i]}</span>
+            <div class="week-day-circle ${studied ? 'studied' : ''} ${isToday ? 'today' : ''}">
+              ${date.getDate()}
+            </div>
+            <span class="week-day-minutes">${totalMins > 0 ? totalMins + '分' : '-'}</span>
+          </div>
+        `;
+      }
+      
+      container.innerHTML = html;
+    }
+    
+    // B: ダッシュボード日別チャート
+    let dashDailyChartInstance = null;
+    
+    function renderDashDailyChart(logs, redbookLogs) {
+      const canvas = document.getElementById('dashDailyChart');
+      if (!canvas) return;
+      
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - dayOfWeek);
+      
+      const labels = [];
+      const data = [];
+      const dayLabels = ['日', '月', '火', '水', '木', '金', '土'];
+      
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startOfWeek);
+        date.setDate(startOfWeek.getDate() + i);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        const studyMins = logs.filter(l => l.date === dateStr).reduce((sum, l) => sum + (l.minutes || 0), 0);
+        const redbookMins = redbookLogs.filter(l => l.date === dateStr).reduce((sum, l) => sum + (l.time || 0), 0);
+        
+        labels.push(dayLabels[i]);
+        data.push(studyMins + redbookMins);
+      }
+      
+      if (dashDailyChartInstance) {
+        dashDailyChartInstance.destroy();
+      }
+      
+      const ctx = canvas.getContext('2d');
+      dashDailyChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: data.map((v, i) => {
+              const date = new Date(startOfWeek);
+              date.setDate(startOfWeek.getDate() + i);
+              const isToday = date.toISOString().split('T')[0] === getTodayStr();
+              return isToday ? '#5E81AC' : 'rgba(94, 129, 172, 0.5)';
+            }),
+            borderRadius: 6,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ctx.parsed.y + '分'
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 11 } }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: {
+                callback: v => v + '分',
+                font: { size: 10 }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // ==========================================
+    // インサイト & おすすめ学習
+    // ==========================================
+    
+    function renderInsights() {
+      // ダッシュボードのおすすめセクション
+      const recSection = document.getElementById('recommendationSection');
+      const recommendationList = document.getElementById('recommendationList');
+      
+      // 学習分析タブのインサイトカード
+      const insightsCard = document.getElementById('insightsCard');
+      const insightsListStudy = document.getElementById('insightsListStudy');
+      
       const studyLogs = appData.studyLogs || [];
-      studyLogs
-        .filter(log => log.date === today && log.memo)
-        .forEach(log => {
-          todayMemos.push({
-            type: 'study',
-            subject: log.subject,
-            memo: log.memo,
-            timestamp: log.timestamp || log.date
-          });
-        });
-      
-      // 赤本記録からメモを収集
       const redbookLogs = appData.redbookLogs || [];
-      redbookLogs
-        .filter(log => log.date === today && log.memo)
-        .forEach(log => {
-          todayMemos.push({
-            type: 'redbook',
-            subject: `${log.university} ${log.subject}`,
-            memo: log.memo,
-            timestamp: log.timestamp || log.date
+      
+      const insights = generateInsights(studyLogs, redbookLogs);
+      const recommendations = generateRecommendations(studyLogs, redbookLogs);
+      
+      // ダッシュボード: おすすめ表示
+      if (recommendations.length > 0) {
+        recommendationList.innerHTML = recommendations.slice(0, 3).map(rec => `
+          <div class="recommendation-item" onclick="${rec.action}">
+            <span class="recommendation-item-icon">${rec.icon}</span>
+            <div class="recommendation-item-text">
+              <div>${rec.text}</div>
+              <div class="recommendation-item-reason">${rec.reason}</div>
+            </div>
+            <span class="recommendation-item-arrow">→</span>
+          </div>
+        `).join('');
+        recSection.style.display = 'block';
+      } else {
+        recSection.style.display = 'none';
+      }
+      
+      // 学習分析タブ: インサイト表示
+      if (insights.length > 0) {
+        insightsListStudy.innerHTML = insights.slice(0, 5).map(insight => `
+          <div class="insight-item ${insight.type}">
+            <span class="insight-item-icon">${insight.icon}</span>
+            <span>${insight.text}</span>
+          </div>
+        `).join('');
+        insightsCard.style.display = 'block';
+      } else {
+        insightsCard.style.display = 'none';
+      }
+    }
+    
+    function generateInsights(studyLogs, redbookLogs) {
+      const insights = [];
+      const today = new Date();
+      const weekAgo = new Date(today);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const twoWeeksAgo = new Date(today);
+      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+      
+      // 今週と先週のデータ
+      const thisWeekStudy = studyLogs.filter(l => new Date(l.date) >= weekAgo);
+      const lastWeekStudy = studyLogs.filter(l => new Date(l.date) >= twoWeeksAgo && new Date(l.date) < weekAgo);
+      
+      // 1. 科目別の学習時間変化
+      const thisWeekBySubject = {};
+      const lastWeekBySubject = {};
+      
+      thisWeekStudy.forEach(l => {
+        const subj = categorizeSubject(l.subject);
+        thisWeekBySubject[subj] = (thisWeekBySubject[subj] || 0) + (l.minutes || 0);
+      });
+      
+      lastWeekStudy.forEach(l => {
+        const subj = categorizeSubject(l.subject);
+        lastWeekBySubject[subj] = (lastWeekBySubject[subj] || 0) + (l.minutes || 0);
+      });
+      
+      // 大幅に増えた科目
+      Object.keys(thisWeekBySubject).forEach(subj => {
+        const thisWeek = thisWeekBySubject[subj] || 0;
+        const lastWeek = lastWeekBySubject[subj] || 0;
+        if (lastWeek > 0 && thisWeek > lastWeek * 1.3 && thisWeek - lastWeek >= 60) {
+          const increase = Math.round((thisWeek / lastWeek - 1) * 100);
+          insights.push({
+            type: 'positive',
+            icon: '📈',
+            text: `${subj}の学習時間が先週比 +${increase}%`
           });
+        }
+      });
+      
+      // 2. 触れていない科目
+      const allSubjects = [...new Set(studyLogs.map(l => categorizeSubject(l.subject)))];
+      const threeDaysAgo = new Date(today);
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      
+      allSubjects.forEach(subj => {
+        const recentLogs = studyLogs.filter(l => 
+          categorizeSubject(l.subject) === subj && new Date(l.date) >= threeDaysAgo
+        );
+        if (recentLogs.length === 0) {
+          const lastLog = studyLogs
+            .filter(l => categorizeSubject(l.subject) === subj)
+            .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+          if (lastLog) {
+            const daysSince = Math.floor((today - new Date(lastLog.date)) / (1000 * 60 * 60 * 24));
+            if (daysSince >= 3) {
+              insights.push({
+                type: 'warning',
+                icon: '⚠️',
+                text: `${subj}は${daysSince}日間触れていません`
+              });
+            }
+          }
+        }
+      });
+      
+      // 3. 曜日パターン
+      const dayOfWeekMinutes = [0, 0, 0, 0, 0, 0, 0];
+      const dayOfWeekCount = [0, 0, 0, 0, 0, 0, 0];
+      
+      studyLogs.forEach(l => {
+        const day = new Date(l.date).getDay();
+        dayOfWeekMinutes[day] += l.minutes || 0;
+        dayOfWeekCount[day]++;
+      });
+      
+      const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+      let maxDay = 0;
+      let maxAvg = 0;
+      for (let i = 0; i < 7; i++) {
+        const avg = dayOfWeekCount[i] > 0 ? dayOfWeekMinutes[i] / dayOfWeekCount[i] : 0;
+        if (avg > maxAvg) {
+          maxAvg = avg;
+          maxDay = i;
+        }
+      }
+      
+      if (maxAvg >= 60) {
+        insights.push({
+          type: 'info',
+          icon: '🔥',
+          text: `${dayNames[maxDay]}曜日が最も集中できています`
+        });
+      }
+      
+      // 4. 過去問の連続上昇
+      const univSubjectGroups = {};
+      redbookLogs.forEach(l => {
+        const key = `${l.university}|${l.subject}`;
+        if (!univSubjectGroups[key]) univSubjectGroups[key] = [];
+        univSubjectGroups[key].push(l);
+      });
+      
+      Object.entries(univSubjectGroups).forEach(([key, logs]) => {
+        if (logs.length >= 3) {
+          const sorted = logs.sort((a, b) => new Date(a.date) - new Date(b.date));
+          const recent = sorted.slice(-3);
+          if (recent[0].score < recent[1].score && recent[1].score < recent[2].score) {
+            const [univ, subj] = key.split('|');
+            insights.push({
+              type: 'positive',
+              icon: '🎯',
+              text: `${univ} ${subj}が3回連続で上昇中！`
+            });
+          }
+        }
+      });
+      
+      // 5. 気分パターン分析
+      if (studyLogs.length >= 5) {
+        const subjectMoods = {};
+        studyLogs.forEach(log => {
+          const subj = categorizeSubject(log.subject);
+          if (!subjectMoods[subj]) subjectMoods[subj] = { good: 0, bad: 0, total: 0 };
+          const mood = log.mood || '';
+          if (mood.includes('😊') || mood.includes('🔥') || mood.includes('✨')) {
+            subjectMoods[subj].good++;
+          } else if (mood.includes('😴') || mood.includes('😵') || mood.includes('😢')) {
+            subjectMoods[subj].bad++;
+          }
+          subjectMoods[subj].total++;
+        });
+        
+        // 特に気分が良い科目
+        Object.entries(subjectMoods).forEach(([subj, data]) => {
+          if (data.total >= 3 && data.good / data.total >= 0.7) {
+            insights.push({
+              type: 'positive',
+              icon: '😊',
+              text: `${subj}は気分良く取り組めています`
+            });
+          }
+        });
+      }
+      
+      return insights;
+    }
+    
+    function generateRecommendations(studyLogs, redbookLogs) {
+      const recommendations = [];
+      const today = new Date();
+      const todayStr = getTodayStr();
+      
+      // 今日やった科目
+      const todaySubjects = new Set(
+        studyLogs.filter(l => l.date === todayStr).map(l => categorizeSubject(l.subject))
+      );
+      
+      // 1. 触れていない科目をおすすめ
+      const allSubjects = [...new Set(studyLogs.map(l => categorizeSubject(l.subject)))];
+      const subjectLastDate = {};
+      
+      studyLogs.forEach(l => {
+        const subj = categorizeSubject(l.subject);
+        if (!subjectLastDate[subj] || l.date > subjectLastDate[subj]) {
+          subjectLastDate[subj] = l.date;
+        }
+      });
+      
+      allSubjects
+        .filter(subj => !todaySubjects.has(subj))
+        .sort((a, b) => (subjectLastDate[a] || '') < (subjectLastDate[b] || '') ? -1 : 1)
+        .slice(0, 2)
+        .forEach(subj => {
+          const lastDate = subjectLastDate[subj];
+          const daysSince = lastDate ? Math.floor((today - new Date(lastDate)) / (1000 * 60 * 60 * 24)) : 999;
+          if (daysSince >= 2) {
+            recommendations.push({
+              icon: '📖',
+              text: subj,
+              reason: `${daysSince}日間やっていません`,
+              action: `openStudyModal()`
+            });
+          }
         });
       
-      // メモがなければ非表示
-      if (todayMemos.length === 0) {
-        container.style.display = 'none';
+      // 2. 久しぶりの過去問をおすすめ
+      const redbookLastDate = {};
+      redbookLogs.forEach(l => {
+        const key = `${l.university}|${l.subject}`;
+        if (!redbookLastDate[key] || l.date > redbookLastDate[key].date) {
+          redbookLastDate[key] = l;
+        }
+      });
+      
+      Object.entries(redbookLastDate)
+        .sort((a, b) => (a[1].date || '') < (b[1].date || '') ? -1 : 1)
+        .slice(0, 2)
+        .forEach(([key, lastLog]) => {
+          const daysSince = Math.floor((today - new Date(lastLog.date)) / (1000 * 60 * 60 * 24));
+          if (daysSince >= 7) {
+            const [univ, subj] = key.split('|');
+            recommendations.push({
+              icon: '📕',
+              text: `${univ} ${subj}`,
+              reason: `前回から${daysSince}日経過`,
+              action: `openRedbookModal()`
+            });
+          }
+        });
+      
+      return recommendations;
+    }
+    
+    // ==========================================
+    // 成長グラフ（過去問分析タブ）
+    // ==========================================
+    
+    let growthChartInstance = null;
+    
+    function populateGrowthSelects() {
+      const redbookLogs = appData.redbookLogs || [];
+      const univSelect = document.getElementById('growthUnivSelect');
+      const subjectSelect = document.getElementById('growthSubjectSelect');
+      
+      // 大学一覧
+      const universities = [...new Set(redbookLogs.map(l => l.university))].filter(Boolean);
+      univSelect.innerHTML = '<option value="">大学を選択</option>' + 
+        universities.map(u => `<option value="${u}">${u}</option>`).join('');
+      
+      // 科目一覧（初期は空）
+      subjectSelect.innerHTML = '<option value="">先に大学を選択</option>';
+    }
+    
+    function updateGrowthSubjects() {
+      const redbookLogs = appData.redbookLogs || [];
+      const univ = document.getElementById('growthUnivSelect').value;
+      const subjectSelect = document.getElementById('growthSubjectSelect');
+      
+      if (!univ) {
+        subjectSelect.innerHTML = '<option value="">先に大学を選択</option>';
         return;
       }
       
-      // 時間順にソート
-      todayMemos.sort((a, b) => {
-        const timeA = new Date(a.timestamp).getTime();
-        const timeB = new Date(b.timestamp).getTime();
-        return timeB - timeA;
+      // 選択した大学の科目だけをフィルタリング
+      const subjects = [...new Set(
+        redbookLogs.filter(l => l.university === univ).map(l => l.subject)
+      )].filter(Boolean);
+      
+      subjectSelect.innerHTML = '<option value="">科目を選択</option>' +
+        subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+    
+    function renderGrowthChart() {
+      const redbookLogs = appData.redbookLogs || [];
+      const univ = document.getElementById('growthUnivSelect').value;
+      const subject = document.getElementById('growthSubjectSelect').value;
+      
+      const container = document.getElementById('growthChartContainer');
+      const empty = document.getElementById('growthEmpty');
+      const summary = document.getElementById('growthSummary');
+      
+      if (!univ || !subject) {
+        container.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      // フィルタリング＆日付順ソート
+      const filtered = redbookLogs
+        .filter(l => l.university === univ && l.subject === subject)
+        .map(l => ({
+          ...l,
+          dateObj: new Date(l.date + 'T00:00:00') // 日付を確実にパース
+        }))
+        .sort((a, b) => a.dateObj - b.dateObj);
+      
+      if (filtered.length < 1) {
+        container.style.display = 'none';
+        empty.innerHTML = '<p>この組み合わせの記録がありません</p>';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      container.style.display = 'block';
+      
+      // グラフデータ準備
+      const labels = filtered.map(l => {
+        const d = new Date(l.date);
+        return `${d.getMonth()+1}/${d.getDate()}`;
+      });
+      const scores = filtered.map(l => l.score || 0);
+      
+      // グラフ描画
+      const ctx = document.getElementById('growthChart').getContext('2d');
+      
+      if (growthChartInstance) {
+        growthChartInstance.destroy();
+      }
+      
+      growthChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '得点率',
+            data: scores,
+            borderColor: '#22C55E',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 6,
+            pointBackgroundColor: '#22C55E',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2,
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: {
+                callback: v => v + '%'
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `${ctx.parsed.y}%`
+              }
+            }
+          }
+        }
       });
       
-      // 表示
-      list.innerHTML = todayMemos.map(item => {
-        let timeStr = '';
-        if (item.timestamp && item.timestamp.includes('T')) {
-          const date = new Date(item.timestamp);
-          timeStr = `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
-        }
-        
-        return `
-          <div class="today-memo-item">
-            <span class="today-memo-subject">${item.type === 'redbook' ? '📕' : '📖'} ${item.subject.split(' ')[0]}</span>
-            <span class="today-memo-text">${escapeHtml(item.memo)}</span>
-            ${timeStr ? `<span class="today-memo-time">${timeStr}</span>` : ''}
-          </div>
-        `;
-      }).join('');
+      // サマリー表示
+      const first = scores[0];
+      const last = scores[scores.length - 1];
+      const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+      const max = Math.max(...scores);
+      const growth = last - first;
       
-      container.style.display = 'block';
+      summary.innerHTML = `
+        <div class="growth-summary-item">
+          <span class="growth-summary-label">初回</span>
+          <span class="growth-summary-value">${first}%</span>
+        </div>
+        <div class="growth-summary-item">
+          <span class="growth-summary-label">最新</span>
+          <span class="growth-summary-value">${last}%</span>
+        </div>
+        <div class="growth-summary-item">
+          <span class="growth-summary-label">成長</span>
+          <span class="growth-summary-value ${growth >= 0 ? 'positive' : 'negative'}">${growth >= 0 ? '+' : ''}${growth}%</span>
+        </div>
+        <div class="growth-summary-item">
+          <span class="growth-summary-label">平均</span>
+          <span class="growth-summary-value">${avg}%</span>
+        </div>
+        <div class="growth-summary-item">
+          <span class="growth-summary-label">最高</span>
+          <span class="growth-summary-value">${max}%</span>
+        </div>
+      `;
     }
     
     function calculateStreak(input) {
@@ -5556,6 +6351,9 @@
       const trendSelect = document.getElementById('scoreTrendSubject');
       trendSelect.innerHTML = '<option value="">全科目</option>' + 
         subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+      
+      // 成長グラフのセレクト更新
+      populateGrowthSelects();
     }
     
     function updateScoreTrendChart() {
