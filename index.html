@@ -4552,7 +4552,7 @@
         return `
           <div class="goal-item">
             <div class="goal-header">
-              <span class="goal-name">${goal.subject}${isAchieved ? '<span class="goal-achieved">🏆 達成！</span>' : ''}</span>
+              <span class="goal-name">${escapeHtml(goal.subject || '')}${isAchieved ? '<span class="goal-achieved">🏆 達成！</span>' : ''}</span>
               <span class="goal-values">${goal.current}% → ${goal.target}%</span>
             </div>
             <div class="goal-bar">
@@ -4587,20 +4587,20 @@
         <div class="record-item">
           <div class="record-main">
             <span class="record-date">${formatDateShort(log.date)}</span>
-            <span class="record-subject">${log.subject}</span>
-            ${log.studyType ? `<span class="record-type">${log.studyType}</span>` : ''}
+            <span class="record-subject">${escapeHtml(log.subject || '')}</span>
+            ${log.studyType ? `<span class="record-type">${escapeHtml(log.studyType)}</span>` : ''}
             <span class="record-time">${log.minutes}分</span>
-            <span class="record-mood">${log.mood || ''}</span>
+            <span class="record-mood">${escapeHtml(log.mood || '')}</span>
           </div>
           ${log.memo || hasSubDetails ? `
             <div class="record-details">
               ${hasSubDetails ? `
                 <div class="record-sub-info">
-                  ${log.unit ? `<span class="record-unit">📖 ${log.unit}</span>` : ''}
-                  ${log.textbook ? `<span class="record-textbook">📚 ${log.textbook}</span>` : ''}
+                  ${log.unit ? `<span class="record-unit">📖 ${escapeHtml(log.unit)}</span>` : ''}
+                  ${log.textbook ? `<span class="record-textbook">📚 ${escapeHtml(log.textbook)}</span>` : ''}
                 </div>
               ` : ''}
-              ${log.memo ? `<div class="record-memo">📝 ${log.memo}</div>` : ''}
+              ${log.memo ? `<div class="record-memo">📝 ${escapeHtml(log.memo)}</div>` : ''}
             </div>
           ` : ''}
         </div>
@@ -4632,8 +4632,8 @@
           <div class="record-item">
             <div class="record-main">
               <span class="record-date">${formatDateShort(log.date)}</span>
-              <span>${log.university}</span>
-              <span class="record-subject-small">${log.subject || ''}</span>
+              <span>${escapeHtml(log.university || '')}</span>
+              <span class="record-subject-small">${escapeHtml(log.subject || '')}</span>
               ${log.time ? `<span class="record-time-small">⏱${log.time}分</span>` : ''}
               <span class="record-score ${scoreClass}">${log.score}%</span>
             </div>
@@ -4641,11 +4641,11 @@
               <div class="record-details">
                 ${hasSubDetails ? `
                   <div class="record-sub-info">
-                    ${log.sectionScores ? `<span class="record-section">📊 ${log.sectionScores}</span>` : ''}
-                    ${log.weakAreas ? `<span class="record-weak">⚠️ ${log.weakAreas}</span>` : ''}
+                    ${log.sectionScores ? `<span class="record-section">📊 ${escapeHtml(log.sectionScores)}</span>` : ''}
+                    ${log.weakAreas ? `<span class="record-weak">⚠️ ${escapeHtml(log.weakAreas)}</span>` : ''}
                   </div>
                 ` : ''}
-                ${log.memo ? `<div class="record-memo">📝 ${log.memo}</div>` : ''}
+                ${log.memo ? `<div class="record-memo">📝 ${escapeHtml(log.memo)}</div>` : ''}
               </div>
             ` : ''}
           </div>
@@ -4792,15 +4792,15 @@
           <div class="manager-item-info">
             <div class="manager-item-main">
               <span class="manager-item-date">${formatDateShort(log.date)}</span>
-              <span class="manager-item-subject">${log.subject}</span>
+              <span class="manager-item-subject">${escapeHtml(log.subject || '')}</span>
               <span>${log.minutes}分</span>
-              <span>${log.mood || ''}</span>
+              <span>${escapeHtml(log.mood || '')}</span>
             </div>
             ${log.studyType || log.unit || log.memo ? `
               <div class="manager-item-detail">
-                ${log.studyType ? log.studyType : ''}
-                ${log.unit ? ' / ' + log.unit : ''}
-                ${log.memo ? ' / ' + log.memo : ''}
+                ${log.studyType ? escapeHtml(log.studyType) : ''}
+                ${log.unit ? ' / ' + escapeHtml(log.unit) : ''}
+                ${log.memo ? ' / ' + escapeHtml(log.memo) : ''}
               </div>
             ` : ''}
           </div>
@@ -4823,14 +4823,14 @@
           <div class="manager-item-info">
             <div class="manager-item-main">
               <span class="manager-item-date">${formatDateShort(log.date)}</span>
-              <span class="manager-item-subject">${log.university}</span>
-              <span>${log.subject}</span>
+              <span class="manager-item-subject">${escapeHtml(log.university || '')}</span>
+              <span>${escapeHtml(log.subject || '')}</span>
               <span>${log.score}%</span>
             </div>
             ${log.year || log.memo ? `
               <div class="manager-item-detail">
-                ${log.year ? log.year + '年度' : ''}
-                ${log.memo ? ' / ' + log.memo : ''}
+                ${log.year ? escapeHtml(String(log.year)) + '年度' : ''}
+                ${log.memo ? ' / ' + escapeHtml(log.memo) : ''}
               </div>
             ` : ''}
           </div>
@@ -6186,10 +6186,10 @@
         return `
           <div class="record-item">
             <div class="record-main">
-              <span class="record-subject">${log.subject}</span>
-              ${log.studyType ? `<span class="record-type">${log.studyType}</span>` : ''}
+              <span class="record-subject">${escapeHtml(log.subject || '')}</span>
+              ${log.studyType ? `<span class="record-type">${escapeHtml(log.studyType)}</span>` : ''}
               <span class="record-time">${log.minutes}分</span>
-              <span class="record-mood">${log.mood || ''}</span>
+              <span class="record-mood">${escapeHtml(log.mood || '')}</span>
             </div>
             <div class="record-sub">
               ${log.date}
@@ -6198,11 +6198,11 @@
               <div class="record-details">
                 ${hasSubDetails ? `
                   <div class="record-sub-info">
-                    ${log.unit ? `<span class="record-unit">📖 ${log.unit}</span>` : ''}
-                    ${log.textbook ? `<span class="record-textbook">📚 ${log.textbook}</span>` : ''}
+                    ${log.unit ? `<span class="record-unit">📖 ${escapeHtml(log.unit)}</span>` : ''}
+                    ${log.textbook ? `<span class="record-textbook">📚 ${escapeHtml(log.textbook)}</span>` : ''}
                   </div>
                 ` : ''}
-                ${log.memo ? `<div class="record-memo">📝 ${log.memo}</div>` : ''}
+                ${log.memo ? `<div class="record-memo">📝 ${escapeHtml(log.memo)}</div>` : ''}
               </div>
             ` : ''}
           </div>
@@ -6420,22 +6420,22 @@
         return `
           <div class="record-item">
             <div class="record-main">
-              <span class="record-subject">${log.university} ${log.subject}</span>
+              <span class="record-subject">${escapeHtml(log.university || '')} ${escapeHtml(log.subject || '')}</span>
               ${log.time ? `<span class="record-time-small">⏱${log.time}分</span>` : ''}
               <span class="record-score ${scoreClass}">${log.score}%</span>
             </div>
             <div class="record-sub">
-              ${log.date} ・ ${log.year}年度
+              ${log.date} ・ ${escapeHtml(String(log.year || ''))}年度
             </div>
             ${log.memo || hasSubDetails ? `
               <div class="record-details">
                 ${hasSubDetails ? `
                   <div class="record-sub-info">
-                    ${log.sectionScores ? `<span class="record-section">📊 ${log.sectionScores}</span>` : ''}
-                    ${log.weakAreas ? `<span class="record-weak">⚠️ ${log.weakAreas}</span>` : ''}
+                    ${log.sectionScores ? `<span class="record-section">📊 ${escapeHtml(log.sectionScores)}</span>` : ''}
+                    ${log.weakAreas ? `<span class="record-weak">⚠️ ${escapeHtml(log.weakAreas)}</span>` : ''}
                   </div>
                 ` : ''}
-                ${log.memo ? `<div class="record-memo">📝 ${log.memo}</div>` : ''}
+                ${log.memo ? `<div class="record-memo">📝 ${escapeHtml(log.memo)}</div>` : ''}
               </div>
             ` : ''}
           </div>
